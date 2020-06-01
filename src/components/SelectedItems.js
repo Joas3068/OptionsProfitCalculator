@@ -67,7 +67,7 @@ class SelectedItems extends React.Component {
                 <TableCell component="th" scope="row">
                   {row.type}
                 </TableCell>
-                <TableCell align="left">{row.buysell === "buy"?"Buy":"Sell"}</TableCell>
+                <TableCell align="left">{row.buySell === 'buy'?"Buy":"Sell"}</TableCell>
                 <TableCell align="left">{row.stockPrice}</TableCell>
                 <TableCell align="left">{row.strikePrice}</TableCell>
                 <TableCell align="left">{row.expiration}</TableCell>
