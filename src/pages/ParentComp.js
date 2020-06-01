@@ -312,7 +312,7 @@ export class ParentComp extends React.Component {
         >
           <BottomNavigationAction
             icon={<GitHubIcon />}
-            href={"https://github.com/Joas3068/SimpleWebApi"}
+            href={"https://github.com/Joas3068/OptionsProfitCalculator"}
           />
         </BottomNavigation>
       </div>
