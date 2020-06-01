@@ -171,7 +171,6 @@ class OptionsForm extends React.Component {
     });
   };
 
-<<<<<<< HEAD
   handleChange = (event) => {
     this.setState({
       optionsData: {
@@ -191,8 +190,7 @@ class OptionsForm extends React.Component {
     });
   };
 
-=======
->>>>>>> 1bafc5ef4831ed5598e7f3554e7eebf4137a5fb0
+
   handleVolChange = (event) => {
     this.setState({
       optionsData: {
@@ -236,11 +234,7 @@ class OptionsForm extends React.Component {
       buySell: this.state.optionsData.buySell,
       stockPrice: this.state.optionsData.stockPrice,
       strikePrice: this.state.optionsData.strikePrice,
-<<<<<<< HEAD
       expiration: this.state.optionsData.expiration,
-=======
-      expiration: this.state.optionsData.expiration / 365,
->>>>>>> 1bafc5ef4831ed5598e7f3554e7eebf4137a5fb0
       interestFree: this.state.optionsData.interestFree,
       volatility: this.state.optionsData.volatility,
       greeks: [
