@@ -75,7 +75,7 @@ class SelectedItems extends React.Component {
                 <TableCell align="left">{row.interestFree}</TableCell>
 
                 <TableCell>
-                Count
+                
                   {/* <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="age-native-simple">Age</InputLabel>
                     <Select

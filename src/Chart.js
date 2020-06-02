@@ -52,6 +52,10 @@ export default class Chart extends React.Component {
     const xmin = this.props.optionsPriceData.optionPrice[0].sPrice;
 
     const xmax = this.props.optionsPriceData.optionPrice[length - 1].sPrice;
+    var xAxis = [];
+    optData.optionPrice.forEach(element => {
+      xAxis.push(element.sPrice);
+    });
     return (
       <div style={{ width: "100%", height: 700 }}>
         <ResponsiveContainer>
@@ -75,7 +79,7 @@ export default class Chart extends React.Component {
               //tickSize={1}
               // type="number"
 
-              //domain={['auto','auto']}
+              domain={[xAxis]}
             />
             <YAxis minTickGap={0} tickSize={1} />
             {/* <ReferenceLine x={305.85} stroke="green"  */}

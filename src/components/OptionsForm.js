@@ -266,7 +266,7 @@ class OptionsForm extends React.Component {
             className={classes.formControl}
               id="standard-select-buySell"
               select
-              autoWidth={true}
+              //autoWidth={true}
               label={"Buy"}
               value={this.state.optionsData.buySell}
               onChange={this.handleChange}
