@@ -29,7 +29,7 @@ const mainObj = {
   GUID: "",
 };
 
-const currencies = [
+const BuySell = [
   {
     value: "buy",
     label: "Buy",
@@ -43,11 +43,11 @@ const currencies = [
 const type = [
   {
     value: "call",
-    lable: "Call",
+    label: "Call",
   },
   {
     value: "put",
-    lable: "Put",
+    label: "Put",
   },
 ];
 
@@ -67,19 +67,19 @@ const useStyles = (theme) => ({
     padding: theme.spacing(1),
     width: 75,
   },
-  formBack:{
+  formBack: {
     backgroundColor: "rgb(230, 230, 230)",
   },
-  formControlButton:{
-        // fullWidth: true,
-        backgroundColor: "rgb(179, 179, 179)",
-        //display: "flex",
-        //wrap: "nowrap",
-        margin: theme.spacing(1),
-        padding: theme.spacing(1),
-        width: 75,
-        color:"black",
-  }
+  formControlButton: {
+    // fullWidth: true,
+    backgroundColor: "rgb(179, 179, 179)",
+    //display: "flex",
+    //wrap: "nowrap",
+    margin: theme.spacing(1),
+    padding: theme.spacing(1),
+    width: 75,
+    color: "black",
+  },
 });
 
 class OptionsForm extends React.Component {
@@ -104,9 +104,10 @@ class OptionsForm extends React.Component {
     this.prepareData = this.prepareData.bind(this);
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.prepareData();
+    this.handleChange();
+    this.handleType();
   }
 
   prepareData() {
@@ -175,7 +176,7 @@ class OptionsForm extends React.Component {
     this.setState({
       optionsData: {
         type: this.state.optionsData.type,
-        buySell: event.target.value,
+        buySell: !event ? this.state.optionsData.buySell : event.target.value,
         stockPrice: this.state.optionsData.stockPrice,
         strikePrice: this.state.optionsData.strikePrice,
         expiration: this.state.optionsData.expiration,
@@ -190,6 +191,24 @@ class OptionsForm extends React.Component {
     });
   };
 
+  handleType = (event) => {
+    this.setState({
+      optionsData: {
+        type: !event ? this.state.optionsData.type : event.target.value,
+        buySell: this.state.optionsData.buySell,
+        stockPrice: this.state.optionsData.stockPrice,
+        strikePrice: this.state.optionsData.strikePrice,
+        expiration: this.state.optionsData.expiration,
+        interestFree: this.state.optionsData.interestFree,
+        volatility: this.state.optionsData.volatility,
+        greeks: [
+          { volatility: "55%", delta: ".5", amount: 3 },
+          { volatility: "59%", delta: ".2", amount: 1 },
+        ],
+        GUID: "",
+      },
+    });
+  };
 
   handleVolChange = (event) => {
     this.setState({
@@ -263,17 +282,32 @@ class OptionsForm extends React.Component {
               </Typography>
             </ExpansionPanelSummary>
             <TextField
-            className={classes.formControl}
+              className={classes.formControl}
+              id="standard-select-CallPut"
+              select
+              //autoWidth={true}
+              value={this.state.optionsData.type}
+              onChange={this.handleType}
+              helperText="Call/Put"
+              width={20}
+            >
+              {type.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              className={classes.formControl}
               id="standard-select-buySell"
               select
               //autoWidth={true}
-              label={"Buy"}
               value={this.state.optionsData.buySell}
               onChange={this.handleChange}
               helperText="Buy or Sell"
               width={20}
             >
-              {currencies.map((option) => (
+              {BuySell.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

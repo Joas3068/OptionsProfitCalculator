@@ -111,8 +111,8 @@ export class ParentComp extends React.Component {
         optionPrice: [{ oPrice: 0, sPrice: 0 }],
       },
       optionsData: {
-        type: "Call",
-        buySell: "Buy",
+        type: "call",
+        buySell: "buy",
         stockPrice: 300,
         strikePrice: 304,
         expiration: 6,

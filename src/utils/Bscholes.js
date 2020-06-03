@@ -40,7 +40,7 @@ export default function GetSchole(lastItem) {
 function BlackScholes(PutCallFlag, S, X, T, r, v) {
   var d1 = (Math.log(S / X) + (r + (v * v) / 2) * T) / (v * Math.sqrt(T));
   var d2 = d1 - v * Math.sqrt(T);
-  if (PutCallFlag === "Call") {
+  if (PutCallFlag === "call") {
     return S * CND(d1) - X * Math.exp(-r * T) * CND(d2);
   } else {
     return X * Math.exp(-r * T) * CND(-d2) - S * CND(-d1);
