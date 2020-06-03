@@ -8,25 +8,17 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Button } from "@material-ui/core";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 
-class SelectedItems extends React.Component {
+class SelectedItems extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      dateOfExpiration: "",
-    };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.testGuid = this.testGuid.bind(this);
   }
 
-  handleChange(value) {
-    this.setState({ dateOfExpiration: value });
+  testGuid(row) {
+    this.props.getGuid(row);
   }
-
-
   render() {
     const classes = this.props.className;
     return (
@@ -62,12 +54,17 @@ class SelectedItems extends React.Component {
             {this.props.selectedItems.map((row) => (
               <TableRow key={row.GUID}>
                 <TableCell align="left">
-                  <Checkbox checked={true}></Checkbox>
+                  <Checkbox
+                    //checked={isPresent ? true : false}
+                    onChange={this.props.getGuid(row)}
+                  ></Checkbox>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.type}
+                  {row.type ==='call'?"Call":"Put"}
                 </TableCell>
-                <TableCell align="left">{row.buySell === 'buy'?"Buy":"Sell"}</TableCell>
+                <TableCell align="left">
+                  {row.buySell === "buy" ? "Buy" : "Sell"}
+                </TableCell>
                 <TableCell align="left">{row.stockPrice}</TableCell>
                 <TableCell align="left">{row.strikePrice}</TableCell>
                 <TableCell align="left">{row.expiration}</TableCell>
@@ -75,7 +72,7 @@ class SelectedItems extends React.Component {
                 <TableCell align="left">{row.interestFree}</TableCell>
 
                 <TableCell>
-                
+                {row.GUID}
                   {/* <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="age-native-simple">Age</InputLabel>
                     <Select

@@ -15,7 +15,7 @@ class ItemsPanel extends React.Component {
     return (
       <ExpansionPanel
         className={
-          this.props.optionType === "Call"
+          this.props.optionType === "call"
             ? classes.expPanelCall
             : classes.expPanelPut
         }
@@ -40,7 +40,7 @@ class ItemsPanel extends React.Component {
             className={classes}
             selectedItems={this.props.selectedItems}
             clearSelected={() => this.props.clearSelected()}
-            updateRows={() => this.props.updateRows()}
+            getGuid={(val) => this.props.getGuid(val)}
           ></SelectedItems>
         </Paper>
       </ExpansionPanel>

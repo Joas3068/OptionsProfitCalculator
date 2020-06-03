@@ -6,28 +6,12 @@ import { withStyles } from "@material-ui/core/styles";
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import FilledInput from "@material-ui/core/FilledInput";
 import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
 import { Button } from "@material-ui/core";
 
-const mainObj = {
-  type: "",
-  buySell: "",
-  stockPrice: 304.5,
-  strikePrice: 306,
-  expiration: 3,
-  interestFree: 0.02,
-  volatility: 0.55,
-  greeks: [
-    { volatility: "55%", delta: ".5", amount: 3 },
-    { volatility: "59%", delta: ".2", amount: 1 },
-  ],
-  GUID: "",
-};
+
 
 const BuySell = [
   {
@@ -86,22 +70,24 @@ class OptionsForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      optionsData: {
-        type: "Call",
-        buySell: "buy",
-        stockPrice: 303.16,
-        strikePrice: 308,
-        expiration: 3,
-        interestFree: 0.04,
-        volatility: 55,
-        greeks: [
-          { volatility: "55%", delta: ".5", amount: 3 },
-          { volatility: "59%", delta: ".2", amount: 1 },
-        ],
-        GUID: "",
-      },
+      optionsData: this.props.currentEdit,
+      // {
+      //   type: "call",
+      //   buySell: "buy",
+      //   stockPrice: 303.16,
+      //   strikePrice: 308,
+      //   expiration: 3,
+      //   interestFree: 0.04,
+      //   volatility: 55,
+      //   greeks: [
+      //     { volatility: "55%", delta: ".5", amount: 3 },
+      //     { volatility: "59%", delta: ".2", amount: 1 },
+      //   ],
+      //   GUID: "",
+      // },
     };
     this.prepareData = this.prepareData.bind(this);
+    this.prepareDataNew=this.prepareDataNew.bind(this);
   }
 
   componentDidMount() {
@@ -112,10 +98,18 @@ class OptionsForm extends React.Component {
 
   prepareData() {
     //populate model
-    var model = this.createData();
+    var model = this.createData(false);
     //send to parent
     this.props.getFormData(model);
   }
+
+  prepareDataNew(){
+    //populate model
+    var model = this.createData(true);
+    //send to parent
+    this.props.getFormData(model);
+  }
+
 
   handleStockPriceChange = (event) => {
     this.setState({
@@ -131,10 +125,12 @@ class OptionsForm extends React.Component {
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
-        GUID: "",
+        GUID: this.state.optionsData.GUID,
+        isEditing:this.state.optionsData.isEditing,
       },
     });
   };
+
   handleStrikePriceChange = (event) => {
     this.setState({
       optionsData: {
@@ -149,10 +145,12 @@ class OptionsForm extends React.Component {
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
-        GUID: "",
+        GUID: this.state.optionsData.GUID,
+        isEditing:this.state.optionsData.isEditing,
       },
     });
   };
+
   handleExpChange = (event) => {
     this.setState({
       optionsData: {
@@ -167,7 +165,8 @@ class OptionsForm extends React.Component {
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
-        GUID: "",
+        GUID: this.state.optionsData.GUID,
+        isEditing:this.state.optionsData.isEditing,
       },
     });
   };
@@ -186,7 +185,8 @@ class OptionsForm extends React.Component {
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
-        GUID: "",
+        GUID: this.state.optionsData.GUID,
+        isEditing:this.state.optionsData.isEditing,
       },
     });
   };
@@ -205,7 +205,8 @@ class OptionsForm extends React.Component {
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
-        GUID: "",
+        GUID: this.state.optionsData.GUID,
+        isEditing:this.state.optionsData.isEditing,
       },
     });
   };
@@ -224,7 +225,8 @@ class OptionsForm extends React.Component {
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
-        GUID: "",
+        GUID: this.state.optionsData.GUID,
+        isEditing:this.state.optionsData.isEditing,
       },
     });
   };
@@ -247,7 +249,7 @@ class OptionsForm extends React.Component {
     });
   }
 
-  createData() {
+  createData(newItem) {
     return {
       type: this.state.optionsData.type,
       buySell: this.state.optionsData.buySell,
@@ -260,7 +262,7 @@ class OptionsForm extends React.Component {
         { volatility: "55%", delta: ".5", amount: 3 },
         { volatility: "59%", delta: ".2", amount: 1 },
       ],
-      GUID: this.uuidv4(),
+      GUID:newItem?this.uuidv4():this.state.optionsData.GUID , //TODO logic
     };
   }
 
@@ -281,6 +283,8 @@ class OptionsForm extends React.Component {
                 Selected Options
               </Typography>
             </ExpansionPanelSummary>
+
+            
             <TextField
               className={classes.formControl}
               id="standard-select-CallPut"
@@ -356,6 +360,14 @@ class OptionsForm extends React.Component {
               variant="outlined"
               color="secondary"
               onClick={this.prepareData}
+            >
+              Update
+            </Button>
+            <Button
+              className={classes.formControlButton}
+              variant="outlined"
+              color="secondary"
+              onClick={this.prepareDataNew}
             >
               Add
             </Button>

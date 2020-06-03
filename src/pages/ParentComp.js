@@ -98,37 +98,54 @@ const useRowStyles = (theme) => ({
     // padding: theme.spacing(2),
     //flexGrow: 1,
   },
-  
 });
 
+const mainObj = {
+  type: "call",
+  buySell: "buy",
+  stockPrice: 304.5,
+  strikePrice: 306,
+  expiration: 3,
+  interestFree: 0.02,
+  volatility: 55,
+  greeks: [
+    { volatility: "55%", delta: ".5", amount: 3 },
+    { volatility: "59%", delta: ".2", amount: 1 },
+  ],
+  GUID: "",
+  isEditing: false,
+};
 export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
+    mainObj.GUID = this.uuidv4();
     this.state = {
       checksList: [],
-      rowData: this.countRows(),
+      currentEdit: mainObj,
       optionsPriceData: {
         optionPrice: [{ oPrice: 0, sPrice: 0 }],
       },
-      optionsData: {
-        type: "call",
-        buySell: "buy",
-        stockPrice: 300,
-        strikePrice: 304,
-        expiration: 6,
-        interestFree: .02,
-        volatility: .55,
-        greeks: [
-          { volatility: "55%", delta: ".5", amount: 3 },
-          { volatility: "59%", delta: ".2", amount: 1 },
-        ],
-        GUID: "",
-      },
+      optionsData: mainObj,
+      // {
+      //   type: "call",
+      //   buySell: "buy",
+      //   stockPrice: 300,
+      //   strikePrice: 304,
+      //   expiration: 6,
+      //   interestFree: .02,
+      //   volatility: .55,
+      //   greeks: [
+      //     { volatility: "55%", delta: ".5", amount: 3 },
+      //     { volatility: "59%", delta: ".2", amount: 1 },
+      //   ],
+      //   GUID: this.uuidv4(),
+
+      // },
     };
     this.addData = this.addData.bind(this);
     this.clearSelected = this.clearSelected.bind(this);
-    this.updateRows = this.updateRows.bind(this);
     this.calculateOptionsPrice = this.calculateOptionsPrice.bind(this);
+    this.getGuid = this.getGuid.bind(this);
   }
 
   addData(val) {
@@ -143,13 +160,6 @@ export class ParentComp extends React.Component {
         });
       };
     }
-  }
-
-  updateRows() {
-    this.setState({
-      rowData: this.countRows(),
-      checksList: [],
-    });
   }
 
   clearSelected() {
@@ -184,31 +194,11 @@ export class ParentComp extends React.Component {
     };
   }
 
-  countRows = () => {
-    let rowsz = [];
-    for (let index = 0; index < 25; index++) {
-      var a = Math.floor(Math.random() * 100);
-      const type = a < 50 ? "Call" : "Put";
-      rowsz.push(
-        this.createData(
-          index,
-          Math.floor(Math.random() * 100),
-          Math.floor(Math.random() * 100),
-          Math.floor(Math.random() * 100),
-          Math.floor(Math.random() * 100),
-          Math.floor(Math.random() * 100),
-          this.uuidv4(),
-          type
-        )
-      );
-    }
-    return rowsz;
-  };
-
   calculateOptionsPrice() {
     var input;
-    if (!this.state.checksList[this.state.checksList.length-1]) input = this.state.optionsData;
-    else input = this.state.checksList[this.state.checksList.length-1];
+    if (!this.state.checksList[this.state.checksList.length - 1])
+      input = this.state.optionsData;
+    else input = this.state.checksList[this.state.checksList.length - 1];
     const res = GetSchole(input);
     this.setState({
       optionsPriceData: res,
@@ -236,22 +226,45 @@ export class ParentComp extends React.Component {
   }
 
   componentDidMount() {
-    //this.addData(this.state.optionsData)
     this.calculateOptionsPrice();
   }
 
-  // getFormData(val) {
-  //     return () => {
-  //       this.setState({
-  //         optionsData: val,
-  //       });
-  //     };
-  // }
   getFormData(val) {
-    this.setState({
-      checksList: this.state.checksList.concat(val),
+    var result = this.state.checksList.find((obj) => {
+      return obj.GUID === val.GUID;
     });
+    var indexFound =-1;
+    for (let i = 0; i < this.state.checksList.length; i++) {
+      if(this.state.checksList[i].GUID === val.GUID)
+      {
+        indexFound = i;
+        break;
+      }
+      
+    }
+
+    if (indexFound ===-1) { //add
+      this.setState({
+        checksList: this.state.checksList.concat(val),
+      });
+    }
+    else{
+      var newState = this.state.checksList;
+      newState[indexFound] = val
+      this.setState({
+        checksList: newState,
+      });
+    }
   }
+
+  getGuid(row) {
+    return () => {
+      this.setState({
+        currentEdit: row,
+      });
+    };
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -269,7 +282,7 @@ export class ParentComp extends React.Component {
             <ItemsPanel
               classes={classes}
               clearSelected={() => this.clearSelected()}
-              updateRows={() => this.updateRows()}
+              getGuid={(val) => this.getGuid(val)}
               selectedItems={this.state.checksList}
               calculateOptionsPrice={() => this.calculateOptionsPrice()}
             ></ItemsPanel>
@@ -281,6 +294,7 @@ export class ParentComp extends React.Component {
           >
             <OptionsForm
               getFormData={(val) => this.getFormData(val)}
+              currentEdit={this.state.currentEdit}
             ></OptionsForm>
           </Grid>
           {/* <Grid item xs={6}>
