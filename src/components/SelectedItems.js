@@ -9,18 +9,21 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Button } from "@material-ui/core";
 
-class SelectedItems extends React.PureComponent {
+class SelectedItems extends React.Component {
   constructor(props) {
     super(props);
 
     this.testGuid = this.testGuid.bind(this);
   }
 
-  testGuid(row) {
-    this.props.getGuid(row);
-  }
+  testGuid = (event) => {
+    this.props.getGuid(event);
+  };
   render() {
     const classes = this.props.className;
+    const cGui = this.props.checksList.find((obj) => {
+      return obj.GUID === this.props.currentEditGuid;
+    });
     return (
       <TableContainer component={Paper}>
         <Table
@@ -55,12 +58,13 @@ class SelectedItems extends React.PureComponent {
               <TableRow key={row.GUID}>
                 <TableCell align="left">
                   <Checkbox
-                    //checked={isPresent ? true : false}
-                    onChange={this.props.getGuid(row)}
+                    checked={row.GUID === cGui.GUID ? true : false}
+                    value={row.GUID}
+                    onChangeCapture={this.props.getGuid}
                   ></Checkbox>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {row.type ==='call'?"Call":"Put"}
+                  {row.type === "call" ? "Call" : "Put"}
                 </TableCell>
                 <TableCell align="left">
                   {row.buySell === "buy" ? "Buy" : "Sell"}
@@ -72,7 +76,7 @@ class SelectedItems extends React.PureComponent {
                 <TableCell align="left">{row.interestFree}</TableCell>
 
                 <TableCell>
-                {row.GUID}
+                  {row.GUID}
                   {/* <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="age-native-simple">Age</InputLabel>
                     <Select

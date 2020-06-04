@@ -33,14 +33,16 @@ class ItemsPanel extends React.Component {
               classes={classes}
               clearSelected={() => this.props.clearSelected()}
               updateRows={() => this.props.updateRows()}
-              calculateOptionsPrice={()=>this.props.calculateOptionsPrice()}
+              calculateOptionsPrice={() => this.props.calculateOptionsPrice()}
             ></HeaderBlock>
           </Grid>
           <SelectedItems
             className={classes}
             selectedItems={this.props.selectedItems}
             clearSelected={() => this.props.clearSelected()}
-            getGuid={(val) => this.props.getGuid(val)}
+            getGuid={(e) => this.props.getGuid(e)}
+            currentEditGuid={this.props.currentEditGuid}
+            checksList={this.props.checksList}
           ></SelectedItems>
         </Paper>
       </ExpansionPanel>

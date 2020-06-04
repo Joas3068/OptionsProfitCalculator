@@ -11,8 +11,6 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { Button } from "@material-ui/core";
 
-
-
 const BuySell = [
   {
     value: "buy",
@@ -66,28 +64,17 @@ const useStyles = (theme) => ({
   },
 });
 
-class OptionsForm extends React.Component {
+class OptionsForm extends React.PureComponent {
   constructor(props) {
     super(props);
+    var result = this.props.checksList.find((obj) => {
+      return obj.GUID === this.props.currentEditGuid;
+    });
     this.state = {
-      optionsData: this.props.currentEdit,
-      // {
-      //   type: "call",
-      //   buySell: "buy",
-      //   stockPrice: 303.16,
-      //   strikePrice: 308,
-      //   expiration: 3,
-      //   interestFree: 0.04,
-      //   volatility: 55,
-      //   greeks: [
-      //     { volatility: "55%", delta: ".5", amount: 3 },
-      //     { volatility: "59%", delta: ".2", amount: 1 },
-      //   ],
-      //   GUID: "",
-      // },
+      optionsData: result,
     };
     this.prepareData = this.prepareData.bind(this);
-    this.prepareDataNew=this.prepareDataNew.bind(this);
+    this.prepareDataNew = this.prepareDataNew.bind(this);
   }
 
   componentDidMount() {
@@ -103,13 +90,12 @@ class OptionsForm extends React.Component {
     this.props.getFormData(model);
   }
 
-  prepareDataNew(){
+  prepareDataNew() {
     //populate model
     var model = this.createData(true);
     //send to parent
     this.props.getFormData(model);
   }
-
 
   handleStockPriceChange = (event) => {
     this.setState({
@@ -126,7 +112,7 @@ class OptionsForm extends React.Component {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing:this.state.optionsData.isEditing,
+        isEditing: this.state.optionsData.isEditing,
       },
     });
   };
@@ -146,7 +132,7 @@ class OptionsForm extends React.Component {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing:this.state.optionsData.isEditing,
+        isEditing: this.state.optionsData.isEditing,
       },
     });
   };
@@ -166,7 +152,7 @@ class OptionsForm extends React.Component {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing:this.state.optionsData.isEditing,
+        isEditing: this.state.optionsData.isEditing,
       },
     });
   };
@@ -186,7 +172,7 @@ class OptionsForm extends React.Component {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing:this.state.optionsData.isEditing,
+        isEditing: this.state.optionsData.isEditing,
       },
     });
   };
@@ -206,7 +192,7 @@ class OptionsForm extends React.Component {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing:this.state.optionsData.isEditing,
+        isEditing: this.state.optionsData.isEditing,
       },
     });
   };
@@ -226,7 +212,7 @@ class OptionsForm extends React.Component {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing:this.state.optionsData.isEditing,
+        isEditing: this.state.optionsData.isEditing,
       },
     });
   };
@@ -262,12 +248,24 @@ class OptionsForm extends React.Component {
         { volatility: "55%", delta: ".5", amount: 3 },
         { volatility: "59%", delta: ".2", amount: 1 },
       ],
-      GUID:newItem?this.uuidv4():this.state.optionsData.GUID , //TODO logic
+      GUID: newItem ? this.uuidv4() : this.state.optionsData.GUID, //TODO logic
     };
+  }
+
+  getSelected() {
+    var result = this.props.checksList.find((obj) => {
+      return obj.GUID === this.props.currentEditGuid;
+    });
+    if (this.props.currentEditGuid !== this.state.optionsData.GUID) {
+      this.setState({
+        optionsData: result,
+      });
+    }
   }
 
   render() {
     const { classes } = this.props;
+    this.getSelected(); //check to see if changes have been made since state needs to be kept seperately.
     return (
       <form className={classes.root} noValidate autoComplete="off">
         <div className={classes.formBack}>
@@ -280,11 +278,10 @@ class OptionsForm extends React.Component {
               <Typography
               //className={classes.heading}
               >
-                Selected Options
+                Add/Edit Options
               </Typography>
             </ExpansionPanelSummary>
 
-            
             <TextField
               className={classes.formControl}
               id="standard-select-CallPut"
@@ -358,7 +355,7 @@ class OptionsForm extends React.Component {
             <Button
               className={classes.formControlButton}
               variant="outlined"
-              color="secondary"
+              color="primary"
               onClick={this.prepareData}
             >
               Update
@@ -366,7 +363,7 @@ class OptionsForm extends React.Component {
             <Button
               className={classes.formControlButton}
               variant="outlined"
-              color="secondary"
+              color="primary"
               onClick={this.prepareDataNew}
             >
               Add

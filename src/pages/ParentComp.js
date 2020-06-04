@@ -129,7 +129,8 @@ export class ParentComp extends React.Component {
     mainObj.GUID = this.uuidv4();
     this.state = {
       checksList: [],
-      currentEdit: mainObj,
+      //currentEdit: mainObj,
+      currentEditGuid:mainObj.GUID,
       //calculatedPriceData: TempPrice,
       optionsData: mainObj,
     };
@@ -208,18 +209,15 @@ export class ParentComp extends React.Component {
     });
   }
 
-  saveText(text, filename) {
-    var a = document.createElement("a");
-    a.setAttribute(
-      "href",
-      "data:text/plain;charset=utf-8," + encodeURIComponent(text)
-    );
-    a.setAttribute("download", filename);
-    a.click();
-  }
 
   componentDidMount() {
     this.calculateOptionsPrice();
+  }
+
+  componentWillMount (){
+    this.setState({
+      checksList: this.state.checksList.concat(this.state.optionsData),
+    });
   }
 
   getFormData(val) {
@@ -245,12 +243,16 @@ export class ParentComp extends React.Component {
     }
   }
 
-  getGuid(row) {
-    return () => {
+  getGuid(e,row) {
+    //var a = row.target.value;
+    var result = this.state.checksList.find((obj) => {
+      return obj.GUID === row.target.value;
+    });
+    //return () => {
       this.setState({
-        currentEdit: row,
+        currentEditGuid: result.GUID,
       });
-    };
+    //};
   }
 
   render() {
@@ -270,9 +272,11 @@ export class ParentComp extends React.Component {
             <ItemsPanel
               classes={classes}
               clearSelected={() => this.clearSelected()}
-              getGuid={(val) => this.getGuid(val)}
+              getGuid={(e,val) => this.getGuid(val,e)}
               selectedItems={this.state.checksList}
               calculateOptionsPrice={() => this.calculateOptionsPrice()}
+              currentEditGuid={this.state.currentEditGuid}
+              checksList={this.state.checksList}
             ></ItemsPanel>
           </Grid>
           <Grid
@@ -282,7 +286,8 @@ export class ParentComp extends React.Component {
           >
             <OptionsForm
               getFormData={(val) => this.getFormData(val)}
-              currentEdit={this.state.currentEdit}
+              currentEditGuid={this.state.currentEditGuid}
+              checksList={this.state.checksList}
             ></OptionsForm>
           </Grid>
           {/* <Grid item xs={6}>

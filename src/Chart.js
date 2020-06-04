@@ -47,6 +47,12 @@ export default class Chart extends React.Component {
       .catch((error) => this.setState({ error, isLoading: false }));
   }
 
+  renderColorfulLegendText(value, entry) {
+    entry.color = "#ffffff";
+    const { color } = entry;
+    return <span style={{ color }}>{value}</span>;
+  }
+
   render() {
     //const length = this.props.priceArray; //.optionPrice.length;
     // const optData = this.props.optionsPriceData;
@@ -101,16 +107,15 @@ export default class Chart extends React.Component {
               domain={[xAxis]}
             />
             <YAxis minTickGap={0} tickSize={1} />
-            <Legend  stroke="white" style={{fill: "white"}} />
+            <Legend formatter={this.renderColorfulLegendText} />
             {/* <ReferenceLine
               x={breakEven.sPrice}
               stroke="aqua"
               strokeWidth={3}
               label={<Label value="Break-Even" fill={"white"} />}
             /> */}
-            <Tooltip cursor={{ stroke: 'red', strokeWidth: 2 }} />
+            <Tooltip cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }} />
             {GetLines(formatedData)}
-           
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -123,7 +128,7 @@ function fMat(myUsers) {
   for (let i = 0; i < myUsers[0].length; i++) {
     var tobj = { x: myUsers[0][i].sPrice };
     for (let j = 0; j < myUsers.length; j++) {
-      tobj["DAY" + j] = myUsers[j][i].oPrice;
+      tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
     }
     finalObj.push(tobj);
   }
@@ -137,12 +142,30 @@ function GetLines(arrs) {
     const LengthOfObj = keyz.length;
 
     for (let i = 1; i < LengthOfObj; i++) {
-      //for (let j = 0; j < arrs.length; j++) {
-        LineList.push(<Line stroke="#8884d8" dataKey={keyz[i]} dot={false} />);
-      //}
+      var cols = GetColors();
+      let rgb =
+        "rgb(" +
+        cols.r.toString() +
+        "," +
+        cols.g.toString() +
+        "," +
+        cols.b.toString() +
+        ")";
+      LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
     }
-
 
     return LineList;
   } else return null;
+}
+
+function GetColors() {
+  var cols = { r: 0, g: 0, b: 0 };
+  let count = 0;
+  while (cols.r + cols.g + cols.b < 300 && count < 4) {
+    cols.r = Math.floor(Math.random() * 255);
+    cols.g = Math.floor(Math.random() * 255);
+    cols.b = Math.floor(Math.random() * 255);
+    count++;
+  }
+  return cols;
 }
