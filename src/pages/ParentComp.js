@@ -100,6 +100,11 @@ const useRowStyles = (theme) => ({
   },
 });
 
+const TempPrice =[
+  [
+    //{oPrice:0,sPrice:0}
+  ],
+]
 const mainObj = {
   type: "call",
   buySell: "buy",
@@ -114,7 +119,10 @@ const mainObj = {
   ],
   GUID: "",
   isEditing: false,
+  priceArray:TempPrice,
 };
+
+
 export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
@@ -122,25 +130,8 @@ export class ParentComp extends React.Component {
     this.state = {
       checksList: [],
       currentEdit: mainObj,
-      optionsPriceData: {
-        optionPrice: [{ oPrice: 0, sPrice: 0 }],
-      },
+      //calculatedPriceData: TempPrice,
       optionsData: mainObj,
-      // {
-      //   type: "call",
-      //   buySell: "buy",
-      //   stockPrice: 300,
-      //   strikePrice: 304,
-      //   expiration: 6,
-      //   interestFree: .02,
-      //   volatility: .55,
-      //   greeks: [
-      //     { volatility: "55%", delta: ".5", amount: 3 },
-      //     { volatility: "59%", delta: ".2", amount: 1 },
-      //   ],
-      //   GUID: this.uuidv4(),
-
-      // },
     };
     this.addData = this.addData.bind(this);
     this.clearSelected = this.clearSelected.bind(this);
@@ -199,9 +190,11 @@ export class ParentComp extends React.Component {
     if (!this.state.checksList[this.state.checksList.length - 1])
       input = this.state.optionsData;
     else input = this.state.checksList[this.state.checksList.length - 1];
+
     const res = GetSchole(input);
+    //input = this.state.calculatedPriceData;
     this.setState({
-      optionsPriceData: res,
+      optionsData: res,
     });
   }
 
@@ -230,27 +223,22 @@ export class ParentComp extends React.Component {
   }
 
   getFormData(val) {
-    var result = this.state.checksList.find((obj) => {
-      return obj.GUID === val.GUID;
-    });
-    var indexFound =-1;
+    var indexFound = -1;
     for (let i = 0; i < this.state.checksList.length; i++) {
-      if(this.state.checksList[i].GUID === val.GUID)
-      {
+      if (this.state.checksList[i].GUID === val.GUID) {
         indexFound = i;
         break;
       }
-      
     }
 
-    if (indexFound ===-1) { //add
+    if (indexFound === -1) {
+      //add
       this.setState({
         checksList: this.state.checksList.concat(val),
       });
-    }
-    else{
+    } else {
       var newState = this.state.checksList;
-      newState[indexFound] = val
+      newState[indexFound] = val;
       this.setState({
         checksList: newState,
       });
@@ -274,7 +262,7 @@ export class ParentComp extends React.Component {
           <Grid container>
             <Chart
               selectedItems={this.state.checksList}
-              optionsPriceData={this.state.optionsPriceData}
+              priceArray={this.state.optionsData.priceArray}
             ></Chart>
           </Grid>
 
