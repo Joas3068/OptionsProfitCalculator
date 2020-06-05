@@ -38,7 +38,6 @@ class ItemsPanel extends React.Component {
           </Grid>
           <SelectedItems
             className={classes}
-            selectedItems={this.props.selectedItems}
             clearSelected={() => this.props.clearSelected()}
             getGuid={(e) => this.props.getGuid(e)}
             currentEditGuid={this.props.currentEditGuid}

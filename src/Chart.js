@@ -108,13 +108,19 @@ export default class Chart extends React.Component {
             />
             <YAxis minTickGap={0} tickSize={1} />
             <Legend formatter={this.renderColorfulLegendText} />
-            {/* <ReferenceLine
-              x={breakEven.sPrice}
-              stroke="aqua"
-              strokeWidth={3}
-              label={<Label value="Break-Even" fill={"white"} />}
-            /> */}
-            <Tooltip cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }} />
+            <ReferenceLine
+              y={0}
+              stroke="white"
+              strokeWidth={1}
+              label={<Label value="Break-Even" fill={"white"} position="insideTopLeft"/>}
+            />
+            <Tooltip 
+            //viewBox={{ x: 0, y: 0, width: 400, height: 400 }} 
+            position={{ x: 400, y: 0 }} 
+            //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }} 
+            cursor={false}
+            animationEasing={"linear"}
+            />
             {GetLines(formatedData)}
           </LineChart>
         </ResponsiveContainer>
@@ -161,7 +167,7 @@ function GetLines(arrs) {
 function GetColors() {
   var cols = { r: 0, g: 0, b: 0 };
   let count = 0;
-  while (cols.r + cols.g + cols.b < 300 && count < 4) {
+  while (cols.r + cols.g + cols.b < 200 && count < 4) {
     cols.r = Math.floor(Math.random() * 255);
     cols.g = Math.floor(Math.random() * 255);
     cols.b = Math.floor(Math.random() * 255);

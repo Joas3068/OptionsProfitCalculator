@@ -100,11 +100,11 @@ const useRowStyles = (theme) => ({
   },
 });
 
-const TempPrice =[
+const TempPrice = [
   [
     //{oPrice:0,sPrice:0}
   ],
-]
+];
 const mainObj = {
   type: "call",
   buySell: "buy",
@@ -119,9 +119,8 @@ const mainObj = {
   ],
   GUID: "",
   isEditing: false,
-  priceArray:TempPrice,
+  priceArray: TempPrice,
 };
-
 
 export class ParentComp extends React.Component {
   constructor(props) {
@@ -130,7 +129,7 @@ export class ParentComp extends React.Component {
     this.state = {
       checksList: [],
       //currentEdit: mainObj,
-      currentEditGuid:mainObj.GUID,
+      currentEditGuid: mainObj.GUID,
       //calculatedPriceData: TempPrice,
       optionsData: mainObj,
     };
@@ -155,8 +154,27 @@ export class ParentComp extends React.Component {
   }
 
   clearSelected() {
+    var newObjec = [
+      {
+        type: "call",
+        buySell: "buy",
+        stockPrice: 0,
+        strikePrice: 0,
+        expiration: 1,
+        interestFree: 0,
+        volatility: 0,
+        greeks: [
+          { volatility: "55%", delta: ".5", amount: 3 },
+          { volatility: "59%", delta: ".2", amount: 1 },
+        ],
+        GUID: this.uuidv4(),
+        isEditing: false,
+        priceArray: TempPrice,
+      },
+    ];
     this.setState({
-      checksList: [],
+      checksList: newObjec,
+      currentEditGuid:newObjec[0].GUID,
     });
   }
 
@@ -209,12 +227,11 @@ export class ParentComp extends React.Component {
     });
   }
 
-
   componentDidMount() {
     this.calculateOptionsPrice();
   }
 
-  componentWillMount (){
+  componentWillMount() {
     this.setState({
       checksList: this.state.checksList.concat(this.state.optionsData),
     });
@@ -243,15 +260,15 @@ export class ParentComp extends React.Component {
     }
   }
 
-  getGuid(e,row) {
+  getGuid(e, row) {
     //var a = row.target.value;
     var result = this.state.checksList.find((obj) => {
       return obj.GUID === row.target.value;
     });
     //return () => {
-      this.setState({
-        currentEditGuid: result.GUID,
-      });
+    this.setState({
+      currentEditGuid: result.GUID,
+    });
     //};
   }
 
@@ -272,8 +289,8 @@ export class ParentComp extends React.Component {
             <ItemsPanel
               classes={classes}
               clearSelected={() => this.clearSelected()}
-              getGuid={(e,val) => this.getGuid(val,e)}
-              selectedItems={this.state.checksList}
+              getGuid={(e, val) => this.getGuid(val, e)}
+              //selectedItems={this.state.checksList}
               calculateOptionsPrice={() => this.calculateOptionsPrice()}
               currentEditGuid={this.state.currentEditGuid}
               checksList={this.state.checksList}

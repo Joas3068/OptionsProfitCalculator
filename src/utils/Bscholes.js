@@ -23,7 +23,8 @@ function GetCalcArr(lastItem,i){
 
 
 var pArr = []
-  for (let index = stockPrice - 20; index < (stockPrice + 20); index += 0.25) {
+let multiplier = Math.floor(stockPrice/12);
+  for (let index = stockPrice - multiplier; index < (stockPrice + multiplier); index += 0.25) {
     var BS = BlackScholes(type, index, strikeX, timeYears, r, volatility) * 100;
     if (lastItem.buySell === "buy" ||lastItem.buySell === "Buy")
     {

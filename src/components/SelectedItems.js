@@ -24,6 +24,7 @@ class SelectedItems extends React.Component {
     const cGui = this.props.checksList.find((obj) => {
       return obj.GUID === this.props.currentEditGuid;
     });
+
     return (
       <TableContainer component={Paper}>
         <Table
@@ -54,7 +55,7 @@ class SelectedItems extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.props.selectedItems.map((row) => (
+            {this.props.checksList.map((row) => (
               <TableRow key={row.GUID}>
                 <TableCell align="left">
                   <Checkbox
