@@ -19,6 +19,7 @@ class ItemsPanel extends React.Component {
             ? classes.expPanelCall
             : classes.expPanelPut
         }
+        defaultExpanded={true}
       >
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}

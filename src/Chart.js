@@ -10,20 +10,22 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   Legend,
+  ReferenceDot,
 } from "recharts";
 
-export default class Chart extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = this.initialState(this.props.selectedItems);
-  }
 
-  initialState(selectedItems) {
-    var start = {
-      selectedItems,
-    };
-    return start;
-  }
+export default class Chart extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  //  // this.state = this.initialState(this.props.selectedItems);
+  // }
+
+  // initialState(selectedItems) {
+  //   var start = {
+  //     selectedItems,
+  //   };
+  //   return start;
+  // }
   fetchUsers() {
     fetch()
       .then((response) => response.json())
@@ -54,33 +56,26 @@ export default class Chart extends React.Component {
   }
 
   render() {
-    //const length = this.props.priceArray; //.optionPrice.length;
-    // const optData = this.props.optionsPriceData;
-    // const xmin = this.props.optionsPriceData.optionPrice[0].sPrice;
+    var result = this.props.checksList.find((obj) => {
+      return obj.GUID === this.props.currentEditGuid;
+    }).priceArray;
 
-    // const xmax = this.props.optionsPriceData.optionPrice[length - 1].sPrice;
     var xAxis = [];
+    var formatedData = [];
+    var getBreakEven = [];
 
-    for (let i = 0; i < this.props.priceArray[0].length; i++) {
-      xAxis.push(this.props.priceArray[0][i].sPrice);
+    if(result.length > 0)
+    {
+      for (let i = 0; i < result[0].length; i++) {
+        xAxis.push(result[0][i].sPrice);
+      }
+  
+       formatedData = fMat(result);
+       getBreakEven = getBreakEvens(formatedData);
     }
 
-    var breakEven = { oPrice: 0, sPrice: 0 };
-    var formatedData = fMat(this.props.priceArray);
-    // var prevVal = -1;
-    // var getFirstPositive = 0;
-    // while (
-    //   getFirstPositive < optData.optionPrice.length-1 &&
-    //   optData.optionPrice[getFirstPositive].oPrice <= 0
-
-    // ) {
-    //   getFirstPositive++;
-    // }
-
-    // if (optData.optionPrice[getFirstPositive].oPrice === 0)
-    //   breakEven = optData.optionPrice[getFirstPositive];
-    // else breakEven = optData.optionPrice[getFirstPositive - 1];
-
+    var a = this.props.checksList;
+    
     return (
       <div style={{ width: "100%", height: 700 }}>
         <ResponsiveContainer>
@@ -112,14 +107,33 @@ export default class Chart extends React.Component {
               y={0}
               stroke="white"
               strokeWidth={1}
-              label={<Label value="Break-Even" fill={"white"} position="insideTopLeft"/>}
+              label={
+                <Label
+                  value="Break-Even"
+                  fill={"white"}
+                  position="insideTopLeft"
+                />
+              }
             />
-            <Tooltip 
-            //viewBox={{ x: 0, y: 0, width: 400, height: 400 }} 
-            position={{ x: 400, y: 0 }} 
-            //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }} 
-            cursor={false}
-            animationEasing={"linear"}
+            {/* <ReferenceLine
+              x={700}
+              stroke="white"
+              strokeWidth={1}
+              label={
+                <Label
+                  value="Break-Even"
+                  fill={"white"}
+                  position="insideTopLeft"
+                />
+              }
+            /> */}
+            {PlotBreakEvens(getBreakEven)}
+            <Tooltip
+              //viewBox={{ x: 0, y: 0, width: 400, height: 400 }}
+              position={{ x: 400, y: 0 }}
+              //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
+              cursor={false}
+              animationEasing={"linear"}
             />
             {GetLines(formatedData)}
           </LineChart>
@@ -128,6 +142,39 @@ export default class Chart extends React.Component {
     );
   }
 }
+
+
+
+
+function getBreakEvens(fmtArray) {
+  var keys;
+  var dataPoints = [];
+  if (fmtArray.length > 0) {
+    keys = Object.keys(fmtArray[0]);
+    var foundKeys = [];
+    for (let i = 0; i < keys.length; i++) {
+      let currentKey = keys[i];
+      let j = 1;
+      if (currentKey === "x" || foundKeys.includes(currentKey)) continue;
+      else {
+        let currentSign = fmtArray[j-1][currentKey] >= 0 ? 1 : -1;
+        while (j < fmtArray.length) {
+          if (
+            fmtArray[j][currentKey] / Math.abs(fmtArray[j][currentKey]) !==
+            currentSign
+          ) {
+            dataPoints.push({ x: fmtArray[j-1].x, Exp: currentKey });
+            foundKeys.push(currentKey);
+            break;
+          }
+          j++;
+        }
+      }
+    }
+  }
+  return dataPoints;
+}
+
 
 function fMat(myUsers) {
   var finalObj = [];
@@ -139,6 +186,24 @@ function fMat(myUsers) {
     finalObj.push(tobj);
   }
   return finalObj;
+}
+
+function PlotBreakEvens(breakEvenList) {
+  var refLines = [];
+
+  for (let i = 0; i < breakEvenList.length; i++) {
+    refLines.push(
+      <ReferenceDot
+        x={breakEvenList[i].x}
+        y={0}
+        //stroke="#ff33cc"
+        fill="rgb(128, 0, 0)"
+        r={4}
+      />
+    );
+  }
+
+  return refLines;
 }
 
 function GetLines(arrs) {

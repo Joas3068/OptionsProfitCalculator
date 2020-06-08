@@ -112,7 +112,8 @@ class OptionsForm extends React.PureComponent {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing: this.state.optionsData.isEditing,
+        priceArray: this.state.optionsData.priceArray,
+        breakEvens: this.state.optionsData.breakEvens,
       },
     });
   };
@@ -132,7 +133,7 @@ class OptionsForm extends React.PureComponent {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing: this.state.optionsData.isEditing,
+        priceArray: this.state.optionsData.priceArray,
       },
     });
   };
@@ -152,7 +153,8 @@ class OptionsForm extends React.PureComponent {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing: this.state.optionsData.isEditing,
+        priceArray: this.state.optionsData.priceArray,
+        breakEvens: this.state.optionsData.breakEvens,
       },
     });
   };
@@ -172,7 +174,7 @@ class OptionsForm extends React.PureComponent {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing: this.state.optionsData.isEditing,
+        priceArray: this.state.optionsData.priceArray,
       },
     });
   };
@@ -192,7 +194,7 @@ class OptionsForm extends React.PureComponent {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing: this.state.optionsData.isEditing,
+        priceArray: this.state.optionsData.priceArray,
       },
     });
   };
@@ -212,7 +214,8 @@ class OptionsForm extends React.PureComponent {
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.state.optionsData.GUID,
-        isEditing: this.state.optionsData.isEditing,
+        priceArray: this.state.optionsData.priceArray,
+        breakEvens: this.state.optionsData.breakEvens,
       },
     });
   };
@@ -249,6 +252,8 @@ class OptionsForm extends React.PureComponent {
         { volatility: "59%", delta: ".2", amount: 1 },
       ],
       GUID: newItem ? this.uuidv4() : this.state.optionsData.GUID, //TODO logic
+      priceArray: newItem ? [] : this.state.optionsData.priceArray,
+      breakEvens: this.state.optionsData.breakEvens,
     };
   }
 
@@ -269,7 +274,7 @@ class OptionsForm extends React.PureComponent {
     return (
       <form className={classes.root} noValidate autoComplete="off">
         <div className={classes.formBack}>
-          <ExpansionPanel className={classes.formBack}>
+          <ExpansionPanel className={classes.formBack} defaultExpanded={true}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"

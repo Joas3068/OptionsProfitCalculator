@@ -4,11 +4,12 @@ import Grid from "@material-ui/core/Grid";
 import Chart from "../Chart";
 import { withStyles } from "@material-ui/core/styles";
 import ItemsPanel from "../components/ItemsPanel";
-import GetSchole from "../utils/Bscholes";
+import {GetSchole,GetBreakEvens,CalcBScholes} from "../utils/Bscholes";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsForm from "../components/OptionsForm";
+import { Button } from "@material-ui/core";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -100,43 +101,43 @@ const useRowStyles = (theme) => ({
   },
 });
 
-const TempPrice = [
-  [
-    //{oPrice:0,sPrice:0}
-  ],
+const TempPrice = [[]];
+const mainObj = [
+  {
+    type: "call",
+    buySell: "buy",
+    stockPrice: 700,
+    strikePrice: 750,
+    expiration: 6,
+    interestFree: 0.02,
+    volatility: 89,
+    greeks: [
+      { volatility: "55%", delta: ".5", amount: 3 },
+      { volatility: "59%", delta: ".2", amount: 1 },
+    ],
+    GUID: "",
+    isEditing: false,
+    priceArray: TempPrice,
+    breakEvens:[],
+  },
 ];
-const mainObj = {
-  type: "call",
-  buySell: "buy",
-  stockPrice: 304.5,
-  strikePrice: 306,
-  expiration: 3,
-  interestFree: 0.02,
-  volatility: 55,
-  greeks: [
-    { volatility: "55%", delta: ".5", amount: 3 },
-    { volatility: "59%", delta: ".2", amount: 1 },
-  ],
-  GUID: "",
-  isEditing: false,
-  priceArray: TempPrice,
-};
 
 export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
-    mainObj.GUID = this.uuidv4();
+    mainObj[0].GUID = this.uuidv4(); //create first entry with new GUID
     this.state = {
-      checksList: [],
-      //currentEdit: mainObj,
-      currentEditGuid: mainObj.GUID,
-      //calculatedPriceData: TempPrice,
-      optionsData: mainObj,
+      checksList: mainObj, //current options
+      currentEditGuid: mainObj[0].GUID, //GUID to access checksList
+      calculatedPriceData: TempPrice, //final calcs for Charts
+      optionsData: mainObj[0], //remove this
+      formattedData:[],
     };
     this.addData = this.addData.bind(this);
     this.clearSelected = this.clearSelected.bind(this);
     this.calculateOptionsPrice = this.calculateOptionsPrice.bind(this);
     this.getGuid = this.getGuid.bind(this);
+    //this.calcData = this.calcData.bind(this);
   }
 
   addData(val) {
@@ -174,7 +175,7 @@ export class ParentComp extends React.Component {
     ];
     this.setState({
       checksList: newObjec,
-      currentEditGuid:newObjec[0].GUID,
+      currentEditGuid: newObjec[0].GUID,
     });
   }
 
@@ -204,16 +205,31 @@ export class ParentComp extends React.Component {
     };
   }
 
-  calculateOptionsPrice() {
-    var input;
-    if (!this.state.checksList[this.state.checksList.length - 1])
-      input = this.state.optionsData;
-    else input = this.state.checksList[this.state.checksList.length - 1];
+  //returns current object related to state GUID
+  getCurrentOptionObj() {
+    var result = this.state.checksList.find((obj) => {
+      return obj.GUID === this.state.currentEditGuid;
+    });
+    return result;
+  }
 
-    const res = GetSchole(input);
-    //input = this.state.calculatedPriceData;
+  replaceOptionData(arrayCopy, replaceObj) {
+    let index = arrayCopy.findIndex((x) => x.GUID === replaceObj.GUID);
+
+    arrayCopy[index] = replaceObj;
+
+    return arrayCopy;
+  }
+
+  calculateOptionsPrice() {
+    var inpu = this.getCurrentOptionObj();
+    const res = GetSchole(inpu);
+
+    //Make new calcs on price array for each object
+    var newArr = this.replaceOptionData([...this.state.checksList], res);
+    GetBreakEvens(this.state.checksList);
     this.setState({
-      optionsData: res,
+      checksList: newArr,
     });
   }
 
@@ -227,14 +243,11 @@ export class ParentComp extends React.Component {
     });
   }
 
-  componentDidMount() {
-    this.calculateOptionsPrice();
-  }
-
   componentWillMount() {
-    this.setState({
-      checksList: this.state.checksList.concat(this.state.optionsData),
-    });
+    // this.setState({
+    //   checksList: this.state.checksList.concat(this.state.optionsData),
+    // });
+    this.calculateOptionsPrice();
   }
 
   getFormData(val) {
@@ -252,6 +265,7 @@ export class ParentComp extends React.Component {
         checksList: this.state.checksList.concat(val),
       });
     } else {
+      //var newState = [...this.state.checksList];
       var newState = this.state.checksList;
       newState[indexFound] = val;
       this.setState({
@@ -272,19 +286,26 @@ export class ParentComp extends React.Component {
     //};
   }
 
+  calcData(){
+    this.setState({
+      currentEditGuid: [],
+    });
+  }
   render() {
     const { classes } = this.props;
 
+    var a = this.state.checksList[0].priceArray;
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid container>
             <Chart
-              selectedItems={this.state.checksList}
-              priceArray={this.state.optionsData.priceArray}
+              checksList={this.state.checksList}
+              currentEditGuid={this.state.currentEditGuid}
+              priceArray={this.getCurrentOptionObj()}
             ></Chart>
           </Grid>
-
+          {/* <Button onClick={this.calcData()}></Button> */}
           <Grid spacing={3} item xs={12}>
             <ItemsPanel
               classes={classes}
@@ -342,6 +363,18 @@ export class ParentComp extends React.Component {
       </div>
     );
   }
+}
+
+function fMat(myUsers) {
+  var finalObj = [];
+  for (let i = 0; i < myUsers[0].length; i++) {
+    var tobj = { x: myUsers[0][i].sPrice };
+    for (let j = 0; j < myUsers.length; j++) {
+      tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
+    }
+    finalObj.push(tobj);
+  }
+  return finalObj;
 }
 
 export default withStyles(useRowStyles)(ParentComp);
