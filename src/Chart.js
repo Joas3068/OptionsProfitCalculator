@@ -59,6 +59,7 @@ export default class Chart extends React.Component {
     var xAxis = [];
     var formatedData = [];
     var getBreakEven = [];
+    var xMin=0,xMax=0;
     if(this.props.formattedData.length === 0)
     {
       var result = this.props.checksList.find((obj) => {
@@ -78,9 +79,11 @@ export default class Chart extends React.Component {
     }
     else{
       formatedData = this.props.formattedData
-      for (let i = 0; i < formatedData.length; i++) {
-        xAxis.push(formatedData[i].x);
-      }
+      xMin = formatedData[0].x;
+      xMax = formatedData[formatedData.length-1].x;
+      // for (let i = 0; i < formatedData.length; i++) {
+      //   xAxis.push(formatedData[i].x);
+      // }
     }
     // var result = this.props.checksList.find((obj) => {
     //   return obj.GUID === this.props.currentEditGuid;
@@ -99,9 +102,6 @@ export default class Chart extends React.Component {
     //    formatedData = fMat(result);
     //    getBreakEven = getBreakEvens(formatedData);
     // }
-
-    var a = this.props.checksList;
-    
     return (
       <div style={{ width: "100%", height: 700 }}>
         <ResponsiveContainer>
@@ -125,7 +125,7 @@ export default class Chart extends React.Component {
               //tickSize={1}
               // type="number"
 
-              domain={[xAxis]}
+              domain={[{xMin},{xMax}]}
             />
             <YAxis minTickGap={0} tickSize={1} />
             <Legend formatter={this.renderColorfulLegendText} />
@@ -153,7 +153,7 @@ export default class Chart extends React.Component {
                 />
               }
             /> */}
-            {PlotBreakEvens(getBreakEven)}
+            {/* {PlotBreakEvens(getBreakEven)} */}
             <Tooltip
               //viewBox={{ x: 0, y: 0, width: 400, height: 400 }}
               position={{ x: 400, y: 0 }}

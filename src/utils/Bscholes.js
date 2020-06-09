@@ -89,13 +89,14 @@ export function CalcBScholes(checksList) {
           var sign = checksList[i].buySell === "sell" ? -1 : 1;
           if (entryAtStockPrice["DAY" + (j + 1)] === undefined)
             entryAtStockPrice["DAY" + (j + 1)] = 0;
-          var tempEnt = entryAtStockPrice["DAY"+(j+1)];
+          if (isNaN(BS)) BS = 0;
+          var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
           entryAtStockPrice["DAY" + (j + 1)] =
-           ((sign * BS) - (checksList[i].optionPriceAtPurchase)) + (tempEnt);
-            // sign *
-            // (BS +
-            //   checksList[i].optionPriceAtPurchase +
-            //   entryAtStockPrice["DAY" + (j + 1)]);
+            sign * BS - checksList[i].optionPriceAtPurchase + tempEnt;
+          // sign *
+          // (BS +
+          //   checksList[i].optionPriceAtPurchase +
+          //   entryAtStockPrice["DAY" + (j + 1)]);
         }
       }
       finalCalcs.push(entryAtStockPrice);

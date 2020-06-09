@@ -106,11 +106,62 @@ const mainObj = [
   {
     type: "call",
     buySell: "buy",
-    stockPrice: 700,
-    strikePrice: 750,
-    expiration: 1,
+    stockPrice: 450,
+    strikePrice: 465,
+    expiration: 4,
     interestFree: 0.02,
-    volatility: 89,
+    volatility: 25,
+    greeks: [
+      { volatility: "55%", delta: ".5", amount: 3 },
+      { volatility: "59%", delta: ".2", amount: 1 },
+    ],
+    GUID: "",
+    isEditing: false,
+    priceArray: TempPrice,
+    breakEvens:[],
+  },
+  {
+    type: "call",
+    buySell: "sell",
+    stockPrice: 450,
+    strikePrice: 460,
+    expiration: 4,
+    interestFree: 0.02,
+    volatility: 22,
+    greeks: [
+      { volatility: "55%", delta: ".5", amount: 3 },
+      { volatility: "59%", delta: ".2", amount: 1 },
+    ],
+    GUID: "",
+    isEditing: false,
+    priceArray: TempPrice,
+    breakEvens:[],
+  },
+  {
+    type: "put",
+    buySell: "buy",
+    stockPrice: 450,
+    strikePrice: 440,
+    expiration: 4,
+    interestFree: 0.02,
+    volatility: 22,
+    greeks: [
+      { volatility: "55%", delta: ".5", amount: 3 },
+      { volatility: "59%", delta: ".2", amount: 1 },
+    ],
+    GUID: "",
+    isEditing: false,
+    priceArray: TempPrice,
+    breakEvens:[],
+  },
+   {
+    type: "put",
+    buySell: "sell",
+    stockPrice: 450,
+    strikePrice: 445,
+    expiration: 4,
+    interestFree: 0.02,
+    volatility: 22,
     greeks: [
       { volatility: "55%", delta: ".5", amount: 3 },
       { volatility: "59%", delta: ".2", amount: 1 },
@@ -126,6 +177,7 @@ export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
     mainObj[0].GUID = this.uuidv4(); //create first entry with new GUID
+    mainObj[1].GUID = this.uuidv4();
     this.state = {
       checksList: mainObj, //current options
       currentEditGuid: mainObj[0].GUID, //GUID to access checksList
@@ -272,6 +324,7 @@ export class ParentComp extends React.Component {
         checksList: newState,
       });
     }
+    this.calcData()
   }
 
   getGuid(e, row) {
@@ -296,10 +349,10 @@ export class ParentComp extends React.Component {
   render() {
     const { classes } = this.props;
 
-    var a = this.state.checksList[0].priceArray;
+    //var a = this.state.checksList[0].priceArray;
     return (
       <div className={classes.root}>
-      <Button onClick={this.calcData}>asdfasdfcv</Button>
+      {/* <Button onClick={this.calcData}>asdfasdfcv</Button> */}
         <Grid container spacing={3}>
           <Grid container>
             <Chart
