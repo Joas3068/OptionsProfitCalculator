@@ -40,7 +40,69 @@ export function GetBreakEvens(checksList) {
   // }
 }
 
+export function CalcBScholes(checksList) {
+  var finalCalcs = []; //{x:3,DAY1:334 etc...}
 
+  if (checksList.length > 0) {
+    //get starting prices
+    //var type = checksList[0].type;
+    var stockPrice = Number(checksList[0].stockPrice); //get starting price
+    //var strikeX = Number(checksList[0].strikePrice);
+    //var timeYears = (checksList[0].expiration) / 365;
+    //var r = checksList[0].interestFree;
+    //var volatility = checksList[0].volatility / 100;
+
+    let multiplier = Math.floor(stockPrice / 12); //tweak graph size here
+    for (
+      let index = stockPrice - multiplier;
+      index < stockPrice + multiplier;
+      index += 0.5 //this will change resolution of graph. the higher the number the less ticks
+    ) {
+      var entryAtStockPrice = {};
+      entryAtStockPrice["x"] = index; //add stock price on x axis
+      for (let i = 0; i < checksList.length; i++) {
+        //var entryAtStockPrice = {};
+        if (checksList.optionPriceAtPurchase === undefined) {
+          checksList[i].optionPriceAtPurchase =
+            BlackScholes(
+              checksList[i].type,
+              checksList[i].stockPrice,
+              checksList[i].strikePrice,
+              checksList[i].expiration / 365, //needs to be in years
+              checksList[i].interestFree, //this will be in decimal format
+              checksList[i].volatility / 100 //divide by 100 to get percent
+            ) * 100;
+          if (checksList[i].buySell === "sell")
+            checksList[i].optionPriceAtPurchase *= -1;
+        }
+
+        for (let j = 0; j <= checksList[i].expiration; j++) {
+          //iterate through expirations
+
+          var type = checksList[i].type;
+          var strikeX = Number(checksList[i].strikePrice);
+          var timeYears = (checksList[i].expiration - j) / 365;
+          var r = checksList[i].interestFree;
+          var volatility = checksList[i].volatility / 100;
+          var BS =
+            BlackScholes(type, index, strikeX, timeYears, r, volatility) * 100; //current price
+          var sign = checksList[i].buySell === "sell" ? -1 : 1;
+          if (entryAtStockPrice["DAY" + (j + 1)] === undefined)
+            entryAtStockPrice["DAY" + (j + 1)] = 0;
+          var tempEnt = entryAtStockPrice["DAY"+(j+1)];
+          entryAtStockPrice["DAY" + (j + 1)] =
+           ((sign * BS) - (checksList[i].optionPriceAtPurchase)) + (tempEnt);
+            // sign *
+            // (BS +
+            //   checksList[i].optionPriceAtPurchase +
+            //   entryAtStockPrice["DAY" + (j + 1)]);
+        }
+      }
+      finalCalcs.push(entryAtStockPrice);
+    }
+    return finalCalcs;
+  } else return [];
+}
 function GetCalcArr(lastItem, i) {
   var type = lastItem.type;
   var stockPrice = Number(lastItem.stockPrice);
@@ -50,11 +112,11 @@ function GetCalcArr(lastItem, i) {
   var volatility = lastItem.volatility / 100;
 
   var pArr = [];
-  let multiplier = Math.floor(stockPrice / 12); //tweak graph size here
+  let multiplier = Math.floor(stockPrice / (6 * (1 / volatility))); //tweak graph size here
   for (
     let index = stockPrice - multiplier;
     index < stockPrice + multiplier;
-    index += 0.25 //this will change resolution of graph. the higher the number the less ticks
+    index += (multiplier * 2) / stockPrice //this will change resolution of graph. the higher the number the less ticks
   ) {
     var BS = BlackScholes(type, index, strikeX, timeYears, r, volatility) * 100;
     if (lastItem.buySell === "buy") {

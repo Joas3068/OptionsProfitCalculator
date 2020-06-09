@@ -108,7 +108,7 @@ const mainObj = [
     buySell: "buy",
     stockPrice: 700,
     strikePrice: 750,
-    expiration: 6,
+    expiration: 1,
     interestFree: 0.02,
     volatility: 89,
     greeks: [
@@ -137,7 +137,7 @@ export class ParentComp extends React.Component {
     this.clearSelected = this.clearSelected.bind(this);
     this.calculateOptionsPrice = this.calculateOptionsPrice.bind(this);
     this.getGuid = this.getGuid.bind(this);
-    //this.calcData = this.calcData.bind(this);
+    this.calcData = this.calcData.bind(this);
   }
 
   addData(val) {
@@ -287,8 +287,10 @@ export class ParentComp extends React.Component {
   }
 
   calcData(){
-    this.setState({
-      currentEditGuid: [],
+
+    var a = CalcBScholes(this.state.checksList);
+        this.setState({
+          formattedData: a,
     });
   }
   render() {
@@ -297,16 +299,19 @@ export class ParentComp extends React.Component {
     var a = this.state.checksList[0].priceArray;
     return (
       <div className={classes.root}>
+      <Button onClick={this.calcData}>asdfasdfcv</Button>
         <Grid container spacing={3}>
           <Grid container>
             <Chart
               checksList={this.state.checksList}
               currentEditGuid={this.state.currentEditGuid}
               priceArray={this.getCurrentOptionObj()}
+              formattedData={this.state.formattedData}
             ></Chart>
           </Grid>
-          {/* <Button onClick={this.calcData()}></Button> */}
+          
           <Grid spacing={3} item xs={12}>
+          
             <ItemsPanel
               classes={classes}
               clearSelected={() => this.clearSelected()}
@@ -355,6 +360,7 @@ export class ParentComp extends React.Component {
           showLabels
           className={classes.root}
         >
+        
           <BottomNavigationAction
             icon={<GitHubIcon />}
             href={"https://github.com/Joas3068/OptionsProfitCalculator"}

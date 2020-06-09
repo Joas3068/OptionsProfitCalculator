@@ -56,23 +56,49 @@ export default class Chart extends React.Component {
   }
 
   render() {
-    var result = this.props.checksList.find((obj) => {
-      return obj.GUID === this.props.currentEditGuid;
-    }).priceArray;
-
     var xAxis = [];
     var formatedData = [];
     var getBreakEven = [];
-
-    if(result.length > 0)
+    if(this.props.formattedData.length === 0)
     {
-      for (let i = 0; i < result[0].length; i++) {
-        xAxis.push(result[0][i].sPrice);
-      }
+      var result = this.props.checksList.find((obj) => {
+        return obj.GUID === this.props.currentEditGuid;
+      }).priceArray;
+
   
-       formatedData = fMat(result);
-       getBreakEven = getBreakEvens(formatedData);
+      if(result.length > 0)
+      {
+        for (let i = 0; i < result[0].length; i++) {
+          xAxis.push(result[0][i].sPrice);
+        }
+    
+         formatedData = fMat(result);
+         getBreakEven = getBreakEvens(formatedData);
+      }
     }
+    else{
+      formatedData = this.props.formattedData
+      for (let i = 0; i < formatedData.length; i++) {
+        xAxis.push(formatedData[i].x);
+      }
+    }
+    // var result = this.props.checksList.find((obj) => {
+    //   return obj.GUID === this.props.currentEditGuid;
+    // }).priceArray;
+
+    // var xAxis = [];
+    // var formatedData = [];
+    // var getBreakEven = [];
+
+    // if(result.length > 0)
+    // {
+    //   for (let i = 0; i < result[0].length; i++) {
+    //     xAxis.push(result[0][i].sPrice);
+    //   }
+  
+    //    formatedData = fMat(result);
+    //    getBreakEven = getBreakEvens(formatedData);
+    // }
 
     var a = this.props.checksList;
     
