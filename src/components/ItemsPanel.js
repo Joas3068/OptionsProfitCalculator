@@ -30,12 +30,12 @@ class ItemsPanel extends React.Component {
         </ExpansionPanelSummary>
         <Paper className={classes.paper}>
           <Grid item xs={12}>
-            <HeaderBlock
+            {/* <HeaderBlock
               classes={classes}
               clearSelected={() => this.props.clearSelected()}
               updateRows={() => this.props.updateRows()}
               calculateOptionsPrice={() => this.props.calculateOptionsPrice()}
-            ></HeaderBlock>
+            ></HeaderBlock> */}
           </Grid>
           <SelectedItems
             className={classes}

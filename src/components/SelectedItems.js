@@ -34,7 +34,7 @@ class SelectedItems extends React.Component {
         >
           <TableHead className={classes.tableHead}>
             <TableRow>
-              <TableCell>Select</TableCell>
+              <TableCell>Edit</TableCell>
               <TableCell align="left">Type</TableCell>
               <TableCell align="left">Buy or Sell&nbsp;</TableCell>
               <TableCell align="left">Stock Price&nbsp;</TableCell>
@@ -42,6 +42,7 @@ class SelectedItems extends React.Component {
               <TableCell align="left">Expiration&nbsp;</TableCell>
               <TableCell align="left">Volatility&nbsp;</TableCell>
               <TableCell align="left">Interest Free&nbsp;</TableCell>
+              <TableCell align="left">Mark&nbsp;</TableCell>
               <TableCell align="left">
                 <Button
                   className={classes.headerButton}
@@ -75,29 +76,13 @@ class SelectedItems extends React.Component {
                 <TableCell align="left">{row.expiration}</TableCell>
                 <TableCell align="left">{row.volatility}</TableCell>
                 <TableCell align="left">{row.interestFree}</TableCell>
-
-                <TableCell>
-                  {row.GUID}
-                  {/* <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="age-native-simple">Age</InputLabel>
-                    <Select
-                      native
-                      value={22}
-                      onChange={(event) =>
-                        this.handleChange(event.target.value)
-                      }
-                      inputProps={{
-                        name: "age",
-                        id: "age-native-simple",
-                      }}
-                    >
-                      <option aria-label="None" value="" />
-                      <option value={10}>Ten</option>
-                      <option value={20}>Twenty</option>
-                      <option value={30}>Thirty</option>
-                    </Select>
-                  </FormControl> */}
+                <TableCell align="left">
+                  {Number.parseFloat(row.optionPriceAtPurchase/100).toFixed(2)}
                 </TableCell>
+                {/* <TableCell>
+                  {row.GUID}
+
+                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>

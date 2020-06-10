@@ -41,16 +41,11 @@ export function GetBreakEvens(checksList) {
 }
 
 export function CalcBScholes(checksList) {
-  var finalCalcs = []; //{x:3,DAY1:334 etc...}
+  var finalCalcs = []; 
 
   if (checksList.length > 0) {
-    //get starting prices
-    //var type = checksList[0].type;
+
     var stockPrice = Number(checksList[0].stockPrice); //get starting price
-    //var strikeX = Number(checksList[0].strikePrice);
-    //var timeYears = (checksList[0].expiration) / 365;
-    //var r = checksList[0].interestFree;
-    //var volatility = checksList[0].volatility / 100;
 
     let multiplier = Math.floor(stockPrice / 12); //tweak graph size here
     for (
@@ -93,10 +88,6 @@ export function CalcBScholes(checksList) {
           var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
           entryAtStockPrice["DAY" + (j + 1)] =
             sign * BS - checksList[i].optionPriceAtPurchase + tempEnt;
-          // sign *
-          // (BS +
-          //   checksList[i].optionPriceAtPurchase +
-          //   entryAtStockPrice["DAY" + (j + 1)]);
         }
       }
       finalCalcs.push(entryAtStockPrice);

@@ -176,8 +176,10 @@ const mainObj = [
 export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
-    mainObj[0].GUID = this.uuidv4(); //create first entry with new GUID
-    mainObj[1].GUID = this.uuidv4();
+
+    mainObj.forEach(element => {
+      element.GUID = this.uuidv4();
+    });
     this.state = {
       checksList: mainObj, //current options
       currentEditGuid: mainObj[0].GUID, //GUID to access checksList
@@ -274,15 +276,15 @@ export class ParentComp extends React.Component {
   }
 
   calculateOptionsPrice() {
-    var inpu = this.getCurrentOptionObj();
-    const res = GetSchole(inpu);
+    // var inpu = this.getCurrentOptionObj();
+    // const res = GetSchole(inpu);
 
-    //Make new calcs on price array for each object
-    var newArr = this.replaceOptionData([...this.state.checksList], res);
-    GetBreakEvens(this.state.checksList);
-    this.setState({
-      checksList: newArr,
-    });
+    // //Make new calcs on price array for each object
+    // var newArr = this.replaceOptionData([...this.state.checksList], res);
+    // GetBreakEvens(this.state.checksList);
+    // this.setState({
+    //   checksList: newArr,
+    // });
   }
 
   uuidv4() {

@@ -13,19 +13,17 @@ import {
   ReferenceDot,
 } from "recharts";
 
-
 export default class Chart extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //  // this.state = this.initialState(this.props.selectedItems);
-  // }
+  constructor(props) {
+    super(props);
 
-  // initialState(selectedItems) {
-  //   var start = {
-  //     selectedItems,
-  //   };
-  //   return start;
-  // }
+    this.state = {
+      colors: [],
+    };
+
+  }
+
+
   fetchUsers() {
     fetch()
       .then((response) => response.json())
@@ -56,52 +54,25 @@ export default class Chart extends React.Component {
   }
 
   render() {
-    var xAxis = [];
-    var formatedData = [];
-    var getBreakEven = [];
-    var xMin=0,xMax=0;
-    if(this.props.formattedData.length === 0)
-    {
-      var result = this.props.checksList.find((obj) => {
-        return obj.GUID === this.props.currentEditGuid;
-      }).priceArray;
-
-  
-      if(result.length > 0)
-      {
-        for (let i = 0; i < result[0].length; i++) {
-          xAxis.push(result[0][i].sPrice);
-        }
     
-         formatedData = fMat(result);
-         getBreakEven = getBreakEvens(formatedData);
-      }
-    }
-    else{
-      formatedData = this.props.formattedData
+    var formatedData = [];
+    var xMin = 0,
+      xMax = 0;
+    if (this.props.formattedData.length > 0) {
+      formatedData = this.props.formattedData;
       xMin = formatedData[0].x;
-      xMax = formatedData[formatedData.length-1].x;
-      // for (let i = 0; i < formatedData.length; i++) {
-      //   xAxis.push(formatedData[i].x);
+      xMax = formatedData[formatedData.length - 1].x;
+
+      // if(this.state.colors.length===0){
+      //   fo
+      //   this.setState({
+      //     colors: ,
+      //   });
       // }
     }
-    // var result = this.props.checksList.find((obj) => {
-    //   return obj.GUID === this.props.currentEditGuid;
-    // }).priceArray;
 
-    // var xAxis = [];
-    // var formatedData = [];
-    // var getBreakEven = [];
 
-    // if(result.length > 0)
-    // {
-    //   for (let i = 0; i < result[0].length; i++) {
-    //     xAxis.push(result[0][i].sPrice);
-    //   }
-  
-    //    formatedData = fMat(result);
-    //    getBreakEven = getBreakEvens(formatedData);
-    // }
+
     return (
       <div style={{ width: "100%", height: 700 }}>
         <ResponsiveContainer>
@@ -119,13 +90,8 @@ export default class Chart extends React.Component {
             <CartesianGrid strokeDasharray="5 5" />
             <XAxis
               dataKey="x"
-              //interval={0}
               stroke="white"
-              // minTickGap={0}
-              //tickSize={1}
-              // type="number"
-
-              domain={[{xMin},{xMax}]}
+              domain={[{ xMin }, { xMax }]}
             />
             <YAxis minTickGap={0} tickSize={1} />
             <Legend formatter={this.renderColorfulLegendText} />
@@ -155,8 +121,8 @@ export default class Chart extends React.Component {
             /> */}
             {/* {PlotBreakEvens(getBreakEven)} */}
             <Tooltip
-              //viewBox={{ x: 0, y: 0, width: 400, height: 400 }}
-              position={{ x: 400, y: 0 }}
+              viewBox={{ x: 0, y: 0, width: 400, height: 400 }}
+              //position={{ x: 400, y: 0 }}
               //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
               cursor={false}
               animationEasing={"linear"}
@@ -169,9 +135,6 @@ export default class Chart extends React.Component {
   }
 }
 
-
-
-
 function getBreakEvens(fmtArray) {
   var keys;
   var dataPoints = [];
@@ -183,13 +146,13 @@ function getBreakEvens(fmtArray) {
       let j = 1;
       if (currentKey === "x" || foundKeys.includes(currentKey)) continue;
       else {
-        let currentSign = fmtArray[j-1][currentKey] >= 0 ? 1 : -1;
+        let currentSign = fmtArray[j - 1][currentKey] >= 0 ? 1 : -1;
         while (j < fmtArray.length) {
           if (
             fmtArray[j][currentKey] / Math.abs(fmtArray[j][currentKey]) !==
             currentSign
           ) {
-            dataPoints.push({ x: fmtArray[j-1].x, Exp: currentKey });
+            dataPoints.push({ x: fmtArray[j - 1].x, Exp: currentKey });
             foundKeys.push(currentKey);
             break;
           }
@@ -200,7 +163,6 @@ function getBreakEvens(fmtArray) {
   }
   return dataPoints;
 }
-
 
 function fMat(myUsers) {
   var finalObj = [];
@@ -266,3 +228,4 @@ function GetColors() {
   }
   return cols;
 }
+
