@@ -1,15 +1,15 @@
 import React from "react";
-import ChainData from "../components/ChainData";
+//import ChainData from "../components/ChainData";
 import Grid from "@material-ui/core/Grid";
 import Chart from "../Chart";
 import { withStyles } from "@material-ui/core/styles";
 import ItemsPanel from "../components/ItemsPanel";
-import {GetSchole,GetBreakEvens,CalcBScholes} from "../utils/Bscholes";
+import {CalcBScholes} from "../utils/Bscholes";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsForm from "../components/OptionsForm";
-import { Button } from "@material-ui/core";
+//import { Button } from "@material-ui/core";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -426,16 +426,16 @@ export class ParentComp extends React.Component {
   }
 }
 
-function fMat(myUsers) {
-  var finalObj = [];
-  for (let i = 0; i < myUsers[0].length; i++) {
-    var tobj = { x: myUsers[0][i].sPrice };
-    for (let j = 0; j < myUsers.length; j++) {
-      tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
-    }
-    finalObj.push(tobj);
-  }
-  return finalObj;
-}
+// function fMat(myUsers) {
+//   var finalObj = [];
+//   for (let i = 0; i < myUsers[0].length; i++) {
+//     var tobj = { x: myUsers[0][i].sPrice };
+//     for (let j = 0; j < myUsers.length; j++) {
+//       tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
+//     }
+//     finalObj.push(tobj);
+//   }
+//   return finalObj;
+// }
 
 export default withStyles(useRowStyles)(ParentComp);
