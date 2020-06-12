@@ -1,5 +1,5 @@
 Options profit calculator showing P/L of simple options contracts.
-Will be implementing multileg options strategies and eventually obtaining options chains through an API.
+[Working Example](https://maharristhepug.com/)
 
 ### `npm install` 
 
