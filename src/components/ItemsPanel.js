@@ -43,6 +43,7 @@ class ItemsPanel extends React.Component {
             getGuid={(e) => this.props.getGuid(e)}
             currentEditGuid={this.props.currentEditGuid}
             checksList={this.props.checksList}
+            deleteRow={(e)=>this.props.deleteRow(e)}
           ></SelectedItems>
         </Paper>
       </ExpansionPanel>

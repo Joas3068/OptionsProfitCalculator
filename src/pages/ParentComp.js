@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import Chart from "../Chart";
 import { withStyles } from "@material-ui/core/styles";
 import ItemsPanel from "../components/ItemsPanel";
-import {CalcBScholes} from "../utils/Bscholes";
+import { CalcBScholes } from "../utils/Bscholes";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
@@ -118,7 +118,7 @@ const mainObj = [
     GUID: "",
     isEditing: false,
     priceArray: TempPrice,
-    breakEvens:[],
+    breakEvens: [],
   },
   {
     type: "call",
@@ -135,7 +135,7 @@ const mainObj = [
     GUID: "",
     isEditing: false,
     priceArray: TempPrice,
-    breakEvens:[],
+    breakEvens: [],
   },
   {
     type: "put",
@@ -152,9 +152,9 @@ const mainObj = [
     GUID: "",
     isEditing: false,
     priceArray: TempPrice,
-    breakEvens:[],
+    breakEvens: [],
   },
-   {
+  {
     type: "put",
     buySell: "sell",
     stockPrice: 450,
@@ -169,7 +169,7 @@ const mainObj = [
     GUID: "",
     isEditing: false,
     priceArray: TempPrice,
-    breakEvens:[],
+    breakEvens: [],
   },
 ];
 
@@ -177,7 +177,7 @@ export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
 
-    mainObj.forEach(element => {
+    mainObj.forEach((element) => {
       element.GUID = this.uuidv4();
     });
     this.state = {
@@ -185,11 +185,10 @@ export class ParentComp extends React.Component {
       currentEditGuid: mainObj[0].GUID, //GUID to access checksList
       calculatedPriceData: TempPrice, //final calcs for Charts
       optionsData: mainObj[0], //remove this
-      formattedData:[],
+      formattedData: [],
     };
     this.addData = this.addData.bind(this);
     this.clearSelected = this.clearSelected.bind(this);
-    this.calculateOptionsPrice = this.calculateOptionsPrice.bind(this);
     this.getGuid = this.getGuid.bind(this);
     this.calcData = this.calcData.bind(this);
   }
@@ -275,18 +274,6 @@ export class ParentComp extends React.Component {
     return arrayCopy;
   }
 
-  calculateOptionsPrice() {
-    // var inpu = this.getCurrentOptionObj();
-    // const res = GetSchole(inpu);
-
-    // //Make new calcs on price array for each object
-    // var newArr = this.replaceOptionData([...this.state.checksList], res);
-    // GetBreakEvens(this.state.checksList);
-    // this.setState({
-    //   checksList: newArr,
-    // });
-  }
-
   uuidv4() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
       c
@@ -297,12 +284,7 @@ export class ParentComp extends React.Component {
     });
   }
 
-  componentWillMount() {
-    // this.setState({
-    //   checksList: this.state.checksList.concat(this.state.optionsData),
-    // });
-    this.calculateOptionsPrice();
-  }
+  componentWillMount() {}
 
   getFormData(val) {
     var indexFound = -1;
@@ -319,42 +301,59 @@ export class ParentComp extends React.Component {
         checksList: this.state.checksList.concat(val),
       });
     } else {
-      //var newState = [...this.state.checksList];
       var newState = this.state.checksList;
       newState[indexFound] = val;
       this.setState({
         checksList: newState,
       });
     }
-    this.calcData()
+    this.calcData();
   }
 
   getGuid(e, row) {
-    //var a = row.target.value;
     var result = this.state.checksList.find((obj) => {
       return obj.GUID === row.target.value;
     });
-    //return () => {
     this.setState({
       currentEditGuid: result.GUID,
     });
-    //};
   }
 
-  calcData(){
-
-    var a = CalcBScholes(this.state.checksList);
+  deleteRow(e, row) {
+    const inputGuid = row.currentTarget.value;
+    if (inputGuid === this.state.currentEditGuid) {
+      if (this.state.checksList.length > 1) {
+        const G = this.state.checksList[1].GUID;
+        var result = this.state.checksList.find((obj) => {
+          return obj.GUID === G;
+        });
         this.setState({
-          formattedData: a,
+          currentEditGuid: result.GUID,
+          checksList: this.state.checksList.filter((x) => x.GUID !== inputGuid),
+        },this.calcData);
+
+      }
+    } else {
+      this.setState(
+        {
+          checksList: this.state.checksList.filter((x) => x.GUID !== inputGuid),
+        },
+        this.calcData
+      );
+    }
+  }
+
+  calcData() {
+    var a = CalcBScholes(this.state.checksList);
+    this.setState({
+      formattedData: a,
     });
   }
   render() {
     const { classes } = this.props;
 
-    //var a = this.state.checksList[0].priceArray;
     return (
       <div className={classes.root}>
-      {/* <Button onClick={this.calcData}>asdfasdfcv</Button> */}
         <Grid container spacing={3}>
           <Grid container>
             <Chart
@@ -364,9 +363,8 @@ export class ParentComp extends React.Component {
               formattedData={this.state.formattedData}
             ></Chart>
           </Grid>
-          
+
           <Grid spacing={3} item xs={12}>
-          
             <ItemsPanel
               classes={classes}
               clearSelected={() => this.clearSelected()}
@@ -375,6 +373,7 @@ export class ParentComp extends React.Component {
               calculateOptionsPrice={() => this.calculateOptionsPrice()}
               currentEditGuid={this.state.currentEditGuid}
               checksList={this.state.checksList}
+              deleteRow={(e, val) => this.deleteRow(val, e)}
             ></ItemsPanel>
           </Grid>
           <Grid
@@ -415,7 +414,6 @@ export class ParentComp extends React.Component {
           showLabels
           className={classes.root}
         >
-        
           <BottomNavigationAction
             icon={<GitHubIcon />}
             href={"https://github.com/Joas3068/OptionsProfitCalculator"}
@@ -425,17 +423,5 @@ export class ParentComp extends React.Component {
     );
   }
 }
-
-// function fMat(myUsers) {
-//   var finalObj = [];
-//   for (let i = 0; i < myUsers[0].length; i++) {
-//     var tobj = { x: myUsers[0][i].sPrice };
-//     for (let j = 0; j < myUsers.length; j++) {
-//       tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
-//     }
-//     finalObj.push(tobj);
-//   }
-//   return finalObj;
-// }
 
 export default withStyles(useRowStyles)(ParentComp);

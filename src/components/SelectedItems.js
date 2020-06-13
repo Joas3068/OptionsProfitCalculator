@@ -8,6 +8,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Button } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 class SelectedItems extends React.Component {
   constructor(props) {
@@ -18,6 +20,10 @@ class SelectedItems extends React.Component {
 
   testGuid = (event) => {
     this.props.getGuid(event);
+  };
+
+  deleteRow = (event) => {
+    this.props.deleteRow(event);
   };
   render() {
     const classes = this.props.className;
@@ -77,12 +83,20 @@ class SelectedItems extends React.Component {
                 <TableCell align="left">{row.volatility}</TableCell>
                 <TableCell align="left">{row.interestFree}</TableCell>
                 <TableCell align="left">
-                  {Number.parseFloat(row.optionPriceAtPurchase/100).toFixed(2)}
+                  {Number.parseFloat(row.optionPriceAtPurchase / 100).toFixed(
+                    2
+                  )}
                 </TableCell>
-                {/* <TableCell>
-                  {row.GUID}
-
-                </TableCell> */}
+                <TableCell align="middle">
+                  <IconButton
+                    value={row.GUID}
+                    size="medium"
+                    onClick={this.props.deleteRow}
+                  >
+                    <DeleteIcon />
+                    {/* {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
