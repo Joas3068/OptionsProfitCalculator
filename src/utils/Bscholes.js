@@ -41,10 +41,9 @@ export function GetBreakEvens(checksList) {
 }
 
 export function CalcBScholes(checksList) {
-  var finalCalcs = []; 
+  var finalCalcs = [];
 
   if (checksList.length > 0) {
-
     var stockPrice = Number(checksList[0].stockPrice); //get starting price
 
     let multiplier = Math.floor(stockPrice / 12); //tweak graph size here
@@ -87,7 +86,7 @@ export function CalcBScholes(checksList) {
           if (isNaN(BS)) BS = 0;
           var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
           entryAtStockPrice["DAY" + (j + 1)] =
-            sign * BS - checksList[i].optionPriceAtPurchase + tempEnt;
+          Number.parseFloat(checksList[i].numberOfContracts)*(sign * BS - checksList[i].optionPriceAtPurchase) + tempEnt;
         }
       }
       finalCalcs.push(entryAtStockPrice);

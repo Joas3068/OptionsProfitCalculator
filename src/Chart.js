@@ -220,7 +220,7 @@ function GetLines(arrs) {
 function GetColors() {
   var cols = { r: 0, g: 0, b: 0 };
   let count = 0;
-  while (cols.r + cols.g + cols.b < 200 && count < 4) {
+  while (cols.r + cols.g + cols.b < 300 && count < 4) {
     cols.r = Math.floor(Math.random() * 255);
     cols.g = Math.floor(Math.random() * 255);
     cols.b = Math.floor(Math.random() * 255);

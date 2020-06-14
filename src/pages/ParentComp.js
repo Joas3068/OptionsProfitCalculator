@@ -9,7 +9,6 @@ import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsForm from "../components/OptionsForm";
-//import { Button } from "@material-ui/core";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -101,14 +100,14 @@ const useRowStyles = (theme) => ({
   },
 });
 
-const TempPrice = [[]];
+
 const mainObj = [
   {
     type: "call",
-    buySell: "buy",
+    buySell: "sell",
     stockPrice: 450,
-    strikePrice: 465,
-    expiration: 4,
+    strikePrice: 455,
+    expiration: 6,
     interestFree: 0.02,
     volatility: 25,
     greeks: [
@@ -117,32 +116,16 @@ const mainObj = [
     ],
     GUID: "",
     isEditing: false,
-    priceArray: TempPrice,
+    priceArray: [[]],
     breakEvens: [],
+    numberOfContracts: 2,
   },
   {
     type: "call",
-    buySell: "sell",
-    stockPrice: 450,
-    strikePrice: 460,
-    expiration: 4,
-    interestFree: 0.02,
-    volatility: 22,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: TempPrice,
-    breakEvens: [],
-  },
-  {
-    type: "put",
     buySell: "buy",
     stockPrice: 450,
-    strikePrice: 440,
-    expiration: 4,
+    strikePrice: 445,
+    expiration: 6,
     interestFree: 0.02,
     volatility: 22,
     greeks: [
@@ -151,15 +134,16 @@ const mainObj = [
     ],
     GUID: "",
     isEditing: false,
-    priceArray: TempPrice,
+    priceArray: [[]],
     breakEvens: [],
+    numberOfContracts: 1,
   },
   {
-    type: "put",
-    buySell: "sell",
+    type: "call",
+    buySell: "buy",
     stockPrice: 450,
-    strikePrice: 445,
-    expiration: 4,
+    strikePrice: 465,
+    expiration: 6,
     interestFree: 0.02,
     volatility: 22,
     greeks: [
@@ -168,8 +152,9 @@ const mainObj = [
     ],
     GUID: "",
     isEditing: false,
-    priceArray: TempPrice,
+    priceArray: [[]],
     breakEvens: [],
+    numberOfContracts: 1,
   },
 ];
 
@@ -177,14 +162,13 @@ export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
 
-    mainObj.forEach((element) => {
+    mainObj.forEach((element) => { //create identity for each order
       element.GUID = this.uuidv4();
     });
     this.state = {
       checksList: mainObj, //current options
       currentEditGuid: mainObj[0].GUID, //GUID to access checksList
-      calculatedPriceData: TempPrice, //final calcs for Charts
-      optionsData: mainObj[0], //remove this
+      calculatedPriceData: [[]], //final calcs for Charts
       formattedData: [],
     };
     this.addData = this.addData.bind(this);
@@ -212,18 +196,19 @@ export class ParentComp extends React.Component {
       {
         type: "call",
         buySell: "buy",
-        stockPrice: 0,
-        strikePrice: 0,
-        expiration: 1,
-        interestFree: 0,
-        volatility: 0,
+        stockPrice: 450,
+        strikePrice: 455,
+        expiration: 5,
+        interestFree: .02,
+        volatility: 25,
         greeks: [
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
         GUID: this.uuidv4(),
         isEditing: false,
-        priceArray: TempPrice,
+        priceArray: [[]],
+        numberOfContracts:1,
       },
     ];
     this.setState({
@@ -232,31 +217,6 @@ export class ParentComp extends React.Component {
     });
   }
 
-  createData(
-    type,
-    buysell,
-    stockPrice,
-    strikePrice,
-    expiration,
-    interestFree,
-    volatility,
-    GUID
-  ) {
-    return {
-      type,
-      buysell,
-      stockPrice,
-      strikePrice,
-      expiration,
-      interestFree,
-      volatility,
-      greeks: [
-        { volatility: "55%", delta: ".5", amount: 3 },
-        { volatility: "59%", delta: ".2", amount: 1 },
-      ],
-      GUID,
-    };
-  }
 
   //returns current object related to state GUID
   getCurrentOptionObj() {

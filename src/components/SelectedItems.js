@@ -59,6 +59,7 @@ class SelectedItems extends React.Component {
                   Clear All
                 </Button>
               </TableCell>
+              <TableCell align="left">Number Of Contracts</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,6 +97,9 @@ class SelectedItems extends React.Component {
                     <DeleteIcon />
                     {/* {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}
                   </IconButton>
+                </TableCell>
+                <TableCell align="middle">
+                   {row.numberOfContracts}
                 </TableCell>
               </TableRow>
             ))}

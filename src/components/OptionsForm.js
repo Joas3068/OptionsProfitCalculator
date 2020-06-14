@@ -105,7 +105,7 @@ class OptionsForm extends React.PureComponent {
         stockPrice: event.target.value > -1 ? event.target.value : 0,
         strikePrice: this.state.optionsData.strikePrice,
         expiration: this.state.optionsData.expiration,
-        interestFree: this.state.optionsData.interestFree,
+        interestFree: Number.parseFloat(this.state.optionsData.interestFree),
         volatility: this.state.optionsData.volatility,
         greeks: [
           { volatility: "55%", delta: ".5", amount: 3 },
@@ -114,6 +114,7 @@ class OptionsForm extends React.PureComponent {
         GUID: this.state.optionsData.GUID,
         priceArray: this.state.optionsData.priceArray,
         breakEvens: this.state.optionsData.breakEvens,
+        numberOfContracts: this.state.optionsData.numberOfContracts,
       },
     });
   };
@@ -134,6 +135,7 @@ class OptionsForm extends React.PureComponent {
         ],
         GUID: this.state.optionsData.GUID,
         priceArray: this.state.optionsData.priceArray,
+        numberOfContracts: this.state.optionsData.numberOfContracts,
       },
     });
   };
@@ -146,7 +148,7 @@ class OptionsForm extends React.PureComponent {
         stockPrice: this.state.optionsData.stockPrice,
         strikePrice: this.state.optionsData.strikePrice,
         expiration: event.target.value > -1 ? event.target.value : 0,
-        interestFree: this.state.optionsData.interestFree,
+        interestFree: Number.parseFloat(this.state.optionsData.interestFree),
         volatility: this.state.optionsData.volatility,
         greeks: [
           { volatility: "55%", delta: ".5", amount: 3 },
@@ -155,6 +157,7 @@ class OptionsForm extends React.PureComponent {
         GUID: this.state.optionsData.GUID,
         priceArray: this.state.optionsData.priceArray,
         breakEvens: this.state.optionsData.breakEvens,
+        numberOfContracts: this.state.optionsData.numberOfContracts,
       },
     });
   };
@@ -175,6 +178,7 @@ class OptionsForm extends React.PureComponent {
         ],
         GUID: this.state.optionsData.GUID,
         priceArray: this.state.optionsData.priceArray,
+        numberOfContracts: this.state.optionsData.numberOfContracts,
       },
     });
   };
@@ -195,6 +199,7 @@ class OptionsForm extends React.PureComponent {
         ],
         GUID: this.state.optionsData.GUID,
         priceArray: this.state.optionsData.priceArray,
+        numberOfContracts: this.state.optionsData.numberOfContracts,
       },
     });
   };
@@ -207,7 +212,7 @@ class OptionsForm extends React.PureComponent {
         stockPrice: this.state.optionsData.stockPrice,
         strikePrice: this.state.optionsData.strikePrice,
         expiration: this.state.optionsData.expiration,
-        interestFree: this.state.optionsData.interestFree,
+        interestFree: Number.parseFloat(this.state.optionsData.interestFree),
         volatility: event.target.value > -1 ? event.target.value : 0,
         greeks: [
           { volatility: "55%", delta: ".5", amount: 3 },
@@ -216,14 +221,7 @@ class OptionsForm extends React.PureComponent {
         GUID: this.state.optionsData.GUID,
         priceArray: this.state.optionsData.priceArray,
         breakEvens: this.state.optionsData.breakEvens,
-      },
-    });
-  };
-
-  handleForm = (event) => {
-    this.setState({
-      optionsData: {
-        strikePrice: event.target.value,
+        numberOfContracts: this.state.optionsData.numberOfContracts,
       },
     });
   };
@@ -245,17 +243,62 @@ class OptionsForm extends React.PureComponent {
       stockPrice: this.state.optionsData.stockPrice,
       strikePrice: this.state.optionsData.strikePrice,
       expiration: this.state.optionsData.expiration,
-      interestFree: this.state.optionsData.interestFree,
+      interestFree: Number.parseFloat(this.state.optionsData.interestFree),
       volatility: this.state.optionsData.volatility,
       greeks: [
         { volatility: "55%", delta: ".5", amount: 3 },
         { volatility: "59%", delta: ".2", amount: 1 },
       ],
-      GUID: newItem ? this.uuidv4() : this.state.optionsData.GUID, //TODO logic
+      GUID: newItem ? this.uuidv4() : this.state.optionsData.GUID, //new guid
       priceArray: newItem ? [] : this.state.optionsData.priceArray,
       breakEvens: this.state.optionsData.breakEvens,
+      numberOfContracts: this.state.optionsData.numberOfContracts,
     };
   }
+
+  handleInterestChange = (event) => {
+    this.setState({
+      optionsData: {
+        type: this.state.optionsData.type,
+        buySell: this.state.optionsData.buySell,
+        stockPrice: this.state.optionsData.stockPrice,
+        strikePrice: this.state.optionsData.strikePrice,
+        expiration: this.state.optionsData.expiration,
+        interestFree: event.target.value > -1 ? Number.parseFloat(event.target.value) : 0,
+        volatility: this.state.optionsData.volatility,
+        greeks: [
+          { volatility: "55%", delta: ".5", amount: 3 },
+          { volatility: "59%", delta: ".2", amount: 1 },
+        ],
+        GUID: this.state.optionsData.GUID,
+        priceArray: this.state.optionsData.priceArray,
+        breakEvens: this.state.optionsData.breakEvens,
+        numberOfContracts: this.state.optionsData.numberOfContracts,
+      },
+    });
+  };
+
+  handleContractNumberChange = (event) => {
+    this.setState({
+      optionsData: {
+        type: this.state.optionsData.type,
+        buySell: this.state.optionsData.buySell,
+        stockPrice: this.state.optionsData.stockPrice,
+        strikePrice: this.state.optionsData.strikePrice,
+        expiration: this.state.optionsData.expiration,
+        interestFree: Number.parseFloat(this.state.optionsData.interestFree),
+        volatility: this.state.optionsData.volatility,
+        greeks: [
+          { volatility: "55%", delta: ".5", amount: 3 },
+          { volatility: "59%", delta: ".2", amount: 1 },
+        ],
+        GUID: this.state.optionsData.GUID,
+        priceArray: this.state.optionsData.priceArray,
+        breakEvens: this.state.optionsData.breakEvens,
+        numberOfContracts: Number.parseFloat(event.target.value) > "0"?Number.parseFloat(event.target.value):1,
+      },
+    });
+  };
 
   getSelected() {
     var result = this.props.checksList.find((obj) => {
@@ -307,7 +350,6 @@ class OptionsForm extends React.PureComponent {
               className={classes.formControl}
               id="standard-select-buySell"
               select
-              //autoWidth={true}
               value={this.state.optionsData.buySell}
               onChange={this.handleChange}
               helperText="Buy or Sell"
@@ -322,7 +364,6 @@ class OptionsForm extends React.PureComponent {
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="component-simple">Stock Price</InputLabel>
               <Input
-                //id="component-simple"
                 value={this.state.optionsData.stockPrice}
                 onChange={this.handleStockPriceChange}
                 type="number"
@@ -331,7 +372,6 @@ class OptionsForm extends React.PureComponent {
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="component-simple">Strike Price</InputLabel>
               <Input
-                //id="component-simple"
                 value={this.state.optionsData.strikePrice}
                 onChange={this.handleStrikePriceChange}
                 type="number"
@@ -342,7 +382,6 @@ class OptionsForm extends React.PureComponent {
                 Expiration (Days)
               </InputLabel>
               <Input
-                //id="component-simple"
                 value={this.state.optionsData.expiration}
                 onChange={this.handleExpChange}
                 type="number"
@@ -351,9 +390,24 @@ class OptionsForm extends React.PureComponent {
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="component-simple">Volatility (%)</InputLabel>
               <Input
-                //id="component-simple"
                 value={this.state.optionsData.volatility}
                 onChange={this.handleVolChange}
+                type="number"
+              />
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="component-simple">Interest Free</InputLabel>
+              <Input
+                value={this.state.optionsData.interestFree}
+                onChange={this.handleInterestChange}
+                type="number"
+              />
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="component-simple">Number Of Contracts</InputLabel>
+              <Input 
+                value={Number.parseFloat(this.state.optionsData.numberOfContracts)}
+                onChange={this.handleContractNumberChange}
                 type="number"
               />
             </FormControl>
