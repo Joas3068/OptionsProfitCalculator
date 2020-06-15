@@ -9,12 +9,15 @@ import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsForm from "../components/OptionsForm";
+import OptionsDrawer from "../components/OptionsDrawer";
+import Colors from "../utils/Colors";
+
 
 const useRowStyles = (theme) => ({
   root: {
     margin: theme.spacing(2),
     // display: "table",
-    backgroundColor: "rgb(38, 38, 38)",
+    backgroundColor: Colors.Primary,
     "& > *": {
       borderBottom: "unset",
     },
@@ -26,10 +29,14 @@ const useRowStyles = (theme) => ({
   },
   table: {
     minWidth: 0,
-    backgroundColor: "rgb(179, 179, 179)",
+    backgroundColor: Colors.Tables,
+  },
+  drawer: {
+    margin: theme.spacing(2),
+    padding: theme.spacing(2),
   },
   container: {
-    backgroundColor: "lightgray",
+    backgroundColor: Colors.Secondary,
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     height: 500,
@@ -37,7 +44,7 @@ const useRowStyles = (theme) => ({
     display: "block",
   },
   paper: {
-    backgroundColor: "rgb(128, 0, 0)",
+    backgroundColor: Colors.Secondary,
     padding: theme.spacing(2),
     // display: "flex",
     overflow: "auto",
@@ -45,7 +52,7 @@ const useRowStyles = (theme) => ({
     maxHeight: "auto",
   },
   chartGrid: {
-    backgroundColor: "rgb(128, 0, 0)",
+    backgroundColor: Colors.Tables,
     padding: theme.spacing(2),
     display: "block",
     // overflow: "auto",
@@ -61,7 +68,7 @@ const useRowStyles = (theme) => ({
     marginTop: theme.spacing(2),
   },
   paperHeader: {
-    backgroundColor: "rgb(128, 0, 0)",
+    backgroundColor: "#364156",
     padding: theme.spacing(0),
     flexDirection: "row",
   },
@@ -72,7 +79,7 @@ const useRowStyles = (theme) => ({
     backgroundColor: "rgb(0, 77, 0)",
   },
   expPanelPut: {
-    backgroundColor: "rgb(128, 26, 0)",
+    backgroundColor: "#364156",
   },
   selectedTable: {
     backgroundColor: "gray",
@@ -99,7 +106,6 @@ const useRowStyles = (theme) => ({
     //flexGrow: 1,
   },
 });
-
 
 const mainObj = [
   {
@@ -162,7 +168,8 @@ export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
 
-    mainObj.forEach((element) => { //create identity for each order
+    mainObj.forEach((element) => {
+      //create identity for each order
       element.GUID = this.uuidv4();
     });
     this.state = {
@@ -199,7 +206,7 @@ export class ParentComp extends React.Component {
         stockPrice: 450,
         strikePrice: 455,
         expiration: 5,
-        interestFree: .02,
+        interestFree: 0.02,
         volatility: 25,
         greeks: [
           { volatility: "55%", delta: ".5", amount: 3 },
@@ -208,7 +215,7 @@ export class ParentComp extends React.Component {
         GUID: this.uuidv4(),
         isEditing: false,
         priceArray: [[]],
-        numberOfContracts:1,
+        numberOfContracts: 1,
       },
     ];
     this.setState({
@@ -216,7 +223,6 @@ export class ParentComp extends React.Component {
       currentEditGuid: newObjec[0].GUID,
     });
   }
-
 
   //returns current object related to state GUID
   getCurrentOptionObj() {
@@ -287,11 +293,15 @@ export class ParentComp extends React.Component {
         var result = this.state.checksList.find((obj) => {
           return obj.GUID === G;
         });
-        this.setState({
-          currentEditGuid: result.GUID,
-          checksList: this.state.checksList.filter((x) => x.GUID !== inputGuid),
-        },this.calcData);
-
+        this.setState(
+          {
+            currentEditGuid: result.GUID,
+            checksList: this.state.checksList.filter(
+              (x) => x.GUID !== inputGuid
+            ),
+          },
+          this.calcData
+        );
       }
     } else {
       this.setState(
@@ -315,7 +325,10 @@ export class ParentComp extends React.Component {
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
-          <Grid container>
+          <Grid container spacing={3}>
+            <OptionsDrawer className={classes.drawer}></OptionsDrawer>
+          </Grid>
+          <Grid container className={classes.drawer}>
             <Chart
               checksList={this.state.checksList}
               currentEditGuid={this.state.currentEditGuid}

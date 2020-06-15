@@ -38,7 +38,7 @@ class SelectedItems extends React.Component {
           size="small"
           aria-label="a dense table"
         >
-          <TableHead className={classes.tableHead}>
+          <TableHead>
             <TableRow>
               <TableCell>Edit</TableCell>
               <TableCell align="left">Type</TableCell>
