@@ -64,7 +64,7 @@ const useStyles = (theme) => ({
   },
 });
 
-class OptionsForm extends React.PureComponent {
+class OptionsForm extends React.Component {
   constructor(props) {
     super(props);
     var result = this.props.checksList.find((obj) => {

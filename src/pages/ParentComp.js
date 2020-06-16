@@ -11,7 +11,7 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsForm from "../components/OptionsForm";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
-
+import uuidv4 from "../utils/GuidGen";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -170,7 +170,7 @@ export class ParentComp extends React.Component {
 
     mainObj.forEach((element) => {
       //create identity for each order
-      element.GUID = this.uuidv4();
+      element.GUID = uuidv4();
     });
     this.state = {
       checksList: mainObj, //current options
@@ -212,7 +212,7 @@ export class ParentComp extends React.Component {
           { volatility: "55%", delta: ".5", amount: 3 },
           { volatility: "59%", delta: ".2", amount: 1 },
         ],
-        GUID: this.uuidv4(),
+        GUID: uuidv4(),
         isEditing: false,
         priceArray: [[]],
         numberOfContracts: 1,
@@ -238,16 +238,6 @@ export class ParentComp extends React.Component {
     arrayCopy[index] = replaceObj;
 
     return arrayCopy;
-  }
-
-  uuidv4() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
-      c
-    ) {
-      var r = (Math.random() * 16) | 0,
-        v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
   }
 
   componentWillMount() {}
@@ -319,6 +309,19 @@ export class ParentComp extends React.Component {
       formattedData: a,
     });
   }
+
+  updateStrategy(newObject) {
+    this.clearSelected();
+    newObject.forEach((element) => {
+      //create identity for each order
+      element.GUID = uuidv4();
+    });
+    this.setState({
+      checksList: newObject,
+      currentEditGuid: newObject[0].GUID,
+    },this.calcData);
+    
+  }
   render() {
     const { classes } = this.props;
 
@@ -326,7 +329,10 @@ export class ParentComp extends React.Component {
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid container spacing={3}>
-            <OptionsDrawer className={classes.drawer}></OptionsDrawer>
+            <OptionsDrawer 
+            className={classes.drawer}
+            updateStrategy={(obj,val)=>this.updateStrategy(obj,val)}
+            ></OptionsDrawer>
           </Grid>
           <Grid container className={classes.drawer}>
             <Chart
