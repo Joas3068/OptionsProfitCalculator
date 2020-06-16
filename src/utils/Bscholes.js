@@ -46,6 +46,11 @@ export function CalcBScholes(checksList) {
   if (checksList.length > 0) {
     var stockPrice = Number(checksList[0].stockPrice); //get starting price
 
+    //cancel if exp > 150
+      for (let checkExp = 0; checkExp < checksList.length; checkExp++) {
+        if (checksList[checkExp].expiration > 150) return [];
+      }
+
     let multiplier = Math.floor(stockPrice / 12); //tweak graph size here
     for (
       let index = stockPrice - multiplier;
@@ -56,6 +61,8 @@ export function CalcBScholes(checksList) {
       entryAtStockPrice["x"] = index; //add stock price on x axis
       for (let i = 0; i < checksList.length; i++) {
         //var entryAtStockPrice = {};
+
+        //add price at purchase. replace with API data
         if (checksList.optionPriceAtPurchase === undefined) {
           checksList[i].optionPriceAtPurchase =
             BlackScholes(
@@ -66,6 +73,7 @@ export function CalcBScholes(checksList) {
               checksList[i].interestFree, //this will be in decimal format
               checksList[i].volatility / 100 //divide by 100 to get percent
             ) * 100;
+          //Sell contracts are neg
           if (checksList[i].buySell === "sell")
             checksList[i].optionPriceAtPurchase *= -1;
         }
@@ -86,7 +94,9 @@ export function CalcBScholes(checksList) {
           if (isNaN(BS)) BS = 0;
           var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
           entryAtStockPrice["DAY" + (j + 1)] =
-          Number.parseFloat(checksList[i].numberOfContracts)*(sign * BS - checksList[i].optionPriceAtPurchase) + tempEnt;
+            Number.parseFloat(checksList[i].numberOfContracts) *
+              (sign * BS - checksList[i].optionPriceAtPurchase) +
+            tempEnt;
         }
       }
       finalCalcs.push(entryAtStockPrice);

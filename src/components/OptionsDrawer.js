@@ -105,15 +105,15 @@ export default function OptionsDrawer(props) {
     props.updateStrategy(PutCreditSpread);
   }
 
-  function sendLongCall(){
+  function sendLongCall() {
     props.updateStrategy(LongCall);
   }
 
-  function sendShortPut(){
+  function sendShortPut() {
     props.updateStrategy(ShortPut);
   }
 
-  function sendIronCondor(){
+  function sendIronCondor() {
     props.updateStrategy(IronCondor);
   }
 
@@ -171,16 +171,6 @@ export default function OptionsDrawer(props) {
         <Button onClick={sendLongCall}>Long Call</Button>
         <Button onClick={sendShortPut}>Short Put</Button>
         <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
       </Drawer>
     </div>
   );

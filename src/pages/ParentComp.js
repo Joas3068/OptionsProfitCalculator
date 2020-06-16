@@ -113,9 +113,9 @@ const mainObj = [
     buySell: "sell",
     stockPrice: 450,
     strikePrice: 455,
-    expiration: 6,
+    expiration: 25,
     interestFree: 0.02,
-    volatility: 25,
+    volatility: 20,
     greeks: [
       { volatility: "55%", delta: ".5", amount: 3 },
       { volatility: "59%", delta: ".2", amount: 1 },
@@ -131,7 +131,7 @@ const mainObj = [
     buySell: "buy",
     stockPrice: 450,
     strikePrice: 445,
-    expiration: 6,
+    expiration: 25,
     interestFree: 0.02,
     volatility: 22,
     greeks: [
@@ -149,7 +149,7 @@ const mainObj = [
     buySell: "buy",
     stockPrice: 450,
     strikePrice: 465,
-    expiration: 6,
+    expiration: 25,
     interestFree: 0.02,
     volatility: 22,
     greeks: [

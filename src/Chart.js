@@ -20,9 +20,7 @@ export default class Chart extends React.Component {
     this.state = {
       colors: [],
     };
-
   }
-
 
   fetchUsers() {
     fetch()
@@ -54,7 +52,6 @@ export default class Chart extends React.Component {
   }
 
   render() {
-    
     var formatedData = [];
     var xMin = 0,
       xMax = 0;
@@ -71,8 +68,6 @@ export default class Chart extends React.Component {
       // }
     }
 
-
-
     return (
       <div style={{ width: "100%", height: 700 }}>
         <ResponsiveContainer>
@@ -88,11 +83,7 @@ export default class Chart extends React.Component {
             }}
           >
             <CartesianGrid strokeDasharray="5 5" />
-            <XAxis
-              dataKey="x"
-              stroke="white"
-              domain={[{ xMin }, { xMax }]}
-            />
+            <XAxis dataKey="x" stroke="white" domain={[{ xMin }, { xMax }]} />
             <YAxis minTickGap={0} tickSize={1} />
             <Legend formatter={this.renderColorfulLegendText} />
             <ReferenceLine
@@ -199,8 +190,12 @@ function GetLines(arrs) {
   if (arrs.length > 0) {
     var keyz = Object.keys(arrs[0]);
     const LengthOfObj = keyz.length;
+    let dayMultiplier = 0;
+    if (keyz.length > 20) {
+      dayMultiplier = Math.round(LengthOfObj / 10);
+    }
 
-    for (let i = 1; i < LengthOfObj; i++) {
+    for (let i = 1; i < LengthOfObj - 1; i = i + dayMultiplier + 1) {
       var cols = GetColors();
       let rgb =
         "rgb(" +
@@ -213,6 +208,17 @@ function GetLines(arrs) {
       LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
     }
 
+    //Always add expiration
+    var colLast = GetColors();
+    let rgb =
+      "rgb(" +
+      colLast.r.toString() +
+      "," +
+      colLast.g.toString() +
+      "," +
+      colLast.b.toString() +
+      ")";
+    LineList.push(<Line stroke={rgb} dataKey={keyz[keyz.length-1]} dot={false} />);
     return LineList;
   } else return null;
 }
@@ -228,4 +234,3 @@ function GetColors() {
   }
   return cols;
 }
-
