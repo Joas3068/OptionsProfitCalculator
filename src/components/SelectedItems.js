@@ -88,7 +88,7 @@ class SelectedItems extends React.Component {
                     2
                   )}
                 </TableCell>
-                <TableCell align="middle">
+                <TableCell align="center">
                   <IconButton
                     value={row.GUID}
                     size="medium"
@@ -98,7 +98,7 @@ class SelectedItems extends React.Component {
                     {/* {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}
                   </IconButton>
                 </TableCell>
-                <TableCell align="middle">
+                <TableCell align="center">
                    {row.numberOfContracts}
                 </TableCell>
               </TableRow>

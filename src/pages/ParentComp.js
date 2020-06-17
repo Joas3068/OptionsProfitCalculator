@@ -240,8 +240,13 @@ export class ParentComp extends React.Component {
     return arrayCopy;
   }
 
-  componentWillMount() {}
+  componentWillMount() {
 
+    var b = 3;
+
+  }
+
+  //get form edit data
   getFormData(val) {
     var indexFound = -1;
     for (let i = 0; i < this.state.checksList.length; i++) {
@@ -266,6 +271,7 @@ export class ParentComp extends React.Component {
     this.calcData();
   }
 
+  //get guid for selected row to edit
   getGuid(e, row) {
     var result = this.state.checksList.find((obj) => {
       return obj.GUID === row.target.value;
@@ -322,9 +328,13 @@ export class ParentComp extends React.Component {
     },this.calcData);
     
   }
+  
   render() {
     const { classes } = this.props;
-
+    //fetch("https://api.maharristhepug.com/api/values")
+    fetch("https://api.maharristhepug.com/api/optionsdata")
+      .then(response => response.json())
+      .then(data => console.log("API-DATA: " + data));
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>

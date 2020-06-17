@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   Legend,
-  ReferenceDot,
 } from "recharts";
 
 export default class Chart extends React.Component {
@@ -126,64 +125,64 @@ export default class Chart extends React.Component {
   }
 }
 
-function getBreakEvens(fmtArray) {
-  var keys;
-  var dataPoints = [];
-  if (fmtArray.length > 0) {
-    keys = Object.keys(fmtArray[0]);
-    var foundKeys = [];
-    for (let i = 0; i < keys.length; i++) {
-      let currentKey = keys[i];
-      let j = 1;
-      if (currentKey === "x" || foundKeys.includes(currentKey)) continue;
-      else {
-        let currentSign = fmtArray[j - 1][currentKey] >= 0 ? 1 : -1;
-        while (j < fmtArray.length) {
-          if (
-            fmtArray[j][currentKey] / Math.abs(fmtArray[j][currentKey]) !==
-            currentSign
-          ) {
-            dataPoints.push({ x: fmtArray[j - 1].x, Exp: currentKey });
-            foundKeys.push(currentKey);
-            break;
-          }
-          j++;
-        }
-      }
-    }
-  }
-  return dataPoints;
-}
+// function getBreakEvens(fmtArray) {
+//   var keys;
+//   var dataPoints = [];
+//   if (fmtArray.length > 0) {
+//     keys = Object.keys(fmtArray[0]);
+//     var foundKeys = [];
+//     for (let i = 0; i < keys.length; i++) {
+//       let currentKey = keys[i];
+//       let j = 1;
+//       if (currentKey === "x" || foundKeys.includes(currentKey)) continue;
+//       else {
+//         let currentSign = fmtArray[j - 1][currentKey] >= 0 ? 1 : -1;
+//         while (j < fmtArray.length) {
+//           if (
+//             fmtArray[j][currentKey] / Math.abs(fmtArray[j][currentKey]) !==
+//             currentSign
+//           ) {
+//             dataPoints.push({ x: fmtArray[j - 1].x, Exp: currentKey });
+//             foundKeys.push(currentKey);
+//             break;
+//           }
+//           j++;
+//         }
+//       }
+//     }
+//   }
+//   return dataPoints;
+// }
 
-function fMat(myUsers) {
-  var finalObj = [];
-  for (let i = 0; i < myUsers[0].length; i++) {
-    var tobj = { x: myUsers[0][i].sPrice };
-    for (let j = 0; j < myUsers.length; j++) {
-      tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
-    }
-    finalObj.push(tobj);
-  }
-  return finalObj;
-}
+// function fMat(myUsers) {
+//   var finalObj = [];
+//   for (let i = 0; i < myUsers[0].length; i++) {
+//     var tobj = { x: myUsers[0][i].sPrice };
+//     for (let j = 0; j < myUsers.length; j++) {
+//       tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
+//     }
+//     finalObj.push(tobj);
+//   }
+//   return finalObj;
+// }
 
-function PlotBreakEvens(breakEvenList) {
-  var refLines = [];
+// function PlotBreakEvens(breakEvenList) {
+//   var refLines = [];
 
-  for (let i = 0; i < breakEvenList.length; i++) {
-    refLines.push(
-      <ReferenceDot
-        x={breakEvenList[i].x}
-        y={0}
-        //stroke="#ff33cc"
-        fill="rgb(128, 0, 0)"
-        r={4}
-      />
-    );
-  }
+//   for (let i = 0; i < breakEvenList.length; i++) {
+//     refLines.push(
+//       <ReferenceDot
+//         x={breakEvenList[i].x}
+//         y={0}
+//         //stroke="#ff33cc"
+//         fill="rgb(128, 0, 0)"
+//         r={4}
+//       />
+//     );
+//   }
 
-  return refLines;
-}
+//   return refLines;
+// }
 
 function GetLines(arrs) {
   var LineList = [];
