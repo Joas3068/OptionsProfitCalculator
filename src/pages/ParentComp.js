@@ -35,6 +35,17 @@ const useRowStyles = (theme) => ({
     margin: theme.spacing(2),
     padding: theme.spacing(2),
   },
+  chartz: {
+    marginTop: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+
+    marginLeft: theme.spacing(0),
+    paddingLeft: theme.spacing(0),
+    marginRight: theme.spacing(0),
+    paddingRight: theme.spacing(0),
+  },
   container: {
     backgroundColor: Colors.Secondary,
     paddingTop: theme.spacing(2),
@@ -53,7 +64,7 @@ const useRowStyles = (theme) => ({
   },
   chartGrid: {
     backgroundColor: Colors.Tables,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     display: "block",
     // overflow: "auto",
     flexDirection: "row",
@@ -355,7 +366,9 @@ export class ParentComp extends React.Component {
             dataModeState={this.props.dataModeState}
             ></OptionsDrawer>
           </Grid>
-          <Grid container className={classes.drawer}>
+          <Grid container 
+          className={classes.chartz}
+          >
             <Chart
               formattedData={this.state.formattedData}
             ></Chart>

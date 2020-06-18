@@ -10,8 +10,7 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import ChainData from "../components/ChainData";
-import {TdData} from "../utils/StrategyData";
-
+import { TdData } from "../utils/StrategyData";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -107,71 +106,65 @@ const useRowStyles = (theme) => ({
   },
 });
 
-
 class TdDataMode extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedTdData: [], 
-      tdData:{},
+      selectedTdData: [],
+      tdData: {},
       formattedData: [],
     };
   }
 
-  componentDidMount(){
+  componentWillMount() {
     var a = TdData;
 
-      this.setState({tdData:TdData});
+    this.setState({ tdData: TdData });
   }
 
-  updateStrategy(obj){
+  updateStrategy(obj) {}
 
-  }
-  
   render() {
     const { classes } = this.props;
- 
+
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid container spacing={3}>
-            <OptionsDrawer 
-            className={classes.drawer}
-            updateStrategy={(obj,val)=>this.updateStrategy(obj,val)}
-            toggleDataMode={this.props.toggleDataMode}
-            dataModeState={this.props.dataModeState}
+            <OptionsDrawer
+              className={classes.drawer}
+              updateStrategy={(obj, val) => this.updateStrategy(obj, val)}
+              toggleDataMode={this.props.toggleDataMode}
+              dataModeState={this.props.dataModeState}
             ></OptionsDrawer>
           </Grid>
           <Grid container className={classes.drawer}>
-            <Chart
-              formattedData={this.state.formattedData}
-            ></Chart>
+            <Chart formattedData={this.state.formattedData}></Chart>
           </Grid>
-          {this.state.tdData.underlyingPrice}
-          {/* <Grid item xs={6}>
+
+          <Grid item xs={12}>
             <ChainData
+              tdDataContract={this.state.tdData.callExpDateMap}
               checksList={this.state.checksList}
               addDataFunc={(val) => this.addData(val)}
               rowData={this.state.rowData}
-              optionType={"Call"}
+              optionType={"CALL"}
               classes={classes}
             ></ChainData>
           </Grid>
           <Grid item xs={6}>
             <ChainData
+              tdDataContract={this.state.tdData.putExpDateMap}
               checksList={this.state.checksList}
               addDataFunc={(val) => this.addData(val)}
               rowData={this.state.rowData}
-              optionType={"Put"}
+              optionType={"PUT"}
               classes={classes}
             ></ChainData>
-          </Grid> */}
+          </Grid>
         </Grid>
-        <BottomNavigation
-          showLabels
-          className={classes.root}
-        >
+        <BottomNavigation showLabels className={classes.root}>
           <BottomNavigationAction
             icon={<GitHubIcon />}
             href={"https://github.com/Joas3068/OptionsProfitCalculator"}

@@ -17,56 +17,70 @@ import { ExpansionPanel } from "@material-ui/core";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
 
-
-
-function createData(type, buysell, stockPrice, strikePrice, expiration, interestFree,volatility, GUID) {
-  return {
-    type,
-    buysell,
-    stockPrice,
-    strikePrice,
-    expiration,
-    interestFree,
-    volatility,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID,
-  };
-}
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const [age, setAge] = React.useState('');
 
-  const isPresent = props.currentSelection.find((o) => o.GUID === row.GUID);
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+  // const isPresent = props.currentSelection.find((o) => o.GUID === row.GUID);
   return (
     <React.Fragment>
-      <TableRow >
+      <TableRow>
         <TableCell>
-          <IconButton
+          {/* <IconButton
             aria-label="expand row"
             size="small"
             onClick={() => setOpen(!open)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-          <Checkbox
+          </IconButton> */}
+          {/* <Checkbox
             checked={isPresent ? true : false}
             onClick={props.update(row)}
-          ></Checkbox>
+          ></Checkbox> */}
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.type}
+          {     <FormControl 
+          //className={classes.formControl}
+          >
+        <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+          Age
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-placeholder-label-label"
+          id="demo-simple-select-placeholder-label"
+          value={age}
+          onChange={handleChange}
+          displayEmpty
+          //className={classes.selectEmpty}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+        <FormHelperText>Label + placeholder</FormHelperText>
+      </FormControl>}
         </TableCell>
-        <TableCell align="left">{row.buysell}</TableCell>
-        <TableCell align="left">{row.stockPrice}</TableCell>
+        <TableCell align="left">{row.putCall}</TableCell>
+        <TableCell align="left">{row.mark}</TableCell>
         <TableCell align="left">{row.strikePrice}</TableCell>
-        <TableCell align="left">{row.expiration}</TableCell>
-        <TableCell align="left">{row.volatility}</TableCell>
-        <TableCell align="left">{row.interestFree}</TableCell>
+        <TableCell align="left">{row.strikePrice}</TableCell>
+        <TableCell align="left">{row.openInterest}</TableCell>
+        <TableCell align="left">{new Date(row.expirationDate).toLocaleDateString()}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -84,7 +98,7 @@ function Row(props) {
                     <TableCell align="right">Total price ($)</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                {/* <TableBody>
                   {row.greeks.map((greeksRow) => (
                     <TableRow key={greeksRow.volatility}>
                       <TableCell component="th" scope="row">
@@ -97,7 +111,7 @@ function Row(props) {
                       </TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
+                </TableBody> */}
               </Table>
             </Box>
           </Collapse>
@@ -125,56 +139,62 @@ function Row(props) {
 //   }).isRequired,
 // };
 
-
 class ChainData extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { counter: 0, counterList: [], checksList: [] };
-    this.appendToList = this.appendToList.bind(this);
+    this.state = { tdData: {} };
   }
 
-  countRows = () => {
-    let rowsz = [];
-    for (let index = 0; index < 25; index++) {
-      rowsz.push(
-        createData(
-          index,
-          Math.random(),
-          Math.random(),
-          Math.random(),
-          Math.random(),
-          Math.random()
-        )
-      );
+  getChainList(chain) {
+    var chainList = [];
+    var keys = Object.keys(chain);
+    for (let index = 0; index < keys.length; index++) {
+      var DateObject = chain[keys[index]];
+      var strikeKeys = Object.keys(DateObject);
+      for (let j = 0; j < strikeKeys.length; j++) {
+        for (let k = 0; k < DateObject[strikeKeys[j]].length; k++) {
+          console.log(DateObject[strikeKeys[j]][k]);
+          chainList.push(DateObject[strikeKeys[j]][k]);
+        }
+      }
     }
-    return rowsz;
-  };
-
-  appendToList(val) {
-    return () => {
-      this.setState({
-        checksList: this.state.checksList.concat(val),
-      });
-    };
+    return chainList;
   }
 
   render() {
-    const getR = this.props.rowData;
     const classes = this.props.classes;
+    var contractData = this.props.tdDataContract;
+
+    var optionsList = this.getChainList(contractData);
+    const listItems = optionsList.map((number) => (
+      <li key={number.symbol}>{number.symbol + "----" + number.strikePrice}</li>
+    ));
     return (
-      <ExpansionPanel className={ this.props.optionType==="Call"? classes.expPanelCall:classes.expPanelPut}>
+      <ExpansionPanel
+        // className={
+        //   this.props.optionType === "CALL"
+        //     ? classes.expPanelCall
+        //     : classes.expPanelPut
+        // }
+      >
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>{this.props.optionType}</Typography>
+          <Typography className={classes.heading}>
+            {this.props.optionType}
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Container maxWidth="lg" className={this.props.classes.container}>
-            <TableContainer >
+          <Container maxWidth="lg" 
+          //className={this.props.classes.container}
+          >
+            <TableContainer>
               <Table aria-label="collapsible table">
-                <TableHead className={classes.tableHead}>
+                <TableHead 
+                //className={classes.tableHead}
+                >
                   <TableRow>
                     <TableCell>Select</TableCell>
                     <TableCell align="left">Type</TableCell>
@@ -187,17 +207,13 @@ class ChainData extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {getR.map((row) =>
-                    row.optionType === this.props.optionType ? (
-                      <Row
-                        key={row.name}
-                        row={row}
-                        update={(row) => this.props.addDataFunc(row)}
-                        currentSelection={this.props.checksList}
-                        classes={this.props.classes}
-                      />
-                    ) : null
-                  )}
+                  {optionsList.map((number) => (
+                    <Row key={number.symbol} row={number}>
+                      {/* {number.symbol + "----" + number.strikePrice} */}
+                    </Row>
+                    
+                  ))}
+                  {/* {listItems} */}
                 </TableBody>
               </Table>
             </TableContainer>

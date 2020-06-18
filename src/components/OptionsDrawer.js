@@ -102,7 +102,7 @@ const PurpleSwitch = withStyles({
       color: Colors.Tables,
     },
     "&$checked + $track": {
-      backgroundColor: Colors.Primary,
+      backgroundColor: Colors.Tables,
     },
   },
   checked: {},
@@ -115,7 +115,7 @@ export default function OptionsDrawer(props) {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [toggleMode, setToggleMode] = React.useState(false);
-  const [value, setValue] = React.useState('Input TD Ameritrade Key');
+  const [value, setValue] = React.useState(" ");
   //const { prop } = props;
   const handleInputChange = (event) => {
     setValue(event.target.value);
@@ -151,17 +151,25 @@ export default function OptionsDrawer(props) {
 
   function handleChange(e) {
     var a = e.target.checked;
-    setOpenDialog(true);
-    setToggleMode(a);
+    if (!toggleMode && a) {
+      setOpenDialog(true);
+      setToggleMode(a);
+    } else if (!toggleMode && !a) {
+      setOpenDialog(false);
+      setToggleMode(a);
+      changeMode();
+    }
   }
 
   function changeMode() {
-    props.toggleDataMode(toggleMode,value);
+    props.toggleDataMode(toggleMode, value);
   }
 
-  const handleClose = () => {
+  function handleClose() {
+    setToggleMode(false);
     setOpenDialog(false);
-  };
+    props.toggleDataMode(!toggleMode, value);
+  }
 
   return (
     <div className={classes.root}>
@@ -190,7 +198,8 @@ export default function OptionsDrawer(props) {
             control={
               <PurpleSwitch
                 onChange={handleChange}
-                defaultChecked={props.dataModeState}
+                // defaultChecked={props.dataModeState}
+                checked={props.dataModeState}
                 aria-label="toggle-mode"
               />
             }
@@ -233,18 +242,17 @@ export default function OptionsDrawer(props) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        {/* <DialogTitle id="form-dialog-title">Subscribe</DialogTitle> */}
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
+            Enter TD Ameritrade developers key for options data.
           </DialogContentText>
           <TextField
-            autoFocus
+            // autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
-            type="email"
+            label="TD Key"
+            type="string"
             fullWidth
             onChange={handleInputChange}
             value={value}
@@ -254,7 +262,7 @@ export default function OptionsDrawer(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={changeMode} color="primary" >
+          <Button onClick={changeMode} color="primary">
             Subscribe
           </Button>
         </DialogActions>

@@ -21,28 +21,6 @@ export default class Chart extends React.Component {
     };
   }
 
-  fetchUsers() {
-    fetch()
-      .then((response) => response.json())
-      .then((data) =>
-        this.setState({
-          data: {
-            symbol: data[0].symbol,
-          },
-          left: "dataMin",
-          right: "dataMax",
-          refAreaLeft: "",
-          refAreaRight: "",
-          top: "dataMax+1",
-          bottom: "dataMin-1",
-          top2: "dataMax+20",
-          bottom2: "dataMin-20",
-          animation: true,
-        })
-      )
-      // Catch any errors we hit and update the app
-      .catch((error) => this.setState({ error, isLoading: false }));
-  }
 
   renderColorfulLegendText(value, entry) {
     entry.color = "#ffffff";
@@ -74,16 +52,10 @@ export default class Chart extends React.Component {
             width={500}
             height={250}
             data={formatedData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
           >
             <CartesianGrid strokeDasharray="5 5" />
             <XAxis dataKey="x" stroke="white" domain={[{ xMin }, { xMax }]} />
-            <YAxis minTickGap={0} tickSize={1} />
+            <YAxis  minTickGap={0} tickSize={1} />
             <Legend formatter={this.renderColorfulLegendText} />
             <ReferenceLine
               y={0}
@@ -110,11 +82,13 @@ export default class Chart extends React.Component {
               }
             /> */}
             {/* {PlotBreakEvens(getBreakEven)} */}
+            
             <Tooltip
-              viewBox={{ x: 0, y: 0, width: 400, height: 400 }}
+              viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
               //position={{ x: 400, y: 0 }}
               //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
               cursor={false}
+              offset={60}
               animationEasing={"linear"}
             />
             {GetLines(formatedData)}
