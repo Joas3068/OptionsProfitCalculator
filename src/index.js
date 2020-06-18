@@ -4,13 +4,14 @@ import './index.css';
 import ParentComp from "./pages/ParentComp"
 import * as serviceWorker from './serviceWorker';
 import { Helmet } from 'react-helmet'
+import Main from "./pages/Main";
 
 ReactDOM.render(
   <React.StrictMode>
           <Helmet>
           <title>Options P/L</title>
         </Helmet>
-    <ParentComp ></ParentComp>
+    <Main></Main>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -177,6 +177,7 @@ export class ParentComp extends React.Component {
       currentEditGuid: mainObj[0].GUID, //GUID to access checksList
       calculatedPriceData: [[]], //final calcs for Charts
       formattedData: [],
+      tdData:{},
     };
     this.addData = this.addData.bind(this);
     this.clearSelected = this.clearSelected.bind(this);
@@ -240,9 +241,20 @@ export class ParentComp extends React.Component {
     return arrayCopy;
   }
 
-  componentWillMount() {
+  getRes(res){
+    this.setState({
+      tdData: res,
+    });
+  }
 
-    var b = 3;
+  componentDidMount() {
+    var r;
+      //  fetch("https://localhost:44321/api/optionsdata")
+      //  //fetch("https://api.maharristhepug.com/api/optionsdata")
+      //  .then(response => response.json())
+      //  .then(data => r = data)
+      //  .then(() => this.getRes(r))
+       //.then(data => console.log("API-DATA: " + data.symbol));
 
   }
 
@@ -331,10 +343,7 @@ export class ParentComp extends React.Component {
   
   render() {
     const { classes } = this.props;
-    //fetch("https://api.maharristhepug.com/api/values")
-    fetch("https://api.maharristhepug.com/api/optionsdata")
-      .then(response => response.json())
-      .then(data => console.log("API-DATA: " + data));
+ 
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
@@ -342,13 +351,12 @@ export class ParentComp extends React.Component {
             <OptionsDrawer 
             className={classes.drawer}
             updateStrategy={(obj,val)=>this.updateStrategy(obj,val)}
+            toggleDataMode={this.props.toggleDataMode}
+            dataModeState={this.props.dataModeState}
             ></OptionsDrawer>
           </Grid>
           <Grid container className={classes.drawer}>
             <Chart
-              checksList={this.state.checksList}
-              currentEditGuid={this.state.currentEditGuid}
-              priceArray={this.getCurrentOptionObj()}
               formattedData={this.state.formattedData}
             ></Chart>
           </Grid>

@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -13,6 +13,22 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import Colors from "../utils/Colors";
 import { Button } from "@material-ui/core";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import {
+  CallDebitSpread,
+  PutCreditSpread,
+  LongCall,
+  ShortPut,
+  IronCondor,
+} from "../utils/StrategyData";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DataKeyDialog from "../Elements/DataKeyDialog";
 
 const drawerWidth = 240;
 
@@ -74,13 +90,36 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  title: {
+    flexGrow: 1,
+  },
 }));
+
+const PurpleSwitch = withStyles({
+  switchBase: {
+    color: Colors.Tables,
+    "&$checked": {
+      color: Colors.Tables,
+    },
+    "&$checked + $track": {
+      backgroundColor: Colors.Primary,
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
 
 export default function OptionsDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [toggleMode, setToggleMode] = React.useState(false);
+  const [value, setValue] = React.useState('Input TD Ameritrade Key');
   //const { prop } = props;
+  const handleInputChange = (event) => {
+    setValue(event.target.value);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -110,6 +149,20 @@ export default function OptionsDrawer(props) {
     props.updateStrategy(IronCondor);
   }
 
+  function handleChange(e) {
+    var a = e.target.checked;
+    setOpenDialog(true);
+    setToggleMode(a);
+  }
+
+  function changeMode() {
+    props.toggleDataMode(toggleMode,value);
+  }
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <div className={classes.root}>
       <AppBar
@@ -129,14 +182,24 @@ export default function OptionsDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography className={classes.title} variant="h6">
             Options Strategies
           </Typography>
+
+          <FormControlLabel
+            control={
+              <PurpleSwitch
+                onChange={handleChange}
+                defaultChecked={props.dataModeState}
+                aria-label="toggle-mode"
+              />
+            }
+            label={"Toggle Data Mode"}
+          />
         </Toolbar>
       </AppBar>
       <Drawer
         className={classes.drawer}
-        // variant="persistent"
         anchor="left"
         open={open}
         classes={{
@@ -165,201 +228,37 @@ export default function OptionsDrawer(props) {
         <Button onClick={sendShortPut}>Short Put</Button>
         <Divider />
       </Drawer>
+      <Dialog
+        open={openDialog}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here.
+            We will send updates occasionally.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+            onChange={handleInputChange}
+            value={value}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={changeMode} color="primary" >
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
-
-const CallDebitSpread = [
-  {
-    type: "call",
-    buySell: "sell",
-    stockPrice: 450,
-    strikePrice: 455,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 25,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-  {
-    type: "call",
-    buySell: "buy",
-    stockPrice: 450,
-    strikePrice: 445,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 22,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-];
-
-const PutCreditSpread = [
-  {
-    type: "put",
-    buySell: "sell",
-    stockPrice: 450,
-    strikePrice: 455,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 56,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-  {
-    type: "put",
-    buySell: "buy",
-    stockPrice: 450,
-    strikePrice: 445,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 52,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-];
-
-const LongCall = [
-  {
-    type: "call",
-    buySell: "buy",
-    stockPrice: 450,
-    strikePrice: 445,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 22,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-];
-
-const ShortPut = [
-  {
-    type: "put",
-    buySell: "sell",
-    stockPrice: 450,
-    strikePrice: 445,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 22,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-];
-
-const IronCondor = [
-  {
-    type: "call",
-    buySell: "sell",
-    stockPrice: 450,
-    strikePrice: 455,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 44,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-  {
-    type: "call",
-    buySell: "buy",
-    stockPrice: 450,
-    strikePrice: 460,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 43,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-  {
-    type: "put",
-    buySell: "sell",
-    stockPrice: 450,
-    strikePrice: 435,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 56,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-  {
-    type: "put",
-    buySell: "buy",
-    stockPrice: 450,
-    strikePrice: 430,
-    expiration: 6,
-    interestFree: 0.02,
-    volatility: 52,
-    greeks: [
-      { volatility: "55%", delta: ".5", amount: 3 },
-      { volatility: "59%", delta: ".2", amount: 1 },
-    ],
-    GUID: "",
-    isEditing: false,
-    priceArray: [[]],
-    breakEvens: [],
-    numberOfContracts: 1,
-  },
-];
