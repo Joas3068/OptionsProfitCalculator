@@ -143,7 +143,7 @@ class TdDataMode extends React.Component {
             <Chart formattedData={this.state.formattedData}></Chart>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <ChainData
               tdDataContract={this.state.tdData.callExpDateMap}
               checksList={this.state.checksList}
