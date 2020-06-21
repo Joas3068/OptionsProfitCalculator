@@ -263,7 +263,7 @@ export default function OptionsDrawer(props) {
             Cancel
           </Button>
           <Button onClick={changeMode} color="primary">
-            Subscribe
+            Submit
           </Button>
         </DialogActions>
       </Dialog>

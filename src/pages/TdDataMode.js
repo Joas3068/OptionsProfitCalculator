@@ -10,7 +10,7 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import ChainData from "../components/ChainData";
-import { TdData } from "../utils/StrategyData";
+import { TdBigData } from "../utils/StrategyData";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -27,8 +27,11 @@ const useRowStyles = (theme) => ({
     flexGrow: 1,
   },
   table: {
-    minWidth: 0,
-    backgroundColor: Colors.Tables,
+    backgroundColor: "#dde7ed",
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+
+    display: "block",
   },
   drawer: {
     margin: theme.spacing(2),
@@ -39,16 +42,20 @@ const useRowStyles = (theme) => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     height: 500,
-    overflow: "scroll",
+    //overflow: "scroll",
     display: "block",
   },
-  paper: {
-    backgroundColor: Colors.Secondary,
-    padding: theme.spacing(2),
-    // display: "flex",
-    overflow: "auto",
-    // // flexDirection: "row",
-    maxHeight: "auto",
+  chainGrid: {
+    //active
+    // backgroundColor: "white",
+    //margin:theme.spacing(2),
+    // //display: "flex",
+    // // // flexDirection: "row",
+    // //maxHeight: "auto",
+    //display: "flex",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    // //height: 500,
   },
   chartGrid: {
     backgroundColor: Colors.Tables,
@@ -74,11 +81,9 @@ const useRowStyles = (theme) => ({
   fixedHeight: {
     height: 300,
   },
-  expPanelCall: {
-    backgroundColor: "rgb(0, 77, 0)",
-  },
-  expPanelPut: {
-    backgroundColor: "#364156",
+  expPanelChain: {
+    //active
+    backgroundColor: "lighGray",
   },
   selectedTable: {
     backgroundColor: "gray",
@@ -90,6 +95,12 @@ const useRowStyles = (theme) => ({
     // backgroundColor: "rgb(128, 0, 0)",
     display: "block",
     flexGrow: 1,
+    //overflow: "scroll",
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
   },
   headerButton: {
     margin: theme.spacing(1),
@@ -97,12 +108,19 @@ const useRowStyles = (theme) => ({
     backgroundColor: "rgb(204, 204, 204)",
     flexGrow: 1,
   },
-  headerBlock: {
-    // margin: theme.spacing(1),
-    // backgroundColor: "rgb(128, 0, 0)",
-    // color: "white",
-    // padding: theme.spacing(2),
-    //flexGrow: 1,
+  tableRoot: {
+    // borderColor: 'red',borderStyle: 'solid',borderTopWidth: 1
+  },
+  tableCellTrue: {
+    //active
+    backgroundColor: "#6aab72",
+  },
+  tableCellFalse: {
+    //active
+    backgroundColor: "#c74444",
+  },
+  addButton: {
+    margin: theme.spacing(1),
   },
 });
 
@@ -115,15 +133,18 @@ class TdDataMode extends React.Component {
       tdData: {},
       formattedData: [],
     };
+    this.sendObject = this.sendObject.bind(this);
   }
 
   componentWillMount() {
-    var a = TdData;
-
-    this.setState({ tdData: TdData });
+    this.setState({ tdData: TdBigData });
   }
 
   updateStrategy(obj) {}
+
+  sendObject(obj) {
+    if (Array.isArray(obj)) var a = obj[0];
+  }
 
   render() {
     const { classes } = this.props;
@@ -142,26 +163,29 @@ class TdDataMode extends React.Component {
           <Grid container className={classes.drawer}>
             <Chart formattedData={this.state.formattedData}></Chart>
           </Grid>
-
-          <Grid item xs={6}>
-            <ChainData
-              tdDataContract={this.state.tdData.callExpDateMap}
-              checksList={this.state.checksList}
-              addDataFunc={(val) => this.addData(val)}
-              rowData={this.state.rowData}
-              optionType={"CALL"}
-              classes={classes}
-            ></ChainData>
-          </Grid>
-          <Grid item xs={6}>
-            <ChainData
-              tdDataContract={this.state.tdData.putExpDateMap}
-              checksList={this.state.checksList}
-              addDataFunc={(val) => this.addData(val)}
-              rowData={this.state.rowData}
-              optionType={"PUT"}
-              classes={classes}
-            ></ChainData>
+          <Grid container spacing={3}>
+            <Grid className={classes.chainGrid} item xs={12}>
+              <ChainData
+                tdDataContract={this.state.tdData.callExpDateMap}
+                checksList={this.state.checksList}
+                addDataFunc={(val) => this.addData(val)}
+                rowData={this.state.rowData}
+                optionType={"CALL"}
+                classes={classes}
+                sendObject={(obj) => this.sendObject(obj)}
+              ></ChainData>
+            </Grid>
+            <Grid className={classes.chainGrid} item xs={12}>
+              <ChainData
+                tdDataContract={this.state.tdData.putExpDateMap}
+                checksList={this.state.checksList}
+                addDataFunc={(val) => this.addData(val)}
+                rowData={this.state.rowData}
+                optionType={"PUT"}
+                classes={classes}
+                sendObject={(obj) => this.sendObject(obj)}
+              ></ChainData>
+            </Grid>
           </Grid>
         </Grid>
         <BottomNavigation showLabels className={classes.root}>

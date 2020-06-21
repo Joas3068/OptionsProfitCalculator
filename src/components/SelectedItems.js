@@ -22,9 +22,6 @@ class SelectedItems extends React.Component {
     this.props.getGuid(event);
   };
 
-  deleteRow = (event) => {
-    this.props.deleteRow(event);
-  };
   render() {
     const classes = this.props.className;
     const cGui = this.props.checksList.find((obj) => {

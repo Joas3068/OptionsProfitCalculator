@@ -65,7 +65,7 @@ const useRowStyles = (theme) => ({
   chartGrid: {
     backgroundColor: Colors.Tables,
     padding: theme.spacing(1),
-    display: "block",
+    //display: "block",
     // overflow: "auto",
     flexDirection: "row",
     flex: 1,
