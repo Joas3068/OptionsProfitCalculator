@@ -11,6 +11,7 @@ import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import ChainData from "../components/ChainData";
 import { TdBigData } from "../utils/StrategyData";
+import SelectedTdData from "../components/SelectedTdData";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -20,7 +21,6 @@ const useRowStyles = (theme) => ({
     "& > *": {
       borderBottom: "unset",
     },
-    //width: "100%",
     flexWrap: "wrap",
   },
   title: {
@@ -37,14 +37,14 @@ const useRowStyles = (theme) => ({
     margin: theme.spacing(2),
     padding: theme.spacing(2),
   },
-  container: {
-    backgroundColor: Colors.Secondary,
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    height: 500,
-    //overflow: "scroll",
-    display: "block",
-  },
+  // container: {
+  //   backgroundColor: Colors.Secondary,
+  //   paddingTop: theme.spacing(2),
+  //   paddingBottom: theme.spacing(2),
+  //   height: 500,
+  //   //overflow: "scroll",
+  //   display: "block",
+  // },
   chainGrid: {
     //active
     // backgroundColor: "white",
@@ -59,25 +59,22 @@ const useRowStyles = (theme) => ({
   },
   chartGrid: {
     backgroundColor: Colors.Tables,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     display: "block",
     // overflow: "auto",
     flexDirection: "row",
     flex: 1,
     maxHeight: "auto",
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  paperHeader: {
-    backgroundColor: "#364156",
-    padding: theme.spacing(0),
-    flexDirection: "row",
-  },
+  // formControl: {
+  //   margin: theme.spacing(1),
+  //   minWidth: 120,
+  // },
+  // paperHeader: {
+  //   backgroundColor: "#364156",
+  //   padding: theme.spacing(0),
+  //   flexDirection: "row",
+  // },
   fixedHeight: {
     height: 300,
   },
@@ -97,20 +94,17 @@ const useRowStyles = (theme) => ({
     flexGrow: 1,
     //overflow: "scroll",
   },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  },
-  headerButton: {
-    margin: theme.spacing(1),
-    color: "black",
-    backgroundColor: "rgb(204, 204, 204)",
-    flexGrow: 1,
-  },
-  tableRoot: {
-    // borderColor: 'red',borderStyle: 'solid',borderTopWidth: 1
-  },
+  // paper: {
+  //   padding: theme.spacing(1),
+  //   textAlign: "center",
+  //   color: theme.palette.text.secondary,
+  // },
+  // headerButton: {
+  //   margin: theme.spacing(1),
+  //   color: "black",
+  //   backgroundColor: "rgb(204, 204, 204)",
+  //   flexGrow: 1,
+  // },
   tableCellTrue: {
     //active
     backgroundColor: "#6aab72",
@@ -142,8 +136,26 @@ class TdDataMode extends React.Component {
 
   updateStrategy(obj) {}
 
+  //check if symbol exists. If not add number of contracts or increment
   sendObject(obj) {
-    if (Array.isArray(obj)) var a = obj[0];
+    if (Array.isArray(obj)) {
+      var cData = this.state.selectedTdData.find((x) => {
+        return x.symbol === obj[0].symbol;
+      });
+
+      if (cData) {
+        obj[0]["numberOfContracts"] += 1;
+       let index=  this.state.selectedTdData.findIndex(x=>x.symbol === cData.symbol);
+       var stateReplace = this.state.selectedTdData;
+       stateReplace[index] = obj[0];
+       this.setState({ selectedTdData: stateReplace });
+      } else {
+        obj[0]["numberOfContracts"] = 1;
+        this.setState((prevState) => ({
+          selectedTdData: [...prevState.selectedTdData, obj[0]],
+        }));
+      }
+    }
   }
 
   render() {
@@ -162,6 +174,18 @@ class TdDataMode extends React.Component {
           </Grid>
           <Grid container className={classes.drawer}>
             <Chart formattedData={this.state.formattedData}></Chart>
+          </Grid>
+          <Grid spacing={3} item xs={12}>
+            <SelectedTdData
+              classes={classes}
+              // clearSelected={() => this.clearSelected()}
+              // getGuid={(e, val) => this.getGuid(val, e)}
+              //selectedItems={this.state.checksList}
+              // calculateOptionsPrice={() => this.calculateOptionsPrice()}
+              // currentEditGuid={this.state.currentEditGuid}
+              selectedTdData={this.state.selectedTdData}
+              // deleteRow={(e, val) => this.deleteRow(val, e)}
+            ></SelectedTdData>
           </Grid>
           <Grid container spacing={3}>
             <Grid className={classes.chainGrid} item xs={12}>

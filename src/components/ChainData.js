@@ -25,6 +25,8 @@ import AddIcon from "@material-ui/icons/Add";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Paper from "@material-ui/core/Paper";
+
+//expiration data and strike price are keys to access values
 function Rows(props) {
   const [open, setOpen] = React.useState(false);
 
@@ -70,8 +72,8 @@ function Rows(props) {
                 onChange={handleChange}
                 //displayEmpty
               >
-                {Object.keys(props.contractData).map((number) => (
-                  <MenuItem value={number}>{number}</MenuItem>
+                {Object.keys(props.contractData).map((number,key) => (
+                  <MenuItem key={key} value={number}>{number}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -88,8 +90,8 @@ function Rows(props) {
                 displayEmpty
               >
                 {Object.keys(props.contractData[expirationKey]).map(
-                  (ExpItem) => (
-                    <MenuItem value={ExpItem}>{ExpItem}</MenuItem>
+                  (ExpItem,index) => (
+                    <MenuItem key={index} value={ExpItem}>{ExpItem}</MenuItem>
                   )
                 )}
               </Select>
@@ -185,21 +187,20 @@ class ChainData extends React.Component {
     this.state = { tdData: {} };
   }
 
-  getChainList(chain) {
-    var chainList = [];
-    var keys = Object.keys(chain);
-    for (let index = 0; index < keys.length; index++) {
-      var DateObject = chain[keys[index]];
-      var strikeKeys = Object.keys(DateObject);
-      for (let j = 0; j < strikeKeys.length; j++) {
-        for (let k = 0; k < DateObject[strikeKeys[j]].length; k++) {
-          console.log(DateObject[strikeKeys[j]][k]);
-          chainList.push(DateObject[strikeKeys[j]][k]);
-        }
-      }
-    }
-    return chainList;
-  }
+  // getChainList(chain) {
+  //   var chainList = [];
+  //   var keys = Object.keys(chain);
+  //   for (let index = 0; index < keys.length; index++) {
+  //     var DateObject = chain[keys[index]];
+  //     var strikeKeys = Object.keys(DateObject);
+  //     for (let j = 0; j < strikeKeys.length; j++) {
+  //       for (let k = 0; k < DateObject[strikeKeys[j]].length; k++) {
+  //         chainList.push(DateObject[strikeKeys[j]][k]);
+  //       }
+  //     }
+  //   }
+  //   return chainList;
+  // }
 
   render() {
     const classes = this.props.classes;
@@ -263,4 +264,3 @@ class ChainData extends React.Component {
 }
 
 export default ChainData;
-//export default (ChainData);
