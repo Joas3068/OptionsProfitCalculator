@@ -135,7 +135,23 @@ class TdDataMode extends React.Component {
   }
 
   updateStrategy(obj) {}
+  updateContractNumber(newObj) {
 
+    var numInput = parseInt(newObj.target.value);
+    const id = newObj.target.id;
+
+    let index = this.state.selectedTdData.findIndex(
+      (x) => x.symbol === id
+    );
+
+    if(numInput > 0){
+      var stateReplace = this.state.selectedTdData;
+      stateReplace[index]["numberOfContracts"] = numInput;
+
+       this.setState({ selectedTdData: stateReplace });
+    }
+   
+  }
   //check if symbol exists. If not add number of contracts or increment
   sendObject(obj) {
     if (Array.isArray(obj)) {
@@ -145,10 +161,12 @@ class TdDataMode extends React.Component {
 
       if (cData) {
         obj[0]["numberOfContracts"] += 1;
-       let index=  this.state.selectedTdData.findIndex(x=>x.symbol === cData.symbol);
-       var stateReplace = this.state.selectedTdData;
-       stateReplace[index] = obj[0];
-       this.setState({ selectedTdData: stateReplace });
+        let index = this.state.selectedTdData.findIndex(
+          (x) => x.symbol === cData.symbol
+        );
+        var stateReplace = this.state.selectedTdData;
+        stateReplace[index] = obj[0];
+        this.setState({ selectedTdData: stateReplace });
       } else {
         obj[0]["numberOfContracts"] = 1;
         this.setState((prevState) => ({
@@ -184,6 +202,7 @@ class TdDataMode extends React.Component {
               // calculateOptionsPrice={() => this.calculateOptionsPrice()}
               // currentEditGuid={this.state.currentEditGuid}
               selectedTdData={this.state.selectedTdData}
+              updateContractNumber={(obj,val)=>this.updateContractNumber(obj,val)}
               // deleteRow={(e, val) => this.deleteRow(val, e)}
             ></SelectedTdData>
           </Grid>

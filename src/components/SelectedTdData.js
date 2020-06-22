@@ -14,7 +14,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 class SelectedTdData extends React.Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      selectedTdData: [],
+    };
     this.testGuid = this.testGuid.bind(this);
   }
 
@@ -22,16 +24,22 @@ class SelectedTdData extends React.Component {
     this.props.getGuid(event);
   };
 
+
+
   render() {
     const classes = this.props.classes;
     // const cGui = this.props.checksList.find((obj) => {
     //   return obj.GUID === this.props.currentEditGuid;
     // });
-
+    if (
+      this.props.selectedTdData.length > 0 &&
+      this.state.selectedTdData.length !== this.props.selectedTdData.length
+    )
+      this.setState({ selectedTdData: this.props.selectedTdData });
     return (
       <TableContainer component={Paper}>
         <Table
-         // className={classes.table}
+          // className={classes.table}
           size="small"
           aria-label="a dense table"
         >
@@ -42,7 +50,7 @@ class SelectedTdData extends React.Component {
               <TableCell align="left">Strike Price&nbsp;</TableCell>
               <TableCell align="left">Expiration&nbsp;</TableCell>
               <TableCell align="left">Strike Price&nbsp;</TableCell>
-              <TableCell align="left">Expiration&nbsp;</TableCell>
+              <TableCell align="left">Number of Contracts&nbsp;</TableCell>
               <TableCell align="left">Volatility&nbsp;</TableCell>
               <TableCell align="left">Interest Free&nbsp;</TableCell>
               <TableCell align="left">Mark&nbsp;</TableCell>
@@ -60,37 +68,54 @@ class SelectedTdData extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Array.isArray(this.props.selectedTdData) ? this.props.selectedTdData.map((row) => (
-              <TableRow key={row.symbol}>
-                <TableCell align="left">
-                  {/* <Checkbox
+            {Array.isArray(this.props.selectedTdData)
+              ? this.props.selectedTdData.map((row) => (
+                  <TableRow key={row.symbol}>
+                    <TableCell align="left">
+                      {/* <Checkbox
                     checked={row.GUID === cGui.GUID ? true : false}
                     value={row.GUID}
                     onChangeCapture={this.props.getGuid}
                   ></Checkbox> */}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.putCall === "CALL" ? "Call" : "Put"}
-                </TableCell>
-                <TableCell align="left">
-                  {/* {row.buySell === "buy" ? "Buy" : "Sell"} */}
-                  {new Date(row.expirationDate).toLocaleDateString()}
-                </TableCell>
-                <TableCell align="left">{row.theoreticalVolatility}</TableCell>
-                <TableCell align="left">{row.theoreticalOptionValue}</TableCell>
-                <TableCell align="left"><InputBase 
-                inputProps={{min:0,style:{maxWidth:50,backgroundColor:"#f2f2f2",textAlign: 'center'}}}
-                
-                type="number"  value={row.numberOfContracts} ></InputBase></TableCell>
-                {/* <TableCell align="left">{row.expiration}</TableCell>
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {row.putCall === "CALL" ? "Call" : "Put"}
+                    </TableCell>
+                    <TableCell align="left">
+                      {/* {row.buySell === "buy" ? "Buy" : "Sell"} */}
+                      {new Date(row.expirationDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell align="left">
+                      {row.theoreticalVolatility}
+                    </TableCell>
+                    <TableCell align="left">
+                      {row.theoreticalOptionValue}
+                    </TableCell>
+                    <TableCell align="left">
+                      <InputBase
+                        inputProps={{
+                          min: 0,
+                          style: {
+                            maxWidth: 50,
+                            backgroundColor: "#f2f2f2",
+                            textAlign: "center",
+                          },
+                        }}
+                        onChange={this.props.updateContractNumber}
+                        type="number"
+                        value={row.numberOfContracts}
+                        id={row.symbol}
+                      ></InputBase>
+                    </TableCell>
+                    {/* <TableCell align="left">{row.expiration}</TableCell>
                 <TableCell align="left">{row.volatility}</TableCell>
                 <TableCell align="left">{row.interestFree}</TableCell> */}
-                {/* <TableCell align="left">
+                    {/* <TableCell align="left">
                   {Number.parseFloat(row.optionPriceAtPurchase / 100).toFixed(
                     2
                   )}
                 </TableCell> */}
-                {/* <TableCell align="center">
+                    {/* <TableCell align="center">
                   <IconButton
                     value={row.GUID}
                     size="medium"
@@ -100,11 +125,12 @@ class SelectedTdData extends React.Component {
                     {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                   </IconButton>
                 </TableCell> */}
-                {/* <TableCell align="center">
+                    {/* <TableCell align="center">
                    {row.numberOfContracts}
                 </TableCell> */}
-              </TableRow>
-            )):null}
+                  </TableRow>
+                ))
+              : null}
           </TableBody>
         </Table>
       </TableContainer>
