@@ -12,6 +12,7 @@ import Colors from "../utils/Colors";
 import ChainData from "../components/ChainData";
 import { TdBigData } from "../utils/StrategyData";
 import SelectedTdData from "../components/SelectedTdData";
+import { CalcBScholesTdData } from "../utils/Bscholes";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -135,45 +136,68 @@ class TdDataMode extends React.Component {
   }
 
   updateStrategy(obj) {}
-  updateContractNumber(newObj) {
 
+  updateContractNumber(newObj) {
+    //parse valu to int get id from input
     var numInput = parseInt(newObj.target.value);
     const id = newObj.target.id;
 
-    let index = this.state.selectedTdData.findIndex(
-      (x) => x.symbol === id
-    );
+    //find matching symbol GUID
+    let index = this.state.selectedTdData.findIndex((x) => x.symbol === id);
 
-    if(numInput > 0){
+    //if found replace array with new value.
+    if (numInput > 0) {
       var stateReplace = this.state.selectedTdData;
       stateReplace[index]["numberOfContracts"] = numInput;
 
-       this.setState({ selectedTdData: stateReplace });
+      this.setState({ selectedTdData: stateReplace });
     }
-   
   }
   //check if symbol exists. If not add number of contracts or increment
-  sendObject(obj) {
+  sendObject(obj, id) {
     if (Array.isArray(obj)) {
       var cData = this.state.selectedTdData.find((x) => {
         return x.symbol === obj[0].symbol;
       });
 
       if (cData) {
-        obj[0]["numberOfContracts"] += 1;
-        let index = this.state.selectedTdData.findIndex(
-          (x) => x.symbol === cData.symbol
-        );
-        var stateReplace = this.state.selectedTdData;
-        stateReplace[index] = obj[0];
-        this.setState({ selectedTdData: stateReplace });
+        var stateReplace;
+        if (obj[0].buySell !== id) {
+          obj[0]["numberOfContracts"] = 1;
+          let index = this.state.selectedTdData.findIndex(
+            (x) => x.symbol === cData.symbol
+          );
+          stateReplace = this.state.selectedTdData;
+          stateReplace[index] = obj[0];
+          this.setState({ selectedTdData: stateReplace },this.makeCalcs);
+        } else {
+          obj[0]["buySell"]= id;
+          obj[0]["numberOfContracts"] += 1;
+          let index = this.state.selectedTdData.findIndex(
+            (x) => x.symbol === cData.symbol
+          );
+          stateReplace = this.state.selectedTdData;
+          stateReplace[index] = obj[0];
+          this.setState({ selectedTdData: stateReplace },this.makeCalcs);
+        }
       } else {
         obj[0]["numberOfContracts"] = 1;
+        obj[0]["buySell"] = id;
         this.setState((prevState) => ({
           selectedTdData: [...prevState.selectedTdData, obj[0]],
-        }));
+        }),this.makeCalcs);
       }
+      
     }
+  }
+
+  makeCalcs() {
+    var calc = CalcBScholesTdData(
+      this.state.selectedTdData,
+      this.state.tdData.underlyingPrice,
+      this.state.tdData.interestRate
+    );
+    this.setState({ formattedData: calc });
   }
 
   render() {
@@ -202,7 +226,9 @@ class TdDataMode extends React.Component {
               // calculateOptionsPrice={() => this.calculateOptionsPrice()}
               // currentEditGuid={this.state.currentEditGuid}
               selectedTdData={this.state.selectedTdData}
-              updateContractNumber={(obj,val)=>this.updateContractNumber(obj,val)}
+              updateContractNumber={(obj, val) =>
+                this.updateContractNumber(obj, val)
+              }
               // deleteRow={(e, val) => this.deleteRow(val, e)}
             ></SelectedTdData>
           </Grid>
@@ -210,23 +236,25 @@ class TdDataMode extends React.Component {
             <Grid className={classes.chainGrid} item xs={12}>
               <ChainData
                 tdDataContract={this.state.tdData.callExpDateMap}
+                tdData={this.state.tdData}
                 checksList={this.state.checksList}
                 addDataFunc={(val) => this.addData(val)}
                 rowData={this.state.rowData}
                 optionType={"CALL"}
                 classes={classes}
-                sendObject={(obj) => this.sendObject(obj)}
+                sendObject={(obj, e) => this.sendObject(obj, e)}
               ></ChainData>
             </Grid>
             <Grid className={classes.chainGrid} item xs={12}>
               <ChainData
                 tdDataContract={this.state.tdData.putExpDateMap}
+                tdData={this.state.tdData}
                 checksList={this.state.checksList}
                 addDataFunc={(val) => this.addData(val)}
                 rowData={this.state.rowData}
                 optionType={"PUT"}
                 classes={classes}
-                sendObject={(obj) => this.sendObject(obj)}
+                sendObject={(obj, e) => this.sendObject(obj, e)}
               ></ChainData>
             </Grid>
           </Grid>

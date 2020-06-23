@@ -25,7 +25,9 @@ import AddIcon from "@material-ui/icons/Add";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Paper from "@material-ui/core/Paper";
-
+import ButtonBase from "@material-ui/core/ButtonBase";
+import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
 //expiration data and strike price are keys to access values
 function Rows(props) {
   const [open, setOpen] = React.useState(false);
@@ -51,8 +53,8 @@ function Rows(props) {
       return "";
     }
   }
-  function handleClick() {
-    props.sendObject(props.contractData[expirationKey][strikeKey]);
+  function handleClick(e) {
+    props.sendObject(props.contractData[expirationKey][strikeKey],e.currentTarget.id);
   }
   return (
     <React.Fragment>
@@ -72,8 +74,10 @@ function Rows(props) {
                 onChange={handleChange}
                 //displayEmpty
               >
-                {Object.keys(props.contractData).map((number,key) => (
-                  <MenuItem key={key} value={number}>{number}</MenuItem>
+                {Object.keys(props.contractData).map((number, key) => (
+                  <MenuItem key={key} value={number}>
+                    {number}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -90,19 +94,37 @@ function Rows(props) {
                 displayEmpty
               >
                 {Object.keys(props.contractData[expirationKey]).map(
-                  (ExpItem,index) => (
-                    <MenuItem key={index} value={ExpItem}>{ExpItem}</MenuItem>
+                  (ExpItem, index) => (
+                    <MenuItem key={index} value={ExpItem}>
+                      {ExpItem}
+                    </MenuItem>
                   )
                 )}
               </Select>
             </FormControl>
           }
         </TableCell>
-        <TableCell className={props.classes.tableCellFalse} align="left">
-          {safeHandle("bid")}
+        <TableCell align="left">
+          <Tooltip title="Sell">
+            <Button
+              className={props.classes.tableCellFalse}
+              id="sell"
+              onClick={handleClick}
+            >
+              {safeHandle("bid")}
+            </Button>
+          </Tooltip>
         </TableCell>
-        <TableCell className={props.classes.tableCellTrue} align="left">
-          {safeHandle("ask")}
+        <TableCell align="left">
+          <Tooltip title="Buy">
+            <Button
+              className={props.classes.tableCellTrue}
+              id="buy"
+              onClick={handleClick}
+            >
+              {safeHandle("ask")}
+            </Button>
+          </Tooltip>
         </TableCell>
         <TableCell align="left">{safeHandle("volatility") + "%"}</TableCell>
         <TableCell align="left">{safeHandle("openInterest")}</TableCell>
@@ -126,21 +148,21 @@ function Rows(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>
-          {/* <Typography style={{ display: "inline" }} variant="subtitle2">
+        {/* <TableCell>
+          <Typography style={{ display: "inline" }} variant="subtitle2">
             Add Selection
-          </Typography> */}
+          </Typography>
           <Fab
-            //style={{ margin: 10, marginRight: 20 }} //change this
+            style={{ margin: 10, marginRight: 20 }} //change this
             size={"small"}
-            //className={props.classes.addButton}
+            className={props.classes.addButton}
             color="primary"
             aria-label="add"
             onClick={handleClick}
           >
             <AddIcon />
           </Fab>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -237,7 +259,7 @@ class ChainData extends React.Component {
                           <TableCell>Expiration Date</TableCell>
                           <TableCell align="left">Strike Price</TableCell>
                           <TableCell align="left">Bid&nbsp;</TableCell>
-                          <TableCell align="left">ask&nbsp;</TableCell>
+                          <TableCell align="left">Ask&nbsp;</TableCell>
                           <TableCell align="left">Volatility&nbsp;</TableCell>
                           <TableCell align="left">Open Int.&nbsp;</TableCell>
                           <TableCell align="left">ITM/OTM&nbsp;</TableCell>

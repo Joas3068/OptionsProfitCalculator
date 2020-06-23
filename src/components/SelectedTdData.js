@@ -28,14 +28,7 @@ class SelectedTdData extends React.Component {
 
   render() {
     const classes = this.props.classes;
-    // const cGui = this.props.checksList.find((obj) => {
-    //   return obj.GUID === this.props.currentEditGuid;
-    // });
-    if (
-      this.props.selectedTdData.length > 0 &&
-      this.state.selectedTdData.length !== this.props.selectedTdData.length
-    )
-      this.setState({ selectedTdData: this.props.selectedTdData });
+
     return (
       <TableContainer component={Paper}>
         <Table

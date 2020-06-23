@@ -19,6 +19,66 @@ export function GetSchole(lastItem) {
   return tempObject;
 }
 
+
+
+export function CalcBScholesTdData(tdArr,stockPrice,interestRate) {
+  var finalCalcs = [];
+
+  if (tdArr.length > 0) {
+
+    //cancel if exp > 150
+      for (let checkExp = 0; checkExp < tdArr.length; checkExp++) {
+        if (tdArr[checkExp].daysToExpiration > 150) return [];
+      }
+
+    let multiplier = Math.floor(stockPrice / 12); //tweak graph size here
+    for (
+      let index = stockPrice - multiplier;
+      index < stockPrice + multiplier;
+      index += 0.5 //this will change resolution of graph. the higher the number the less ticks
+    ) {
+      var entryAtStockPrice = {};
+      entryAtStockPrice["x"] = index; //add stock price on x axis
+      for (let i = 0; i < tdArr.length; i++) {
+        //var entryAtStockPrice = {};
+
+        //add price at purchase. replace with API data
+
+          //Sell contracts are neg
+        //   if (tdArr[i].buySell === "sell")
+        //   tdArr[i].optionPriceAtPurchase *= -1;
+        // }
+
+        for (let j = 0; j <= tdArr[i].daysToExpiration; j++) {
+          //iterate through expirations
+
+          var type = tdArr[i].putCall;
+          var strikeX = Number(tdArr[i].strikePrice);
+          var timeYears = (tdArr[i].daysToExpiration - j) / 365;
+          var r = interestRate;
+          var volatility = tdArr[i].volatility / 100;
+          var BS =
+            BlackScholes(type, index, strikeX, timeYears, r, volatility) * 100; //current price
+          var sign = tdArr[i].buySell === "sell" ? -1 : 1;
+          if (entryAtStockPrice["DAY" + (j + 1)] === undefined)
+            entryAtStockPrice["DAY" + (j + 1)] = 0;
+          if (isNaN(BS)) BS = 0;
+          var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
+          entryAtStockPrice["DAY" + (j + 1)] =
+            Number.parseFloat(tdArr[i].numberOfContracts) *
+              (sign * BS - (tdArr[i].theoreticalOptionValue*100)) +
+            tempEnt;
+        }
+      }
+      finalCalcs.push(entryAtStockPrice);
+    }
+    return finalCalcs;
+  } else return [];
+}
+
+
+
+
 export function GetBreakEvens(checksList) {
   // for (let i = 0; i < checksList.length; i++) {
   //   let exp = checksList[i].expiration;
@@ -139,7 +199,7 @@ function GetCalcArr(lastItem, i) {
 function BlackScholes(PutCallFlag, S, X, T, r, v) {
   var d1 = (Math.log(S / X) + (r + (v * v) / 2) * T) / (v * Math.sqrt(T));
   var d2 = d1 - v * Math.sqrt(T);
-  if (PutCallFlag === "call") {
+  if (PutCallFlag === "call" || PutCallFlag ==="CALL") {
     return S * CND(d1) - X * Math.exp(-r * T) * CND(d2);
   } else {
     return X * Math.exp(-r * T) * CND(-d2) - S * CND(-d1);
