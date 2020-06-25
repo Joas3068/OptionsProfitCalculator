@@ -36,9 +36,12 @@ function Rows(props) {
   var initialStrikeKey = Object.keys(props.contractData[initialDateKey[0]]);
 
   const [expirationKey, setExpirationKey] = React.useState(initialDateKey[0]);
-  const [strikeKey, setStrikeKey] = React.useState(
-    initialStrikeKey[(initialStrikeKey.length - 1) / 2]
-  );
+
+  let index = 0;
+
+  while (props.tdData.underlyingPrice - initialStrikeKey[index] > 0) index++;
+
+  const [strikeKey, setStrikeKey] = React.useState(initialStrikeKey[index]);
   const handleChange = (event) => {
     setExpirationKey(event.target.value);
   };
@@ -54,17 +57,17 @@ function Rows(props) {
     }
   }
   function handleClick(e) {
-    props.sendObject(props.contractData[expirationKey][strikeKey],e.currentTarget.id);
+    props.sendObject(
+      props.contractData[expirationKey][strikeKey],
+      e.currentTarget.id
+    );
   }
   return (
     <React.Fragment>
       <TableRow value={props.contractData[expirationKey][strikeKey]}>
-        {/* <TableCell> */}
-        {/* <Checkbox
-            checked={isPresent ? true : false}
-            onClick={props.update(row)}
-          ></Checkbox> */}
-        {/* </TableCell> */}
+        <TableCell>
+        {props.tdData.underlyingPrice}
+        </TableCell>
         <TableCell component="th" scope="row">
           {
             <FormControl className={props.classes.formControl}>
@@ -243,19 +246,14 @@ class ChainData extends React.Component {
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Paper className={classes.headerPaper}>
               <Grid item xs={12}>
-                <Container
-                  maxWidth="lg"
-                  // className={this.props.classes.container}
-                >
-                  <TableContainer>
                     <Table
-                      className={classes.chainGrid}
+                      className={classes.chainDataTable}
                       aria-label="collapsible table"
                     >
                       <TableHead>
                         <TableRow className={classes.tableRoot}>
+                          <TableCell>Underlying Price</TableCell>
                           <TableCell>Expiration Date</TableCell>
                           <TableCell align="left">Strike Price</TableCell>
                           <TableCell align="left">Bid&nbsp;</TableCell>
@@ -271,13 +269,11 @@ class ChainData extends React.Component {
                           contractData={contractData}
                           classes={classes}
                           sendObject={this.props.sendObject}
+                          tdData={this.props.tdData}
                         ></Rows>
                       </TableBody>
                     </Table>
-                  </TableContainer>
-                </Container>
               </Grid>
-            </Paper>
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>

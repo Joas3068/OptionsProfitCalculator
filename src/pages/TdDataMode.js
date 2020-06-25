@@ -38,14 +38,7 @@ const useRowStyles = (theme) => ({
     margin: theme.spacing(2),
     padding: theme.spacing(2),
   },
-  // container: {
-  //   backgroundColor: Colors.Secondary,
-  //   paddingTop: theme.spacing(2),
-  //   paddingBottom: theme.spacing(2),
-  //   height: 500,
-  //   //overflow: "scroll",
-  //   display: "block",
-  // },
+
   chainGrid: {
     //active
     // backgroundColor: "white",
@@ -67,15 +60,7 @@ const useRowStyles = (theme) => ({
     flex: 1,
     maxHeight: "auto",
   },
-  // formControl: {
-  //   margin: theme.spacing(1),
-  //   minWidth: 120,
-  // },
-  // paperHeader: {
-  //   backgroundColor: "#364156",
-  //   padding: theme.spacing(0),
-  //   flexDirection: "row",
-  // },
+
   fixedHeight: {
     height: 300,
   },
@@ -83,29 +68,9 @@ const useRowStyles = (theme) => ({
     //active
     backgroundColor: "lighGray",
   },
-  selectedTable: {
-    backgroundColor: "gray",
+  chainDataTable: {
+    backgroundColor: "#f2f2f2",
   },
-  headerPaper: {
-    //Top level
-    margin: theme.spacing(3),
-    // color: "rgb(191, 191, 191)",
-    // backgroundColor: "rgb(128, 0, 0)",
-    display: "block",
-    flexGrow: 1,
-    //overflow: "scroll",
-  },
-  // paper: {
-  //   padding: theme.spacing(1),
-  //   textAlign: "center",
-  //   color: theme.palette.text.secondary,
-  // },
-  // headerButton: {
-  //   margin: theme.spacing(1),
-  //   color: "black",
-  //   backgroundColor: "rgb(204, 204, 204)",
-  //   flexGrow: 1,
-  // },
   tableCellTrue: {
     //active
     backgroundColor: "#6aab72",
@@ -221,7 +186,7 @@ class TdDataMode extends React.Component {
             <SelectedTdData
               classes={classes}
               // clearSelected={() => this.clearSelected()}
-              // getGuid={(e, val) => this.getGuid(val, e)}
+              editItem={(e, val) => this.getGuid(val, e)}
               //selectedItems={this.state.checksList}
               // calculateOptionsPrice={() => this.calculateOptionsPrice()}
               // currentEditGuid={this.state.currentEditGuid}

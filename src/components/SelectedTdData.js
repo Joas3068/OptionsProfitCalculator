@@ -57,7 +57,7 @@ class SelectedTdData extends React.Component {
                   Clear All
                 </Button> */}
               </TableCell>
-              <TableCell align="left">Number Of Contracts</TableCell>
+
             </TableRow>
           </TableHead>
           <TableBody>
@@ -65,21 +65,22 @@ class SelectedTdData extends React.Component {
               ? this.props.selectedTdData.map((row) => (
                   <TableRow key={row.symbol}>
                     <TableCell align="left">
-                      {/* <Checkbox
-                    checked={row.GUID === cGui.GUID ? true : false}
-                    value={row.GUID}
+                      <Checkbox
+                    // checked={row.GUID === cGui.GUID ? true : false}
+                    value={row.symbol}
                     onChangeCapture={this.props.getGuid}
-                  ></Checkbox> */}
+                  ></Checkbox>
                     </TableCell>
                     <TableCell component="th" scope="row">
                       {row.putCall === "CALL" ? "Call" : "Put"}
                     </TableCell>
                     <TableCell align="left">
                       {/* {row.buySell === "buy" ? "Buy" : "Sell"} */}
-                      {new Date(row.expirationDate).toLocaleDateString()}
+                      {row.strikePrice}
                     </TableCell>
                     <TableCell align="left">
-                      {row.theoreticalVolatility}
+                    {new Date(row.expirationDate).toLocaleDateString()}
+                      {/* {row.theoreticalVolatility} */}
                     </TableCell>
                     <TableCell align="left">
                       {row.theoreticalOptionValue}
@@ -100,6 +101,9 @@ class SelectedTdData extends React.Component {
                         id={row.symbol}
                       ></InputBase>
                     </TableCell>
+                    <TableCell align="left">-</TableCell>
+                    <TableCell align="left">-</TableCell>
+                    <TableCell align="left">-</TableCell>
                     {/* <TableCell align="left">{row.expiration}</TableCell>
                 <TableCell align="left">{row.volatility}</TableCell>
                 <TableCell align="left">{row.interestFree}</TableCell> */}
