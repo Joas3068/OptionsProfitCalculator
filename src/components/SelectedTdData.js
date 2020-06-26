@@ -10,7 +10,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { Button, InputBase } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import Tooltip from "@material-ui/core/Tooltip";
 class SelectedTdData extends React.Component {
   constructor(props) {
     super(props);
@@ -23,8 +23,6 @@ class SelectedTdData extends React.Component {
   testGuid = (event) => {
     this.props.getGuid(event);
   };
-
-
 
   render() {
     const classes = this.props.classes;
@@ -42,22 +40,22 @@ class SelectedTdData extends React.Component {
               <TableCell align="left">Type</TableCell>
               <TableCell align="left">Strike Price&nbsp;</TableCell>
               <TableCell align="left">Expiration&nbsp;</TableCell>
-              <TableCell align="left">Strike Price&nbsp;</TableCell>
+              <TableCell align="left">Mark&nbsp;</TableCell>
               <TableCell align="left">Number of Contracts&nbsp;</TableCell>
               <TableCell align="left">Volatility&nbsp;</TableCell>
               <TableCell align="left">Interest Free&nbsp;</TableCell>
               <TableCell align="left">Mark&nbsp;</TableCell>
               <TableCell align="left">
-                {/* <Button
+                <Button
+                  style={{ backgroundColor: "#bfbfbf", color: "black" }}
                   className={classes.headerButton}
                   variant="contained"
                   color="primary"
-                  onClick={this.props.clearSelected}
+                  onClick={this.props.clearAll}
                 >
                   Clear All
-                </Button> */}
+                </Button>
               </TableCell>
-
             </TableRow>
           </TableHead>
           <TableBody>
@@ -66,20 +64,34 @@ class SelectedTdData extends React.Component {
                   <TableRow key={row.symbol}>
                     <TableCell align="left">
                       <Checkbox
-                    // checked={row.GUID === cGui.GUID ? true : false}
-                    value={row.symbol}
-                    onChangeCapture={this.props.getGuid}
-                  ></Checkbox>
+                        // checked={row.GUID === cGui.GUID ? true : false}
+                        value={row.symbol}
+                        onChangeCapture={this.props.getGuid}
+                      ></Checkbox>
                     </TableCell>
-                    <TableCell component="th" scope="row">
-                      {row.putCall === "CALL" ? "Call" : "Put"}
-                    </TableCell>
+                    <Tooltip title={
+                          row.buySell === "buy"
+                            ? "Buy"
+                            : "Sell"
+                        }>
+                      <TableCell
+                        className={
+                          row.buySell === "buy"
+                            ? this.props.classes.tableCellTrue
+                            : this.props.classes.tableCellFalse
+                        }
+                        component="th"
+                        scope="row"
+                      >
+                        {row.putCall === "CALL" ? "Call" : "Put"}
+                      </TableCell>
+                    </Tooltip>
                     <TableCell align="left">
                       {/* {row.buySell === "buy" ? "Buy" : "Sell"} */}
                       {row.strikePrice}
                     </TableCell>
                     <TableCell align="left">
-                    {new Date(row.expirationDate).toLocaleDateString()}
+                      {new Date(row.expirationDate).toLocaleDateString()}
                       {/* {row.theoreticalVolatility} */}
                     </TableCell>
                     <TableCell align="left">
@@ -104,27 +116,15 @@ class SelectedTdData extends React.Component {
                     <TableCell align="left">-</TableCell>
                     <TableCell align="left">-</TableCell>
                     <TableCell align="left">-</TableCell>
-                    {/* <TableCell align="left">{row.expiration}</TableCell>
-                <TableCell align="left">{row.volatility}</TableCell>
-                <TableCell align="left">{row.interestFree}</TableCell> */}
-                    {/* <TableCell align="left">
-                  {Number.parseFloat(row.optionPriceAtPurchase / 100).toFixed(
-                    2
-                  )}
-                </TableCell> */}
-                    {/* <TableCell align="center">
-                  <IconButton
-                    value={row.GUID}
-                    size="medium"
-                    onClick={this.props.deleteRow}
-                  >
-                    <DeleteIcon />
-                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                  </IconButton>
-                </TableCell> */}
-                    {/* <TableCell align="center">
-                   {row.numberOfContracts}
-                </TableCell> */}
+                    <TableCell align="left">
+                      <IconButton
+                        value={row.symbol}
+                        size="medium"
+                        onClick={this.props.deleteRow}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))
               : null}

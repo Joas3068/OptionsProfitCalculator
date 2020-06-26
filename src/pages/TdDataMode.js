@@ -3,7 +3,7 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Chart from "../Chart";
 import { withStyles } from "@material-ui/core/styles";
-import { CalcBScholes } from "../utils/Bscholes";
+// import { CalcBScholes } from "../utils/Bscholes";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
@@ -67,6 +67,7 @@ const useRowStyles = (theme) => ({
   expPanelChain: {
     //active
     backgroundColor: "lighGray",
+    overflow: "auto"
   },
   chainDataTable: {
     backgroundColor: "#f2f2f2",
@@ -115,7 +116,7 @@ class TdDataMode extends React.Component {
       var stateReplace = this.state.selectedTdData;
       stateReplace[index]["numberOfContracts"] = numInput;
 
-      this.setState({ selectedTdData: stateReplace });
+      this.setState({ selectedTdData: stateReplace },this.makeCalcs);
     }
   }
   //check if symbol exists. If not add number of contracts or increment
@@ -129,6 +130,7 @@ class TdDataMode extends React.Component {
         var stateReplace;
         if (obj[0].buySell !== id) {
           obj[0]["numberOfContracts"] = 1;
+          obj[0].buySell = id;
           let index = this.state.selectedTdData.findIndex(
             (x) => x.symbol === cData.symbol
           );
@@ -165,6 +167,21 @@ class TdDataMode extends React.Component {
     this.setState({ formattedData: calc });
   }
 
+  clearAll(){
+    this.setState({selectedTdData: []});
+  }
+
+  deleteRow(e, row) {
+    const inputGuid = row.currentTarget.value;
+      this.setState(
+        {
+          selectedTdData: this.state.selectedTdData.filter((x) => x.symbol !== inputGuid),
+        },
+        this.makeCalcs
+      );
+    //}
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -182,11 +199,11 @@ class TdDataMode extends React.Component {
           <Grid container className={classes.drawer}>
             <Chart formattedData={this.state.formattedData}></Chart>
           </Grid>
-          <Grid spacing={3} item xs={12}>
+          <Grid  item xs={12}>
             <SelectedTdData
               classes={classes}
-              // clearSelected={() => this.clearSelected()}
-              editItem={(e, val) => this.getGuid(val, e)}
+              clearAll={() => this.clearAll()}
+              deleteRow={(e, val) => this.deleteRow(val, e)}
               //selectedItems={this.state.checksList}
               // calculateOptionsPrice={() => this.calculateOptionsPrice()}
               // currentEditGuid={this.state.currentEditGuid}

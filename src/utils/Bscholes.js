@@ -31,6 +31,7 @@ export function CalcBScholesTdData(tdArr,stockPrice,interestRate) {
         if (tdArr[checkExp].daysToExpiration > 150) return [];
       }
 
+      
     let multiplier = Math.floor(stockPrice / 12); //tweak graph size here
     for (
       let index = stockPrice - multiplier;
@@ -39,6 +40,8 @@ export function CalcBScholesTdData(tdArr,stockPrice,interestRate) {
     ) {
       var entryAtStockPrice = {};
       entryAtStockPrice["x"] = index; //add stock price on x axis
+
+      
       for (let i = 0; i < tdArr.length; i++) {
         //var entryAtStockPrice = {};
 
@@ -48,7 +51,6 @@ export function CalcBScholesTdData(tdArr,stockPrice,interestRate) {
         //   if (tdArr[i].buySell === "sell")
         //   tdArr[i].optionPriceAtPurchase *= -1;
         // }
-
         for (let j = 0; j <= tdArr[i].daysToExpiration; j++) {
           //iterate through expirations
 
@@ -65,9 +67,9 @@ export function CalcBScholesTdData(tdArr,stockPrice,interestRate) {
           if (isNaN(BS)) BS = 0;
           var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
           entryAtStockPrice["DAY" + (j + 1)] =
-            Number.parseFloat(tdArr[i].numberOfContracts) *
-              (sign * BS - (tdArr[i].theoreticalOptionValue*100)) +
-            tempEnt;
+            +(Number.parseFloat(tdArr[i].numberOfContracts) *
+              ((sign * BS) - (sign*tdArr[i].theoreticalOptionValue*100)) +
+            tempEnt).toFixed(4);
         }
       }
       finalCalcs.push(entryAtStockPrice);
@@ -154,9 +156,9 @@ export function CalcBScholes(checksList) {
           if (isNaN(BS)) BS = 0;
           var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
           entryAtStockPrice["DAY" + (j + 1)] =
-            Number.parseFloat(checksList[i].numberOfContracts) *
+            +(Number.parseFloat(checksList[i].numberOfContracts) *
               (sign * BS - checksList[i].optionPriceAtPurchase) +
-            tempEnt;
+            tempEnt).toFixed(4);
         }
       }
       finalCalcs.push(entryAtStockPrice);
