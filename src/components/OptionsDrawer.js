@@ -115,7 +115,7 @@ export default function OptionsDrawer(props) {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [toggleMode, setToggleMode] = React.useState(false);
-  const [value, setValue] = React.useState(" ");
+  const [value, setValue] = React.useState(props.tdKey);
   //const { prop } = props;
   const handleInputChange = (event) => {
     setValue(event.target.value);

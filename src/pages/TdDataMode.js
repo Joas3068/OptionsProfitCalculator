@@ -67,7 +67,7 @@ const useRowStyles = (theme) => ({
   expPanelChain: {
     //active
     backgroundColor: "lighGray",
-    overflow: "auto"
+    overflow: "auto",
   },
   chainDataTable: {
     backgroundColor: "#f2f2f2",
@@ -101,6 +101,23 @@ class TdDataMode extends React.Component {
     this.setState({ tdData: TdBigData });
   }
 
+  componentDidMount() {
+    try {
+      var selectedTdData = JSON.parse(localStorage.getItem("selectedTdData"));
+      if (selectedTdData !== null)
+        this.setState({ selectedTdData: selectedTdData }, this.makeCalcs);
+    } catch {
+      localStorage.clear();
+    }
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem(
+      "selectedTdData",
+      JSON.stringify(this.state.selectedTdData)
+    );
+  }
+
   updateStrategy(obj) {}
 
   updateContractNumber(newObj) {
@@ -116,7 +133,7 @@ class TdDataMode extends React.Component {
       var stateReplace = this.state.selectedTdData;
       stateReplace[index]["numberOfContracts"] = numInput;
 
-      this.setState({ selectedTdData: stateReplace },this.makeCalcs);
+      this.setState({ selectedTdData: stateReplace }, this.makeCalcs);
     }
   }
   //check if symbol exists. If not add number of contracts or increment
@@ -136,25 +153,27 @@ class TdDataMode extends React.Component {
           );
           stateReplace = this.state.selectedTdData;
           stateReplace[index] = obj[0];
-          this.setState({ selectedTdData: stateReplace },this.makeCalcs);
+          this.setState({ selectedTdData: stateReplace }, this.makeCalcs);
         } else {
-          obj[0]["buySell"]= id;
+          obj[0]["buySell"] = id;
           obj[0]["numberOfContracts"] += 1;
           let index = this.state.selectedTdData.findIndex(
             (x) => x.symbol === cData.symbol
           );
           stateReplace = this.state.selectedTdData;
           stateReplace[index] = obj[0];
-          this.setState({ selectedTdData: stateReplace },this.makeCalcs);
+          this.setState({ selectedTdData: stateReplace }, this.makeCalcs);
         }
       } else {
         obj[0]["numberOfContracts"] = 1;
         obj[0]["buySell"] = id;
-        this.setState((prevState) => ({
-          selectedTdData: [...prevState.selectedTdData, obj[0]],
-        }),this.makeCalcs);
+        this.setState(
+          (prevState) => ({
+            selectedTdData: [...prevState.selectedTdData, obj[0]],
+          }),
+          this.makeCalcs
+        );
       }
-      
     }
   }
 
@@ -167,18 +186,20 @@ class TdDataMode extends React.Component {
     this.setState({ formattedData: calc });
   }
 
-  clearAll(){
-    this.setState({selectedTdData: []});
+  clearAll() {
+    this.setState({ selectedTdData: [] });
   }
 
   deleteRow(e, row) {
     const inputGuid = row.currentTarget.value;
-      this.setState(
-        {
-          selectedTdData: this.state.selectedTdData.filter((x) => x.symbol !== inputGuid),
-        },
-        this.makeCalcs
-      );
+    this.setState(
+      {
+        selectedTdData: this.state.selectedTdData.filter(
+          (x) => x.symbol !== inputGuid
+        ),
+      },
+      this.makeCalcs
+    );
     //}
   }
 
@@ -194,12 +215,13 @@ class TdDataMode extends React.Component {
               updateStrategy={(obj, val) => this.updateStrategy(obj, val)}
               toggleDataMode={this.props.toggleDataMode}
               dataModeState={this.props.dataModeState}
+              tdKey={this.props.tdKey}
             ></OptionsDrawer>
           </Grid>
           <Grid container className={classes.drawer}>
             <Chart formattedData={this.state.formattedData}></Chart>
           </Grid>
-          <Grid  item xs={12}>
+          <Grid item xs={12}>
             <SelectedTdData
               classes={classes}
               clearAll={() => this.clearAll()}

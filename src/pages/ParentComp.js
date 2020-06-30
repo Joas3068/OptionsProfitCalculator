@@ -388,6 +388,7 @@ export class ParentComp extends React.Component {
               updateStrategy={(obj, val) => this.updateStrategy(obj, val)}
               toggleDataMode={this.props.toggleDataMode}
               dataModeState={this.props.dataModeState}
+              tdKey={this.props.tdKey}
             ></OptionsDrawer>
           </Grid>
           <Grid container className={classes.chartz}>
