@@ -18,9 +18,9 @@ export default class Chart extends React.Component {
 
     this.state = {
       colors: [],
+      numberOfDays: -1,
     };
   }
-
 
   renderColorfulLegendText(value, entry) {
     entry.color = "#ffffff";
@@ -48,14 +48,10 @@ export default class Chart extends React.Component {
     return (
       <div style={{ width: "100%", height: 700 }}>
         <ResponsiveContainer>
-          <LineChart
-            width={500}
-            height={250}
-            data={formatedData}
-          >
+          <LineChart width={500} height={250} data={formatedData}>
             <CartesianGrid strokeDasharray="5 5" />
             <XAxis dataKey="x" stroke="white" domain={[{ xMin }, { xMax }]} />
-            <YAxis  minTickGap={0} tickSize={1} />
+            <YAxis minTickGap={0} tickSize={1} />
             <Legend formatter={this.renderColorfulLegendText} />
             <ReferenceLine
               y={0}
@@ -82,7 +78,7 @@ export default class Chart extends React.Component {
               }
             /> */}
             {/* {PlotBreakEvens(getBreakEven)} */}
-            
+
             <Tooltip
               viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
               //position={{ x: 400, y: 0 }}
@@ -91,7 +87,7 @@ export default class Chart extends React.Component {
               offset={60}
               animationEasing={"linear"}
             />
-            {GetLines(formatedData)}
+            {GetLines(formatedData, this.state.numberOfDays)}
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -158,27 +154,42 @@ export default class Chart extends React.Component {
 //   return refLines;
 // }
 
-function GetLines(arrs) {
+function GetLines(arrs, numberOfDays) {
   var LineList = [];
   if (arrs.length > 0) {
     var keyz = Object.keys(arrs[0]);
     const LengthOfObj = keyz.length;
-    let dayMultiplier = 0;
-    if (keyz.length > 20) {
-      dayMultiplier = Math.round(LengthOfObj / 10);
-    }
+    if (numberOfDays === -1) {
+      let dayMultiplier = 0;
+      if (keyz.length > 20) {
+        dayMultiplier = Math.round(LengthOfObj / 10);
+      }
 
-    for (let i = 1; i < LengthOfObj - 1; i = i + dayMultiplier + 1) {
-      var cols = GetColors();
-      let rgb =
-        "rgb(" +
-        cols.r.toString() +
-        "," +
-        cols.g.toString() +
-        "," +
-        cols.b.toString() +
-        ")";
-      LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
+      for (let i = 1; i < LengthOfObj - 1; i = i + dayMultiplier + 1) {
+        var cols = GetColors();
+        let rgb =
+          "rgb(" +
+          cols.r.toString() +
+          "," +
+          cols.g.toString() +
+          "," +
+          cols.b.toString() +
+          ")";
+        LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
+      }
+    } else {
+      for (let i = 1; i < numberOfDays; i++) {
+        var colsD = GetColors();
+        let rgb =
+          "rgb(" +
+          colsD.r.toString() +
+          "," +
+          colsD.g.toString() +
+          "," +
+          colsD.b.toString() +
+          ")";
+        LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
+      }
     }
 
     //Always add expiration
@@ -191,7 +202,9 @@ function GetLines(arrs) {
       "," +
       colLast.b.toString() +
       ")";
-    LineList.push(<Line stroke={rgb} dataKey={keyz[keyz.length-1]} dot={false} />);
+    LineList.push(
+      <Line stroke={rgb} dataKey={keyz[keyz.length - 1]} dot={false} />
+    );
     return LineList;
   } else return null;
 }

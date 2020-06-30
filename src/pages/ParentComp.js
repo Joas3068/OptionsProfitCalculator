@@ -131,7 +131,7 @@ const mainObj = [
       { volatility: "55%", delta: ".5", amount: 3 },
       { volatility: "59%", delta: ".2", amount: 1 },
     ],
-    GUID: "",
+    GUID: uuidv4(),
     isEditing: false,
     priceArray: [[]],
     breakEvens: [],
@@ -149,7 +149,7 @@ const mainObj = [
       { volatility: "55%", delta: ".5", amount: 3 },
       { volatility: "59%", delta: ".2", amount: 1 },
     ],
-    GUID: "",
+    GUID: uuidv4(),
     isEditing: false,
     priceArray: [[]],
     breakEvens: [],
@@ -167,7 +167,7 @@ const mainObj = [
       { volatility: "55%", delta: ".5", amount: 3 },
       { volatility: "59%", delta: ".2", amount: 1 },
     ],
-    GUID: "",
+    GUID: uuidv4(),
     isEditing: false,
     priceArray: [[]],
     breakEvens: [],
@@ -178,22 +178,21 @@ const mainObj = [
 export class ParentComp extends React.Component {
   constructor(props) {
     super(props);
-
     mainObj.forEach((element) => {
       //create identity for each order
       element.GUID = uuidv4();
     });
+
     this.state = {
       checksList: mainObj, //current options
       currentEditGuid: mainObj[0].GUID, //GUID to access checksList
       calculatedPriceData: [[]], //final calcs for Charts
       formattedData: [],
-      tdData:{},
+      tdData: {},
     };
     this.addData = this.addData.bind(this);
     this.clearSelected = this.clearSelected.bind(this);
     this.getGuid = this.getGuid.bind(this);
-    this.calcData = this.calcData.bind(this);
   }
 
   addData(val) {
@@ -252,21 +251,31 @@ export class ParentComp extends React.Component {
     return arrayCopy;
   }
 
-  getRes(res){
+  getRes(res) {
     this.setState({
       tdData: res,
     });
   }
 
   componentDidMount() {
-    var r;
-      //  fetch("https://localhost:44321/api/optionsdata")
-      //  //fetch("https://api.maharristhepug.com/api/optionsdata")
-      //  .then(response => response.json())
-      //  .then(data => r = data)
-      //  .then(() => this.getRes(r))
-       //.then(data => console.log("API-DATA: " + data.symbol));
-
+    //var r;
+    //  fetch("https://localhost:44321/api/optionsdata")
+    //  //fetch("https://api.maharristhepug.com/api/optionsdata")
+    //  .then(response => response.json())
+    //  .then(data => r = data)
+    //  .then(() => this.getRes(r))
+    //.then(data => console.log("API-DATA: " + data.symbol));
+    try {
+      var checksList = JSON.parse(localStorage.getItem("checksList"));
+      var cg = JSON.parse(localStorage.getItem("currentEditGuid"));
+      if (cg !== undefined && checksList !== null)
+        this.setState(
+          { checksList: checksList, currentEditGuid: cg },
+          this.calcData
+        );
+    } catch {
+      localStorage.clear();
+    }
   }
 
   //get form edit data
@@ -281,17 +290,22 @@ export class ParentComp extends React.Component {
 
     if (indexFound === -1) {
       //add
-      this.setState({
-        checksList: this.state.checksList.concat(val),
-      });
+      this.setState(
+        {
+          checksList: this.state.checksList.concat(val),
+        },
+        this.calcData
+      );
     } else {
       var newState = this.state.checksList;
       newState[indexFound] = val;
-      this.setState({
-        checksList: newState,
-      });
+      this.setState(
+        {
+          checksList: newState,
+        },
+        this.calcData
+      );
     }
-    this.calcData();
   }
 
   //get guid for selected row to edit
@@ -339,39 +353,45 @@ export class ParentComp extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    localStorage.setItem("checksList", JSON.stringify(this.state.checksList));
+    localStorage.setItem(
+      "currentEditGuid",
+      JSON.stringify(this.state.currentEditGuid)
+    );
+  }
+
   updateStrategy(newObject) {
     this.clearSelected();
     newObject.forEach((element) => {
       //create identity for each order
       element.GUID = uuidv4();
     });
-    this.setState({
-      checksList: newObject,
-      currentEditGuid: newObject[0].GUID,
-    },this.calcData);
-    
+    this.setState(
+      {
+        checksList: newObject,
+        currentEditGuid: newObject[0].GUID,
+      },
+      this.calcData
+    );
   }
-  
+
   render() {
     const { classes } = this.props;
- 
+
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid container spacing={3}>
-            <OptionsDrawer 
-            className={classes.drawer}
-            updateStrategy={(obj,val)=>this.updateStrategy(obj,val)}
-            toggleDataMode={this.props.toggleDataMode}
-            dataModeState={this.props.dataModeState}
+            <OptionsDrawer
+              className={classes.drawer}
+              updateStrategy={(obj, val) => this.updateStrategy(obj, val)}
+              toggleDataMode={this.props.toggleDataMode}
+              dataModeState={this.props.dataModeState}
             ></OptionsDrawer>
           </Grid>
-          <Grid container 
-          className={classes.chartz}
-          >
-            <Chart
-              formattedData={this.state.formattedData}
-            ></Chart>
+          <Grid container className={classes.chartz}>
+            <Chart formattedData={this.state.formattedData}></Chart>
           </Grid>
 
           <Grid spacing={3} item xs={12}>
@@ -379,7 +399,6 @@ export class ParentComp extends React.Component {
               classes={classes}
               clearSelected={() => this.clearSelected()}
               getGuid={(e, val) => this.getGuid(val, e)}
-              //selectedItems={this.state.checksList}
               calculateOptionsPrice={() => this.calculateOptionsPrice()}
               currentEditGuid={this.state.currentEditGuid}
               checksList={this.state.checksList}
