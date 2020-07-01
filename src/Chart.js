@@ -11,21 +11,90 @@ import {
   ReferenceLine,
   Legend,
 } from "recharts";
+import {
+  Checkbox,
+  Paper,
+  Input,
+  Grid,
+  InputLabel,
+  Button,
+  FormControl,
+  InputBase,
+} from "@material-ui/core";
 
-export default class Chart extends React.Component {
+import { withStyles } from "@material-ui/core/styles";
+
+const useRowStyles = (theme) => ({
+  root: {
+    margin: theme.spacing(3),
+    padding: theme.spacing(3),
+    // display: "table",
+    //backgroundColor: Colors.Primary,
+    "& > *": {
+      borderBottom: "unset",
+    },
+    flexWrap: "wrap",
+  },
+  papa: {
+    backgroundColor: "white",
+    margin: theme.spacing(2),
+    flexGrow: 1,
+  },
+  controlRoot: {
+    margin: theme.spacing(1),
+  },
+});
+
+class Chart extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       colors: [],
-      numberOfDays: -1,
+      numberOfDays: null,
+      showTip: true,
     };
+    this.changeToolTip = this.changeToolTip.bind(this);
   }
 
   renderColorfulLegendText(value, entry) {
     entry.color = "#ffffff";
     const { color } = entry;
     return <span style={{ color }}>{value}</span>;
+  }
+
+  changeToolTip(e) {
+    const a = e.target.checked;
+    this.setState({ showTip: a });
+  }
+  updateDaysNumber(e) {
+    if (this.props.formattedData.length > 0) {
+      var keyz = Object.keys(this.props.formattedData[0]);
+      if (e.target.value <= keyz.length && e.target.value > 0) {
+        this.setState({ numberOfDays: e.target.value });
+      } else if (e.target.value > keyz.length) {
+        let t = e.target.value - 1;
+        this.setState({ numberOfDays: t });
+      }
+    }
+  }
+
+  componentDidMount() {
+    try {
+      var numberOfDays = JSON.parse(localStorage.getItem("numberOfDays"));
+
+      if (numberOfDays !== undefined)
+        this.setState({ numberOfDays: numberOfDays });
+    } catch {
+      localStorage.clear();
+    }
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem(
+      "numberOfDays",
+      JSON.stringify(this.state.numberOfDays)
+    );
   }
 
   render() {
@@ -44,128 +113,89 @@ export default class Chart extends React.Component {
       //   });
       // }
     }
-
+    const { classes } = this.props;
     return (
-      <div style={{ width: "100%", height: 700 }}>
-        <ResponsiveContainer>
-          <LineChart width={500} height={250} data={formatedData}>
-            <CartesianGrid strokeDasharray="5 5" />
-            <XAxis dataKey="x" stroke="white" domain={[{ xMin }, { xMax }]} />
-            <YAxis minTickGap={0} tickSize={1} />
-            <Legend formatter={this.renderColorfulLegendText} />
-            <ReferenceLine
-              y={0}
-              stroke="white"
-              strokeWidth={1}
-              label={
-                <Label
-                  value="Break-Even"
-                  fill={"white"}
-                  position="insideTopLeft"
+      <>
+        <Grid container xs={12}>
+          <Paper
+            className={classes.papa}
+            square={true}
+            //style={{ backgroundColor: "white", flexWrap: "wrap" }}
+          >
+            <InputLabel htmlFor="component-simple">Days</InputLabel>
+            <InputBase
+              inputProps={{
+                min: 0,
+                style: {
+                  maxWidth: 50,
+                  backgroundColor: "#f2f2f2",
+                  textAlign: "center",
+                },
+              }}
+              className={classes.controlRoot}
+              onChange={(e) => this.updateDaysNumber(e)}
+              type="number"
+              value={this.state.numberOfDays}
+            ></InputBase>
+            <InputLabel>Display Values</InputLabel>
+            <Checkbox
+              checked={this.state.showTip}
+              size={"small"}
+              onChangeCapture={(e) => this.changeToolTip(e)}
+            ></Checkbox>
+          </Paper>
+        </Grid>
+        <Grid container xs={12} style={{ width: "100%", height: 700 }}>
+          <ResponsiveContainer>
+            <LineChart data={formatedData}>
+              <CartesianGrid strokeDasharray="5 5" />
+              <XAxis dataKey="x" stroke="white" domain={[{ xMin }, { xMax }]} />
+              <YAxis minTickGap={0} tickSize={1} />
+              <Legend formatter={this.renderColorfulLegendText} />
+              <ReferenceLine
+                y={0}
+                stroke="white"
+                strokeWidth={1}
+                label={
+                  <Label
+                    value="Break-Even"
+                    fill={"white"}
+                    position="insideTopLeft"
+                  />
+                }
+              />
+              {this.state.showTip ? (
+                <Tooltip
+                  viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
+                  //position={{ x: 400, y: 0 }}
+                  //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
+                  cursor={false}
+                  offset={80}
+                  animationEasing={"linear"}
                 />
-              }
-            />
-            {/* <ReferenceLine
-              x={700}
-              stroke="white"
-              strokeWidth={1}
-              label={
-                <Label
-                  value="Break-Even"
-                  fill={"white"}
-                  position="insideTopLeft"
-                />
-              }
-            /> */}
-            {/* {PlotBreakEvens(getBreakEven)} */}
+              ) : null}
 
-            <Tooltip
-              viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
-              //position={{ x: 400, y: 0 }}
-              //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
-              cursor={false}
-              offset={60}
-              animationEasing={"linear"}
-            />
-            {GetLines(formatedData, this.state.numberOfDays)}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+              {GetLines(formatedData, this.state.numberOfDays)}
+            </LineChart>
+          </ResponsiveContainer>
+        </Grid>
+      </>
     );
   }
 }
-
-// function getBreakEvens(fmtArray) {
-//   var keys;
-//   var dataPoints = [];
-//   if (fmtArray.length > 0) {
-//     keys = Object.keys(fmtArray[0]);
-//     var foundKeys = [];
-//     for (let i = 0; i < keys.length; i++) {
-//       let currentKey = keys[i];
-//       let j = 1;
-//       if (currentKey === "x" || foundKeys.includes(currentKey)) continue;
-//       else {
-//         let currentSign = fmtArray[j - 1][currentKey] >= 0 ? 1 : -1;
-//         while (j < fmtArray.length) {
-//           if (
-//             fmtArray[j][currentKey] / Math.abs(fmtArray[j][currentKey]) !==
-//             currentSign
-//           ) {
-//             dataPoints.push({ x: fmtArray[j - 1].x, Exp: currentKey });
-//             foundKeys.push(currentKey);
-//             break;
-//           }
-//           j++;
-//         }
-//       }
-//     }
-//   }
-//   return dataPoints;
-// }
-
-// function fMat(myUsers) {
-//   var finalObj = [];
-//   for (let i = 0; i < myUsers[0].length; i++) {
-//     var tobj = { x: myUsers[0][i].sPrice };
-//     for (let j = 0; j < myUsers.length; j++) {
-//       tobj["DAY" + (j + 1)] = +myUsers[j][i].oPrice.toFixed(2);
-//     }
-//     finalObj.push(tobj);
-//   }
-//   return finalObj;
-// }
-
-// function PlotBreakEvens(breakEvenList) {
-//   var refLines = [];
-
-//   for (let i = 0; i < breakEvenList.length; i++) {
-//     refLines.push(
-//       <ReferenceDot
-//         x={breakEvenList[i].x}
-//         y={0}
-//         //stroke="#ff33cc"
-//         fill="rgb(128, 0, 0)"
-//         r={4}
-//       />
-//     );
-//   }
-
-//   return refLines;
-// }
 
 function GetLines(arrs, numberOfDays) {
   var LineList = [];
   if (arrs.length > 0) {
     var keyz = Object.keys(arrs[0]);
     const LengthOfObj = keyz.length;
-    if (numberOfDays === -1) {
+    if (numberOfDays === null) {
       let dayMultiplier = 0;
       if (keyz.length > 20) {
         dayMultiplier = Math.round(LengthOfObj / 10);
       }
 
-      for (let i = 1; i < LengthOfObj - 1; i = i + dayMultiplier + 1) {
+      for (let i = 1; i <= LengthOfObj - 1; i = i + dayMultiplier + 1) {
         var cols = GetColors();
         let rgb =
           "rgb(" +
@@ -178,7 +208,7 @@ function GetLines(arrs, numberOfDays) {
         LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
       }
     } else {
-      for (let i = 1; i < numberOfDays; i++) {
+      for (let i = 1; i <= numberOfDays; i++) {
         var colsD = GetColors();
         let rgb =
           "rgb(" +
@@ -192,19 +222,6 @@ function GetLines(arrs, numberOfDays) {
       }
     }
 
-    //Always add expiration
-    var colLast = GetColors();
-    let rgb =
-      "rgb(" +
-      colLast.r.toString() +
-      "," +
-      colLast.g.toString() +
-      "," +
-      colLast.b.toString() +
-      ")";
-    LineList.push(
-      <Line stroke={rgb} dataKey={keyz[keyz.length - 1]} dot={false} />
-    );
     return LineList;
   } else return null;
 }
@@ -220,3 +237,5 @@ function GetColors() {
   }
   return cols;
 }
+
+export default withStyles(useRowStyles)(Chart);

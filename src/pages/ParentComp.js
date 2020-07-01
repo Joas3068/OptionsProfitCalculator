@@ -1,12 +1,14 @@
 import React from "react";
 //import ChainData from "../components/ChainData";
-import Grid from "@material-ui/core/Grid";
+import {
+  Grid,
+  BottomNavigation,
+  BottomNavigationAction,
+  withStyles,
+} from "@material-ui/core";
 import Chart from "../Chart";
-import { withStyles } from "@material-ui/core/styles";
 import ItemsPanel from "../components/ItemsPanel";
 import { CalcBScholes } from "../utils/Bscholes";
-import BottomNavigation from "@material-ui/core/BottomNavigation";
-import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsForm from "../components/OptionsForm";
 import OptionsDrawer from "../components/OptionsDrawer";

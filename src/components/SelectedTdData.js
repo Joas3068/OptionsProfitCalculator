@@ -1,16 +1,21 @@
 import React from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import { Button, InputBase } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+  Button,
+  InputBase,
+  IconButton,
+  Tooltip,
+} from "@material-ui/core";
+
 import DeleteIcon from "@material-ui/icons/Delete";
-import Tooltip from "@material-ui/core/Tooltip";
+
 class SelectedTdData extends React.Component {
   constructor(props) {
     super(props);
@@ -69,11 +74,7 @@ class SelectedTdData extends React.Component {
                         onChangeCapture={this.props.getGuid}
                       ></Checkbox>
                     </TableCell>
-                    <Tooltip title={
-                          row.buySell === "buy"
-                            ? "Buy"
-                            : "Sell"
-                        }>
+                    <Tooltip title={row.buySell === "buy" ? "Buy" : "Sell"}>
                       <TableCell
                         className={
                           row.buySell === "buy"
