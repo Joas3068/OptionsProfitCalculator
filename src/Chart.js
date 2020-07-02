@@ -77,6 +77,7 @@ class Chart extends React.Component {
     };
     this.changeToolTip = this.changeToolTip.bind(this);
     this.getCoord = this.getCoord.bind(this);
+    this.setDefaultXCoords = this.setDefaultXCoords.bind(this);
   }
 
   renderColorfulLegendText(value, entry) {
@@ -161,7 +162,9 @@ class Chart extends React.Component {
       }
     }
   }
-
+  setDefaultXCoords() {
+    this.setState({ xMaxVal: undefined, xMinVal: undefined });
+  }
   getCoord(e) {
     var a = e; //.target.value;
   }
@@ -170,44 +173,23 @@ class Chart extends React.Component {
     var xMin = 1,
       xMax = 1;
     if (this.props.formattedData.length > 0) {
-      //formattedData = this.props.formattedData;
-      if (
-        this.state.xMinVal !== undefined ||
-        this.state.xMaxVal !== undefined
-      ) {
-        if (
-          this.state.xMinVal !== undefined &&
-          this.state.xMaxVal === undefined
-        ) {
-          formattedData = this.props.formattedData.slice(
-            this.state.xMinVal,
-            this.props.formattedData.length - 1
-          );
-          xMax = formattedData[formattedData.length - 1].x;
-          xMin = this.state.xMinVal;
-        } else if (
-          this.state.xMaxVal !== undefined &&
-          this.state.xMinVal === undefined
-        ) {
-          formattedData = this.props.formattedData.slice(0, this.state.xMaxVal);
-          xMin = formattedData[0].x;
-          xMax = this.state.xMaxVal;
-        } else if (
-          this.state.xMaxVal !== undefined &&
-          this.state.xMinVal !== undefined
-        ) {
-          formattedData = this.props.formattedData.slice(
-            this.state.xMinVal,
-            this.state.xMaxVal
-          );
-          xMin = this.state.xMinVal;
-          xMax = this.state.xMaxVal;
-        }
-      } else {
-        formattedData = this.props.formattedData;
-        xMin = this.props.formattedData[0].x;
-        xMax = this.props.formattedData[this.props.formattedData.length - 1].x;
+      let sliceMinIndex = 0; //get smallest
+      let sliceMaxIndex = this.props.formattedData.length; //get largest
+
+      //if min is changing
+      if (this.state.xMinVal !== undefined) {
+        sliceMinIndex = this.state.xMinVal;
       }
+      if (this.state.xMaxVal !== undefined) {
+        sliceMaxIndex = this.state.xMaxVal;
+      }
+
+      formattedData = this.props.formattedData.slice(
+        sliceMinIndex,
+        sliceMaxIndex
+      );
+      xMin = formattedData[0].x;
+      xMax = formattedData[formattedData.length - 1].x;
     }
 
     const { classes } = this.props;
@@ -254,13 +236,14 @@ class Chart extends React.Component {
               inputProps={{
                 min: 0,
                 style: {
-                  maxWidth: 50,
+                  maxWidth: 55,
                   backgroundColor: "#f2f2f2",
                   textAlign: "center",
                 },
               }}
               onChange={(e) => this.updateXMin(e)}
               type="number"
+              value={xMin}
             ></InputBase>
           </Grid>
           <Grid item className={classes.alignGridItems}>
@@ -269,22 +252,23 @@ class Chart extends React.Component {
               inputProps={{
                 min: 0,
                 style: {
-                  maxWidth: 50,
+                  maxWidth: 55,
                   backgroundColor: "#f2f2f2",
                   textAlign: "center",
                 },
               }}
               onChange={(e) => this.updateXMax(e)}
               type="number"
+              value={xMax}
             ></InputBase>
           </Grid>
           <Grid item className={classes.alignGridItems}>
             <Button
               className={classes.controlRoot}
               //style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px',backgroundColor:"gray"}}
-              onChangeCapture={(e) => this.changeToolTip(e)}
+              onClick={this.setDefaultXCoords}
             >
-              <Typography variant="button">Default</Typography>
+              Default
             </Button>
           </Grid>
         </Grid>
@@ -295,25 +279,24 @@ class Chart extends React.Component {
               <XAxis
                 tickCount={25}
                 interval="preserveStartEnd"
-                tickSize={10} 
+                tickSize={10}
                 type="number"
                 dataKey="x"
                 stroke="white"
                 domain={[{ xMin }, { xMax }]}
               />
-              <YAxis  tickCount={15} type="number" minTickGap={0} tickSize={10} />
+              <YAxis
+                tickCount={15}
+                type="number"
+                minTickGap={0}
+                tickSize={10}
+              />
               <Legend formatter={this.renderColorfulLegendText} />
               <ReferenceLine
                 y={0}
                 stroke="white"
                 strokeWidth={1}
-                label={
-                  <Label
-                    
-                    fill={"white"}
-                    position="insideTopLeft"
-                  />
-                }
+                label={<Label fill={"white"} position="insideTopLeft" />}
               />
 
               <Tooltip
