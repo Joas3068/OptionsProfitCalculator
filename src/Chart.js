@@ -54,6 +54,14 @@ const useRowStyles = (theme) => ({
     justifyContent: "center",
     //alignItems: "center",
   },
+  toolTipContainer: {
+    //boxSizing: "borderBox",
+    border: "1px solid",
+    // padding: 10px,
+    // width: 800px,
+    // height: 800px,
+    backgroundColor: "#f2f2f2",
+  },
 });
 
 class Chart extends React.Component {
@@ -68,6 +76,7 @@ class Chart extends React.Component {
       xMaxVal: undefined,
     };
     this.changeToolTip = this.changeToolTip.bind(this);
+    this.getCoord = this.getCoord.bind(this);
   }
 
   renderColorfulLegendText(value, entry) {
@@ -152,25 +161,41 @@ class Chart extends React.Component {
       }
     }
   }
+
+  getCoord(e) {
+    var a = e; //.target.value;
+  }
   render() {
     var formattedData = [];
     var xMin = 1,
       xMax = 1;
     if (this.props.formattedData.length > 0) {
       //formattedData = this.props.formattedData;
-      if (this.state.xMinVal !== undefined || this.state.xMaxVal !== undefined) {
-        if (this.state.xMinVal !== undefined && this.state.xMaxVal === undefined) {
+      if (
+        this.state.xMinVal !== undefined ||
+        this.state.xMaxVal !== undefined
+      ) {
+        if (
+          this.state.xMinVal !== undefined &&
+          this.state.xMaxVal === undefined
+        ) {
           formattedData = this.props.formattedData.slice(
             this.state.xMinVal,
             this.props.formattedData.length - 1
           );
           xMax = formattedData[formattedData.length - 1].x;
           xMin = this.state.xMinVal;
-        } else if (this.state.xMaxVal !== undefined && this.state.xMinVal === undefined) {
+        } else if (
+          this.state.xMaxVal !== undefined &&
+          this.state.xMinVal === undefined
+        ) {
           formattedData = this.props.formattedData.slice(0, this.state.xMaxVal);
           xMin = formattedData[0].x;
           xMax = this.state.xMaxVal;
-        } else if (this.state.xMaxVal !== undefined && this.state.xMinVal !== undefined) {
+        } else if (
+          this.state.xMaxVal !== undefined &&
+          this.state.xMinVal !== undefined
+        ) {
           formattedData = this.props.formattedData.slice(
             this.state.xMinVal,
             this.state.xMaxVal
@@ -254,21 +279,29 @@ class Chart extends React.Component {
             ></InputBase>
           </Grid>
           <Grid item className={classes.alignGridItems}>
-           
             <Button
               className={classes.controlRoot}
-    
               //style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px',backgroundColor:"gray"}}
               onChangeCapture={(e) => this.changeToolTip(e)}
-            ><Typography variant="button">Default</Typography></Button>
+            >
+              <Typography variant="button">Default</Typography>
+            </Button>
           </Grid>
         </Grid>
         <Grid container xs={12} style={{ width: "99%", height: 700 }}>
           <ResponsiveContainer>
-            <LineChart data={formattedData}>
+            <LineChart data={formattedData} onClick={(e) => this.getCoord(e)}>
               <CartesianGrid stroke={"#808080"} />
-              <XAxis dataKey="x" stroke="white" domain={[{ xMin }, { xMax }]} />
-              <YAxis minTickGap={0} tickSize={1} />
+              <XAxis
+                tickCount={25}
+                interval="preserveStartEnd"
+                tickSize={10} 
+                type="number"
+                dataKey="x"
+                stroke="white"
+                domain={[{ xMin }, { xMax }]}
+              />
+              <YAxis  tickCount={15} type="number" minTickGap={0} tickSize={10} />
               <Legend formatter={this.renderColorfulLegendText} />
               <ReferenceLine
                 y={0}
@@ -276,22 +309,26 @@ class Chart extends React.Component {
                 strokeWidth={1}
                 label={
                   <Label
-                    value="Break-Even"
+                    
                     fill={"white"}
                     position="insideTopLeft"
                   />
                 }
               />
-              {this.state.showTip ? (
-                <Tooltip
-                  viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
-                  //position={{ x: 400, y: 0 }}
-                  //cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
-                  cursor={false}
-                  offset={80}
-                  animationEasing={"linear"}
-                />
-              ) : null}
+
+              <Tooltip
+                //viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
+                content={
+                  !this.state.showTip ? (
+                    <CustomTooltip stylez={classes.toolTipContainer} />
+                  ) : null
+                }
+                //position={{ x: 400, y: 0 }}
+                cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
+                //cursor={false}
+                offset={45}
+                animationEasing={"linear"}
+              />
 
               {GetLines(formattedData, this.state.numberOfDays)}
             </LineChart>
@@ -301,6 +338,19 @@ class Chart extends React.Component {
     );
   }
 }
+
+const CustomTooltip = ({ active, payload, label, stylez }) => {
+  if (active) {
+    return (
+      <div className={stylez}>
+        <p className="label">{`${label}`}</p>
+        {/* <p className="intro">{getIntroOfPage(label)}</p> */}
+      </div>
+    );
+  }
+
+  return null;
+};
 
 function GetLines(arrs, numberOfDays) {
   var LineList = [];

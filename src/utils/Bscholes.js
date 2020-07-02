@@ -36,10 +36,10 @@ export function CalcBScholesTdData(tdArr,stockPrice,interestRate) {
     for (
       let index = stockPrice - multiplier;
       index < stockPrice + multiplier;
-      index += 0.5 //this will change resolution of graph. the higher the number the less ticks
+      index += 0.10 //this will change resolution of graph. the higher the number the less ticks
     ) {
       var entryAtStockPrice = {};
-      entryAtStockPrice["x"] = index; //add stock price on x axis
+      entryAtStockPrice["x"] = +index.toFixed(2); //add stock price on x axis
 
       
       for (let i = 0; i < tdArr.length; i++) {
@@ -47,10 +47,6 @@ export function CalcBScholesTdData(tdArr,stockPrice,interestRate) {
 
         //add price at purchase. replace with API data
 
-          //Sell contracts are neg
-        //   if (tdArr[i].buySell === "sell")
-        //   tdArr[i].optionPriceAtPurchase *= -1;
-        // }
         for (let j = 0; j <= tdArr[i].daysToExpiration; j++) {
           //iterate through expirations
 
@@ -117,10 +113,10 @@ export function CalcBScholes(checksList) {
     for (
       let index = stockPrice - multiplier;
       index < stockPrice + multiplier;
-      index += 0.5 //this will change resolution of graph. the higher the number the less ticks
+      index += 0.10 //this will change resolution of graph. the higher the number the less ticks
     ) {
       var entryAtStockPrice = {};
-      entryAtStockPrice["x"] = index; //add stock price on x axis
+      entryAtStockPrice["x"] = +index.toFixed(2); //add stock price on x axis
       for (let i = 0; i < checksList.length; i++) {
         //var entryAtStockPrice = {};
 
