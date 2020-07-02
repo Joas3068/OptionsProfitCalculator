@@ -16,13 +16,13 @@ import { CalcBScholesTdData } from "../utils/Bscholes";
 
 const useRowStyles = (theme) => ({
   root: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
     // display: "table",
     backgroundColor: Colors.Primary,
     "& > *": {
       borderBottom: "unset",
     },
-    flexWrap: "wrap",
+   // flexWrap: "wrap",
   },
   title: {
     flexGrow: 1,

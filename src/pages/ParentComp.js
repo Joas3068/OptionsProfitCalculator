@@ -17,14 +17,14 @@ import uuidv4 from "../utils/GuidGen";
 
 const useRowStyles = (theme) => ({
   root: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
     // display: "table",
     backgroundColor: Colors.Primary,
     "& > *": {
       borderBottom: "unset",
     },
-    //width: "100%",
-    flexWrap: "wrap",
+    // width: "100%",
+    // flexWrap: 1,
   },
   title: {
     flexGrow: 1,
@@ -397,7 +397,7 @@ export class ParentComp extends React.Component {
             <Chart formattedData={this.state.formattedData}></Chart>
           </Grid>
 
-          <Grid spacing={3} item xs={12}>
+          <Grid item xs={12}>
             <ItemsPanel
               classes={classes}
               clearSelected={() => this.clearSelected()}

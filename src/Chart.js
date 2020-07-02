@@ -20,6 +20,8 @@ import {
   Button,
   FormControl,
   InputBase,
+  Divider,
+  Typography,
 } from "@material-ui/core";
 
 import { withStyles } from "@material-ui/core/styles";
@@ -37,11 +39,20 @@ const useRowStyles = (theme) => ({
   },
   papa: {
     backgroundColor: "white",
-    margin: theme.spacing(2),
-    flexGrow: 1,
+    margin: theme.spacing(1),
+    //display: "inlineBlock",
+    //flexWrap: "wrap",
   },
   controlRoot: {
-    margin: theme.spacing(1),
+    //margin: theme.spacing(1),
+    //padding: theme.spacing(2),
+    //float:"left",
+    //display: "inlineBlock",
+  },
+  alignGridItems: {
+    //display: "flex",
+    justifyContent: "center",
+    //alignItems: "center",
   },
 });
 
@@ -51,8 +62,10 @@ class Chart extends React.Component {
 
     this.state = {
       colors: [],
-      numberOfDays: null,
+      numberOfDays: undefined,
       showTip: true,
+      xMinVal: undefined,
+      xMaxVal: undefined,
     };
     this.changeToolTip = this.changeToolTip.bind(this);
   }
@@ -97,32 +110,94 @@ class Chart extends React.Component {
     );
   }
 
-  render() {
-    var formatedData = [];
-    var xMin = 0,
-      xMax = 0;
+  updateXMin(e) {
+    let val = e.target.valueAsNumber;
+    let i = 0;
+    var xMinH = 0;
     if (this.props.formattedData.length > 0) {
-      formatedData = this.props.formattedData;
-      xMin = formatedData[0].x;
-      xMax = formatedData[formatedData.length - 1].x;
-
-      // if(this.state.colors.length===0){
-      //   fo
-      //   this.setState({
-      //     colors: ,
-      //   });
-      // }
+      var formattedData = this.props.formattedData;
+      //if greater than min value
+      if (val > formattedData[0].x) {
+        xMinH = formattedData[0].x;
+        while (
+          val - this.props.formattedData[i].x > 0 &&
+          val < formattedData[formattedData.length - 1].x &&
+          val > formattedData[0].x
+        ) {
+          i++;
+        }
+        if (val < xMinH) i = 0;
+        this.setState({ xMinVal: i });
+      }
     }
+  }
+
+  updateXMax(e) {
+    let val = e.target.valueAsNumber;
+    let i = 0;
+    var xMaxH = 0;
+    if (this.props.formattedData.length > 0) {
+      var formattedData = this.props.formattedData;
+      if (val > formattedData[0].x) {
+        xMaxH = formattedData[formattedData.length - 1].x;
+        while (
+          val - this.props.formattedData[i].x > 0 &&
+          val < xMaxH &&
+          val > formattedData[0].x
+        ) {
+          i++;
+        }
+        if (val > xMaxH) i = formattedData.length - 1;
+        this.setState({ xMaxVal: i });
+      }
+    }
+  }
+  render() {
+    var formattedData = [];
+    var xMin = 1,
+      xMax = 1;
+    if (this.props.formattedData.length > 0) {
+      //formattedData = this.props.formattedData;
+      if (this.state.xMinVal !== undefined || this.state.xMaxVal !== undefined) {
+        if (this.state.xMinVal !== undefined && this.state.xMaxVal === undefined) {
+          formattedData = this.props.formattedData.slice(
+            this.state.xMinVal,
+            this.props.formattedData.length - 1
+          );
+          xMax = formattedData[formattedData.length - 1].x;
+          xMin = this.state.xMinVal;
+        } else if (this.state.xMaxVal !== undefined && this.state.xMinVal === undefined) {
+          formattedData = this.props.formattedData.slice(0, this.state.xMaxVal);
+          xMin = formattedData[0].x;
+          xMax = this.state.xMaxVal;
+        } else if (this.state.xMaxVal !== undefined && this.state.xMinVal !== undefined) {
+          formattedData = this.props.formattedData.slice(
+            this.state.xMinVal,
+            this.state.xMaxVal
+          );
+          xMin = this.state.xMinVal;
+          xMax = this.state.xMaxVal;
+        }
+      } else {
+        formattedData = this.props.formattedData;
+        xMin = this.props.formattedData[0].x;
+        xMax = this.props.formattedData[this.props.formattedData.length - 1].x;
+      }
+    }
+
     const { classes } = this.props;
     return (
       <>
-        <Grid container xs={12}>
-          <Paper
-            className={classes.papa}
-            square={true}
-            //style={{ backgroundColor: "white", flexWrap: "wrap" }}
-          >
-            <InputLabel htmlFor="component-simple">Days</InputLabel>
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="center"
+          spacing={1}
+          className={classes.papa}
+        >
+          <Grid item className={classes.alignGridItems}>
+            <InputLabel>Days</InputLabel>
             <InputBase
               inputProps={{
                 min: 0,
@@ -132,23 +207,66 @@ class Chart extends React.Component {
                   textAlign: "center",
                 },
               }}
-              className={classes.controlRoot}
               onChange={(e) => this.updateDaysNumber(e)}
               type="number"
               value={this.state.numberOfDays}
             ></InputBase>
-            <InputLabel>Display Values</InputLabel>
+          </Grid>
+          <Divider orientation="vertical" flexItem />
+          <Grid item className={classes.alignGridItems}>
+            <InputLabel>P/L</InputLabel>
             <Checkbox
+              className={classes.controlRoot}
               checked={this.state.showTip}
               size={"small"}
               onChangeCapture={(e) => this.changeToolTip(e)}
             ></Checkbox>
-          </Paper>
+          </Grid>
+          <Divider orientation="vertical" flexItem />
+          <Grid item className={classes.alignGridItems}>
+            <InputLabel>X-Min</InputLabel>
+            <InputBase
+              inputProps={{
+                min: 0,
+                style: {
+                  maxWidth: 50,
+                  backgroundColor: "#f2f2f2",
+                  textAlign: "center",
+                },
+              }}
+              onChange={(e) => this.updateXMin(e)}
+              type="number"
+            ></InputBase>
+          </Grid>
+          <Grid item className={classes.alignGridItems}>
+            <InputLabel>X-Max</InputLabel>
+            <InputBase
+              inputProps={{
+                min: 0,
+                style: {
+                  maxWidth: 50,
+                  backgroundColor: "#f2f2f2",
+                  textAlign: "center",
+                },
+              }}
+              onChange={(e) => this.updateXMax(e)}
+              type="number"
+            ></InputBase>
+          </Grid>
+          <Grid item className={classes.alignGridItems}>
+           
+            <Button
+              className={classes.controlRoot}
+    
+              //style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px',backgroundColor:"gray"}}
+              onChangeCapture={(e) => this.changeToolTip(e)}
+            ><Typography variant="button">Default</Typography></Button>
+          </Grid>
         </Grid>
-        <Grid container xs={12} style={{ width: "100%", height: 700 }}>
+        <Grid container xs={12} style={{ width: "99%", height: 700 }}>
           <ResponsiveContainer>
-            <LineChart data={formatedData}>
-              <CartesianGrid strokeDasharray="5 5" />
+            <LineChart data={formattedData}>
+              <CartesianGrid stroke={"#808080"} />
               <XAxis dataKey="x" stroke="white" domain={[{ xMin }, { xMax }]} />
               <YAxis minTickGap={0} tickSize={1} />
               <Legend formatter={this.renderColorfulLegendText} />
@@ -175,7 +293,7 @@ class Chart extends React.Component {
                 />
               ) : null}
 
-              {GetLines(formatedData, this.state.numberOfDays)}
+              {GetLines(formattedData, this.state.numberOfDays)}
             </LineChart>
           </ResponsiveContainer>
         </Grid>
@@ -189,7 +307,7 @@ function GetLines(arrs, numberOfDays) {
   if (arrs.length > 0) {
     var keyz = Object.keys(arrs[0]);
     const LengthOfObj = keyz.length;
-    if (numberOfDays === null) {
+    if (numberOfDays === undefined) {
       let dayMultiplier = 0;
       if (keyz.length > 20) {
         dayMultiplier = Math.round(LengthOfObj / 10);
