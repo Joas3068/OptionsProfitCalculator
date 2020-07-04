@@ -1,11 +1,12 @@
 import React from "react";
-//import ChainData from "../components/ChainData";
-import Grid from "@material-ui/core/Grid";
+import {
+  Divider,
+  Grid,
+  withStyles,
+  BottomNavigation,
+  BottomNavigationAction,
+} from "@material-ui/core";
 import Chart from "../Chart";
-import { withStyles } from "@material-ui/core/styles";
-// import { CalcBScholes } from "../utils/Bscholes";
-import BottomNavigation from "@material-ui/core/BottomNavigation";
-import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
@@ -13,6 +14,7 @@ import ChainData from "../components/ChainData";
 import { TdBigData } from "../utils/StrategyData";
 import SelectedTdData from "../components/SelectedTdData";
 import { CalcBScholesTdData } from "../utils/Bscholes";
+import TdDataSelection from "../components/TdDataSelection";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -22,7 +24,7 @@ const useRowStyles = (theme) => ({
     "& > *": {
       borderBottom: "unset",
     },
-   // flexWrap: "wrap",
+    // flexWrap: "wrap",
   },
   title: {
     flexGrow: 1,
@@ -68,6 +70,7 @@ const useRowStyles = (theme) => ({
     //active
     backgroundColor: "lighGray",
     overflow: "auto",
+    padding:theme.spacing(1),
   },
   chainDataTable: {
     backgroundColor: "#f2f2f2",
@@ -83,6 +86,7 @@ const useRowStyles = (theme) => ({
   addButton: {
     margin: theme.spacing(1),
   },
+  
 });
 
 class TdDataMode extends React.Component {
@@ -121,7 +125,7 @@ class TdDataMode extends React.Component {
   updateStrategy(obj) {}
 
   updateContractNumber(newObj) {
-    //parse valu to int get id from input
+    //parse value to int get id from input
     var numInput = parseInt(newObj.target.value);
     const id = newObj.target.id;
 
@@ -136,6 +140,7 @@ class TdDataMode extends React.Component {
       this.setState({ selectedTdData: stateReplace }, this.makeCalcs);
     }
   }
+
   //check if symbol exists. If not add number of contracts or increment
   sendObject(obj, id) {
     if (Array.isArray(obj)) {
@@ -205,7 +210,9 @@ class TdDataMode extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    //need symbol
+    //api key
+    //to date? from date should be default day of
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
@@ -219,21 +226,20 @@ class TdDataMode extends React.Component {
             ></OptionsDrawer>
           </Grid>
           <Grid container className={classes.drawer}>
-            <Chart formattedData={this.state.formattedData}></Chart>
+            <Chart
+              formattedData={this.state.formattedData}
+              underlying={this.state.tdData.underlyingPrice}
+            ></Chart>
           </Grid>
           <Grid item xs={12}>
             <SelectedTdData
               classes={classes}
               clearAll={() => this.clearAll()}
               deleteRow={(e, val) => this.deleteRow(val, e)}
-              //selectedItems={this.state.checksList}
-              // calculateOptionsPrice={() => this.calculateOptionsPrice()}
-              // currentEditGuid={this.state.currentEditGuid}
               selectedTdData={this.state.selectedTdData}
               updateContractNumber={(obj, val) =>
                 this.updateContractNumber(obj, val)
               }
-              // deleteRow={(e, val) => this.deleteRow(val, e)}
             ></SelectedTdData>
           </Grid>
           <Grid container spacing={3}>
@@ -262,7 +268,12 @@ class TdDataMode extends React.Component {
               ></ChainData>
             </Grid>
           </Grid>
+          <Grid className={classes.chainGrid} item xs={12}>
+            <Divider></Divider>
+            <TdDataSelection classes={classes}></TdDataSelection>
+          </Grid>
         </Grid>
+
         <BottomNavigation showLabels className={classes.root}>
           <BottomNavigationAction
             icon={<GitHubIcon />}

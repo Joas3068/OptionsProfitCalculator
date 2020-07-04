@@ -66,7 +66,7 @@ class SelectedTdData extends React.Component {
           <TableBody>
             {Array.isArray(this.props.selectedTdData)
               ? this.props.selectedTdData.map((row) => (
-                  <TableRow key={row.symbol}>
+                  <TableRow key={row.symbol}> 
                     <TableCell align="left">
                       <Checkbox
                         // checked={row.GUID === cGui.GUID ? true : false}
@@ -93,7 +93,6 @@ class SelectedTdData extends React.Component {
                     </TableCell>
                     <TableCell align="left">
                       {new Date(row.expirationDate).toLocaleDateString()}
-                      {/* {row.theoreticalVolatility} */}
                     </TableCell>
                     <TableCell align="left">
                       {row.theoreticalOptionValue}
@@ -114,7 +113,7 @@ class SelectedTdData extends React.Component {
                         id={row.symbol}
                       ></InputBase>
                     </TableCell>
-                    <TableCell align="left">-</TableCell>
+                    <TableCell align="left">{row.volatility}</TableCell>
                     <TableCell align="left">-</TableCell>
                     <TableCell align="left">-</TableCell>
                     <TableCell align="left">

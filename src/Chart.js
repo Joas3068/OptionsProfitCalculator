@@ -78,6 +78,7 @@ class Chart extends React.Component {
     this.changeToolTip = this.changeToolTip.bind(this);
     this.getCoord = this.getCoord.bind(this);
     this.setDefaultXCoords = this.setDefaultXCoords.bind(this);
+    this.updateXMax = this.updateXMax.bind(this);
   }
 
   renderColorfulLegendText(value, entry) {
@@ -151,9 +152,9 @@ class Chart extends React.Component {
       if (val > formattedData[0].x) {
         xMaxH = formattedData[formattedData.length - 1].x;
         while (
-          val - this.props.formattedData[i].x > 0 &&
-          val < xMaxH &&
-          val > formattedData[0].x
+          val - this.props.formattedData[i].x >= 0 &&
+          val < xMaxH 
+          //&& val > formattedData[0].x
         ) {
           i++;
         }
@@ -170,6 +171,7 @@ class Chart extends React.Component {
   }
   render() {
     var formattedData = [];
+    let underLyingPrice = undefined;
     var xMin = 1,
       xMax = 1;
     if (this.props.formattedData.length > 0) {
@@ -190,6 +192,12 @@ class Chart extends React.Component {
       );
       xMin = formattedData[0].x;
       xMax = formattedData[formattedData.length - 1].x;
+
+      if (this.props.underlying) {
+        let index = 0;
+        while (this.props.underlying - formattedData[index].x > 0) index++;
+        underLyingPrice = formattedData[index];
+      }
     }
 
     const { classes } = this.props;
@@ -257,7 +265,7 @@ class Chart extends React.Component {
                   textAlign: "center",
                 },
               }}
-              onChange={(e) => this.updateXMax(e)}
+              onChange={this.updateXMax}
               type="number"
               value={xMax}
             ></InputBase>
@@ -298,7 +306,18 @@ class Chart extends React.Component {
                 strokeWidth={1}
                 label={<Label fill={"white"} position="insideTopLeft" />}
               />
-
+              {underLyingPrice !== undefined ? (
+                <ReferenceLine
+                  x={underLyingPrice.x}
+                  stroke="#736916"
+                  strokeWidth={1}
+                  label={
+                    <Label fill={"#736916"} position="insideTopLeft">
+                      {"Underlying " + this.props.underlying.toFixed(2)}
+                    </Label>
+                  }
+                />
+              ) : null}
               <Tooltip
                 //viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
                 content={
