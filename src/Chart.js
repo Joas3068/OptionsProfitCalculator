@@ -126,20 +126,20 @@ class Chart extends React.Component {
     let i = 0;
     var xMinH = 0;
     if (this.props.formattedData.length > 0) {
-      var formattedData = this.props.formattedData;
-      //if greater than min value
-      if (val > formattedData[0].x) {
-        xMinH = formattedData[0].x;
-        while (
-          val - this.props.formattedData[i].x > 0 &&
-          val < formattedData[formattedData.length - 1].x &&
-          val > formattedData[0].x
-        ) {
-          i++;
-        }
-        if (val < xMinH) i = 0;
-        this.setState({ xMinVal: i });
-      }
+      // var formattedData = this.props.formattedData;
+      // //if greater than min value
+      // if (val > formattedData[0].x) {
+      //   xMinH = formattedData[0].x;
+      //   while (
+      //     val - this.props.formattedData[i].x > 0 &&
+      //     val < formattedData[formattedData.length - 1].x &&
+      //     val > formattedData[0].x
+      //   ) {
+      //     i++;
+      //   }
+      //   if (val < xMinH) i = 0;
+      this.setState({ xMinVal: val });
+      //}
     }
   }
 
@@ -148,19 +148,20 @@ class Chart extends React.Component {
     let i = 0;
     var xMaxH = 0;
     if (this.props.formattedData.length > 0) {
-      var formattedData = this.props.formattedData;
-      if (val > formattedData[0].x) {
-        xMaxH = formattedData[formattedData.length - 1].x;
-        while (
-          val - this.props.formattedData[i].x >= 0 &&
-          val < xMaxH 
-          //&& val > formattedData[0].x
-        ) {
-          i++;
-        }
-        if (val > xMaxH) i = formattedData.length - 1;
-        this.setState({ xMaxVal: i });
-      }
+      // var formattedData = this.props.formattedData;
+      // if (val > formattedData[0].x) {
+      //   xMaxH = formattedData[formattedData.length - 1].x;
+      //   while (
+      //     val - this.props.formattedData[i].x >= 0 &&
+      //     val < xMaxH
+      //     //&& val > formattedData[0].x
+      //   ) {
+      //     i++;
+      //   }
+      //   if (val > xMaxH) i = formattedData.length - 1;
+      //   this.setState({ xMaxVal: i });
+      // }
+      this.setState({ xMaxVal: val });
     }
   }
   setDefaultXCoords() {
@@ -174,18 +175,42 @@ class Chart extends React.Component {
     let underLyingPrice = undefined;
     var xMin = 1,
       xMax = 1;
+    //set any value from handlers format here
+    //search for nearest values here
+    //set xmin xmax equal to lowest if out of bounds
     if (this.props.formattedData.length > 0) {
       let sliceMinIndex = 0; //get smallest
       let sliceMaxIndex = this.props.formattedData.length; //get largest
+      let xMaxH = this.props.formattedData[this.props.formattedData.length - 1]
+        .x;
 
-      //if min is changing
-      if (this.state.xMinVal !== undefined) {
-        sliceMinIndex = this.state.xMinVal;
-      }
-      if (this.state.xMaxVal !== undefined) {
-        sliceMaxIndex = this.state.xMaxVal;
+      let i = 0;
+
+      if (this.state.xMaxVal) {
+        while (
+          this.state.xMaxVal - this.props.formattedData[i].x >= 0 &&
+          this.state.xMaxVal < xMaxH
+          //&& val > formattedData[0].x
+        ) {
+          i++;
+        }
+        sliceMaxIndex = i > 0 ? i : this.props.formattedData.length;
+       i = 0;
       }
 
+      if (this.state.xMinVal) {
+        while (
+          this.state.xMinVal - this.props.formattedData[i].x > 0 &&
+          this.state.xMinVal <
+            this.props.formattedData[this.props.formattedData.length - 1].x &&
+          this.state.xMinVal > this.props.formattedData[0].x
+        ) {
+          i++;
+        }
+        sliceMinIndex = i;
+      }
+
+      console.log(sliceMinIndex + " " + sliceMaxIndex);
       formattedData = this.props.formattedData.slice(
         sliceMinIndex,
         sliceMaxIndex
@@ -195,8 +220,8 @@ class Chart extends React.Component {
 
       if (this.props.underlying) {
         let index = 0;
-        while (this.props.underlying - formattedData[index].x > 0) index++;
-        underLyingPrice = formattedData[index];
+        while (this.props.underlying - this.props.formattedData[index].x > 0) index++;
+        underLyingPrice = this.props.formattedData[index];
       }
     }
 
@@ -251,7 +276,7 @@ class Chart extends React.Component {
               }}
               onChange={(e) => this.updateXMin(e)}
               type="number"
-              value={xMin}
+              value={this.state.xMinVal}
             ></InputBase>
           </Grid>
           <Grid item className={classes.alignGridItems}>
@@ -267,7 +292,7 @@ class Chart extends React.Component {
               }}
               onChange={this.updateXMax}
               type="number"
-              value={xMax}
+              value={this.state.xMaxVal}
             ></InputBase>
           </Grid>
           <Grid item className={classes.alignGridItems}>
