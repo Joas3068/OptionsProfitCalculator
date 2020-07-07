@@ -213,8 +213,8 @@ class TdDataMode extends React.Component {
     //}
   }
 
-  getNewData(){
-    this.setState({tdData:OtherTd,selectedTdData:[],formattedData:[]})
+  getNewData(obj){
+    this.setState({tdData:obj,selectedTdData:[],formattedData:[]})
   }
 
   render() {
@@ -279,7 +279,7 @@ class TdDataMode extends React.Component {
           </Grid>
           <Grid className={classes.chainGrid} item xs={12}>
             <Divider></Divider>
-            <TdDataSelection classes={classes} getNewData={this.getNewData}></TdDataSelection>
+            <TdDataSelection classes={classes} getNewData={this.getNewData} tdKey={this.props.tdKey}></TdDataSelection>
           </Grid>
         </Grid>
 

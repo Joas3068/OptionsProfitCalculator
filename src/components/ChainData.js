@@ -83,7 +83,7 @@ function Rows(props) {
       {props.contractData[expirationKey] ? (
         <>
           <TableRow value={props.contractData[expirationKey][strikeKey]}>
-            <TableCell>{props.tdData.underlyingPrice}</TableCell>
+            <TableCell>{+props.tdData.underlyingPrice.toFixed(2)}</TableCell>
             <TableCell component="th" scope="row">
               {
                 <FormControl className={props.classes.formControl}>

@@ -1,18 +1,6 @@
 import React from "react";
-// import Box from "@material-ui/core/Box";
-// import Collapse from "@material-ui/core/Collapse";
-// import IconButton from "@material-ui/core/IconButton";
-// import Table from "@material-ui/core/Table";
-// import TableBody from "@material-ui/core/TableBody";
-// import TableCell from "@material-ui/core/TableCell";
-// import TableHead from "@material-ui/core/TableHead";
-// import TableRow from "@material-ui/core/TableRow";
-// import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-// import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-// import Select from "@material-ui/core/Select";
-// import MenuItem from "@material-ui/core/MenuItem";
-// import Tooltip from "@material-ui/core/Tooltip";
+import { formatDate } from "../utils/Misc";
 
 import {
   Checkbox,
@@ -28,25 +16,38 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
+  TextField,
 } from "@material-ui/core";
 
 class TdDataSelection extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      endDate: undefined,
+    };
     this.callNewRequest = this.callNewRequest.bind(this);
+    this.getDate = this.getDate.bind(this);
   }
 
   callNewRequest() {
     var r;
-    //      fetch("https://api.tdameritrade.com/v1/marketdata/chains?apikey=HULFYOXJ8NBCAEZRRDZWJWDFPTNJKUHF&symbol=SPY&strikeCount=6&fromDate=2020-07-06&toDate=2020-07-09")
-    //  //fetch("https://api.maharristhepug.com/api/optionsdata")
-    //  .then(response => response.json())
-    //  .then(data => r = data)
-    // //  .then(() => this.getRes(r))
-    // .then(data => console.log("API-DATA: " + data))
-    // .then( ()=>this.props.getNewData(r));
-    this.props.getNewData(r);
+
+    const stringReq =
+      "https://api.tdameritrade.com/v1/marketdata/chains?apikey=" +
+      this.props.tdKey +
+      "&symbol=SPY&strikeCount=6&fromDate=2020-07-06&toDate=" +
+      this.state.endDate;
+
+    fetch(stringReq)
+      .then((response) => response.json())
+      .then((data) => (r = data))
+      .then(() => this.props.getNewData(r));
+  }
+
+  getDate(e) {
+    var a = e.target.value;
+    this.setState({ endDate: a });
   }
 
   render() {
@@ -75,22 +76,6 @@ class TdDataSelection extends React.Component {
                 spacing={1}
                 className={classes.papa}
               >
-                <Grid item className={classes.alignGridItems}>
-                  <InputLabel>Days</InputLabel>
-                  <InputBase
-                    inputProps={{
-                      min: 0,
-                      style: {
-                        maxWidth: 50,
-                        backgroundColor: "#f2f2f2",
-                        textAlign: "center",
-                      },
-                    }}
-                    //onChange={(e) => this.updateDaysNumber(e)}
-                    type="number"
-                   // value={this.state.numberOfDays}
-                  ></InputBase>
-                </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid item className={classes.alignGridItems}>
                   <InputLabel>P/L</InputLabel>
@@ -103,40 +88,34 @@ class TdDataSelection extends React.Component {
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid item className={classes.alignGridItems}>
-                  <InputLabel>X-Min</InputLabel>
-                  <InputBase
-                    inputProps={{
-                      min: 0,
-                      style: {
-                        maxWidth: 55,
-                        backgroundColor: "#f2f2f2",
-                        textAlign: "center",
-                      },
+                  <TextField
+                    label="Start Date"
+                    type="date"
+                    defaultValue={formatDate(new Date())}
+                    onChange={this.getStartDate}
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
                     }}
-                    //onChange={(e) => this.updateXMin(e)}
-                    type="number"
-                  ></InputBase>
+                  />
                 </Grid>
+                <Divider orientation="vertical" flexItem />
                 <Grid item className={classes.alignGridItems}>
-                  <InputLabel>X-Max</InputLabel>
-                  <InputBase
-                    inputProps={{
-                      min: 0,
-                      style: {
-                        maxWidth: 55,
-                        backgroundColor: "#f2f2f2",
-                        textAlign: "center",
-                      },
+                  <TextField
+                    label="End Date"
+                    type="date"
+                    onChange={this.getDate}
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
                     }}
-                    //onChange={(e) => this.updateXMax(e)}
-                    type="number"
-                  ></InputBase>
+                  />
                 </Grid>
                 <Grid item className={classes.alignGridItems}>
                   <Button
                     className={classes.controlRoot}
                     //style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px',backgroundColor:"gray"}}
-                    onClick={this.props.getNewData}
+                    onClick={this.callNewRequest}
                   >
                     Default
                   </Button>
