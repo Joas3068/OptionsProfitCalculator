@@ -11,7 +11,7 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import ChainData from "../components/ChainData";
-import { TdBigData } from "../utils/StrategyData";
+import { TdBigData,OtherTd } from "../utils/StrategyData";
 import SelectedTdData from "../components/SelectedTdData";
 import { CalcBScholesTdData } from "../utils/Bscholes";
 import TdDataSelection from "../components/TdDataSelection";
@@ -31,8 +31,8 @@ const useRowStyles = (theme) => ({
   },
   table: {
     backgroundColor: "#dde7ed",
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
 
     display: "block",
   },
@@ -62,18 +62,22 @@ const useRowStyles = (theme) => ({
     flex: 1,
     maxHeight: "auto",
   },
-
+  alignGridItems:{
+    
+  },
   fixedHeight: {
     height: 300,
   },
+  
   expPanelChain: {
-    //active
-    backgroundColor: "lighGray",
+    //active, Controls all expansion panel
+    backgroundColor: "#cccccc",
     overflow: "auto",
     padding:theme.spacing(1),
+    margin:theme.spacing(1),
   },
   chainDataTable: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#e6e6e6",
   },
   tableCellTrue: {
     //active
@@ -99,6 +103,7 @@ class TdDataMode extends React.Component {
       formattedData: [],
     };
     this.sendObject = this.sendObject.bind(this);
+    this.getNewData = this.getNewData.bind(this);
   }
 
   componentWillMount() {
@@ -208,6 +213,10 @@ class TdDataMode extends React.Component {
     //}
   }
 
+  getNewData(){
+    this.setState({tdData:OtherTd,selectedTdData:[],formattedData:[]})
+  }
+
   render() {
     const { classes } = this.props;
     //need symbol
@@ -270,7 +279,7 @@ class TdDataMode extends React.Component {
           </Grid>
           <Grid className={classes.chainGrid} item xs={12}>
             <Divider></Divider>
-            <TdDataSelection classes={classes}></TdDataSelection>
+            <TdDataSelection classes={classes} getNewData={this.getNewData}></TdDataSelection>
           </Grid>
         </Grid>
 

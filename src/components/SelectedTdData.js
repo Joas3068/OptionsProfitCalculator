@@ -35,7 +35,7 @@ class SelectedTdData extends React.Component {
     return (
       <TableContainer component={Paper}>
         <Table
-          // className={classes.table}
+           className={classes.chainDataTable}
           size="small"
           aria-label="a dense table"
         >

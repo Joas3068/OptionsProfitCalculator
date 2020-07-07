@@ -33,7 +33,20 @@ import {
 class TdDataSelection extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { tdData: {} };
+
+    this.callNewRequest = this.callNewRequest.bind(this);
+  }
+
+  callNewRequest() {
+    var r;
+    //      fetch("https://api.tdameritrade.com/v1/marketdata/chains?apikey=HULFYOXJ8NBCAEZRRDZWJWDFPTNJKUHF&symbol=SPY&strikeCount=6&fromDate=2020-07-06&toDate=2020-07-09")
+    //  //fetch("https://api.maharristhepug.com/api/optionsdata")
+    //  .then(response => response.json())
+    //  .then(data => r = data)
+    // //  .then(() => this.getRes(r))
+    // .then(data => console.log("API-DATA: " + data))
+    // .then( ()=>this.props.getNewData(r));
+    this.props.getNewData(r);
   }
 
   render() {
@@ -63,50 +76,46 @@ class TdDataSelection extends React.Component {
                 className={classes.papa}
               >
                 <Grid item className={classes.alignGridItems}>
-                  <FormControl>
-                    <InputLabel>Days</InputLabel>
-                    <InputBase
-                      inputProps={{
-                        min: 0,
-                        style: {
-                          maxWidth: 50,
-                          backgroundColor: "#f2f2f2",
-                          textAlign: "center",
-                        },
-                      }}
-                      //onChange={(e) => this.updateDaysNumber(e)}
-                      type="number"
-                      value={this.state.numberOfDays}
-                    ></InputBase>
-                  </FormControl>
+                  <InputLabel>Days</InputLabel>
+                  <InputBase
+                    inputProps={{
+                      min: 0,
+                      style: {
+                        maxWidth: 50,
+                        backgroundColor: "#f2f2f2",
+                        textAlign: "center",
+                      },
+                    }}
+                    //onChange={(e) => this.updateDaysNumber(e)}
+                    type="number"
+                   // value={this.state.numberOfDays}
+                  ></InputBase>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid item className={classes.alignGridItems}>
                   <InputLabel>P/L</InputLabel>
                   <Checkbox
                     className={classes.controlRoot}
-                    checked={this.state.showTip}
+                    //checked={this.state.showTip}
                     size={"small"}
                     //onChangeCapture={(e) => this.changeToolTip(e)}
                   ></Checkbox>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid item className={classes.alignGridItems}>
-                  <FormControl>
-                    <InputLabel>X-Min</InputLabel>
-                    <InputBase
-                      inputProps={{
-                        min: 0,
-                        style: {
-                          maxWidth: 55,
-                          backgroundColor: "#f2f2f2",
-                          textAlign: "center",
-                        },
-                      }}
-                      //onChange={(e) => this.updateXMin(e)}
-                      type="number"
-                    ></InputBase>
-                  </FormControl>
+                  <InputLabel>X-Min</InputLabel>
+                  <InputBase
+                    inputProps={{
+                      min: 0,
+                      style: {
+                        maxWidth: 55,
+                        backgroundColor: "#f2f2f2",
+                        textAlign: "center",
+                      },
+                    }}
+                    //onChange={(e) => this.updateXMin(e)}
+                    type="number"
+                  ></InputBase>
                 </Grid>
                 <Grid item className={classes.alignGridItems}>
                   <InputLabel>X-Max</InputLabel>
@@ -127,7 +136,7 @@ class TdDataSelection extends React.Component {
                   <Button
                     className={classes.controlRoot}
                     //style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px',backgroundColor:"gray"}}
-                    onClick={this.setDefaultXCoords}
+                    onClick={this.props.getNewData}
                   >
                     Default
                   </Button>

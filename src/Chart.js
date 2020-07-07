@@ -40,6 +40,7 @@ const useRowStyles = (theme) => ({
   papa: {
     backgroundColor: "white",
     margin: theme.spacing(1),
+    borderRadius: "2px",
     //display: "inlineBlock",
     //flexWrap: "wrap",
   },
@@ -94,7 +95,13 @@ class Chart extends React.Component {
   updateDaysNumber(e) {
     if (this.props.formattedData.length > 0) {
       var keyz = Object.keys(this.props.formattedData[0]);
-      if (e.target.value <= keyz.length && e.target.value > 0) {
+      if (e.target.value === "") {
+        this.setState({ numberOfDays: undefined });
+      } else if (
+        e.target.value <= keyz.length &&
+        e.target.value > 0 &&
+        e.target.value
+      ) {
         this.setState({ numberOfDays: e.target.value });
       } else if (e.target.value > keyz.length) {
         let t = e.target.value - 1;
@@ -106,61 +113,44 @@ class Chart extends React.Component {
   componentDidMount() {
     try {
       var numberOfDays = JSON.parse(localStorage.getItem("numberOfDays"));
+      var keyz;
+      let length = 0;
+      if (this.props.formattedData.length > 0) {
+        keyz = Object.keys(this.props.formattedData[0]);
+        length = keyz.length;
+      }
 
-      if (numberOfDays !== undefined)
-        this.setState({ numberOfDays: numberOfDays });
+      //if (numberOfDays !== undefined)
+      numberOfDays = !numberOfDays ? length : numberOfDays;
+      this.setState({ numberOfDays: numberOfDays });
     } catch {
       localStorage.clear();
     }
   }
 
   componentDidUpdate() {
+    let days = this.state.numberOfDays;
+    if (!this.state.numberOfDays && this.props.formattedData.length > 0) {
+      var keyz = Object.keys(this.props.formattedData[0]);
+      days = keyz.length - 1;
+    }
+  
     localStorage.setItem(
       "numberOfDays",
-      JSON.stringify(this.state.numberOfDays)
+      JSON.stringify(days)
     );
   }
 
   updateXMin(e) {
     let val = e.target.valueAsNumber;
-    let i = 0;
-    var xMinH = 0;
     if (this.props.formattedData.length > 0) {
-      // var formattedData = this.props.formattedData;
-      // //if greater than min value
-      // if (val > formattedData[0].x) {
-      //   xMinH = formattedData[0].x;
-      //   while (
-      //     val - this.props.formattedData[i].x > 0 &&
-      //     val < formattedData[formattedData.length - 1].x &&
-      //     val > formattedData[0].x
-      //   ) {
-      //     i++;
-      //   }
-      //   if (val < xMinH) i = 0;
       this.setState({ xMinVal: val });
-      //}
     }
   }
 
   updateXMax(e) {
     let val = e.target.valueAsNumber;
-    let i = 0;
-    var xMaxH = 0;
     if (this.props.formattedData.length > 0) {
-      // var formattedData = this.props.formattedData;
-      // if (val > formattedData[0].x) {
-      //   xMaxH = formattedData[formattedData.length - 1].x;
-      //   while (
-      //     val - this.props.formattedData[i].x >= 0 &&
-      //     val < xMaxH
-      //     //&& val > formattedData[0].x
-      //   ) {
-      //     i++;
-      //   }
-      //   if (val > xMaxH) i = formattedData.length - 1;
-      //   this.setState({ xMaxVal: i });
-      // }
       this.setState({ xMaxVal: val });
     }
   }
@@ -175,9 +165,7 @@ class Chart extends React.Component {
     let underLyingPrice = undefined;
     var xMin = 1,
       xMax = 1;
-    //set any value from handlers format here
-    //search for nearest values here
-    //set xmin xmax equal to lowest if out of bounds
+
     if (this.props.formattedData.length > 0) {
       let sliceMinIndex = 0; //get smallest
       let sliceMaxIndex = this.props.formattedData.length; //get largest
@@ -195,7 +183,7 @@ class Chart extends React.Component {
           i++;
         }
         sliceMaxIndex = i > 0 ? i : this.props.formattedData.length;
-       i = 0;
+        i = 0;
       }
 
       if (this.state.xMinVal) {
@@ -210,7 +198,10 @@ class Chart extends React.Component {
         sliceMinIndex = i;
       }
 
-      console.log(sliceMinIndex + " " + sliceMaxIndex);
+      if (sliceMinIndex >= sliceMaxIndex) {
+        sliceMinIndex = 0; //get smallest
+        sliceMaxIndex = this.props.formattedData.length; //get largest
+      }
       formattedData = this.props.formattedData.slice(
         sliceMinIndex,
         sliceMaxIndex
@@ -220,7 +211,8 @@ class Chart extends React.Component {
 
       if (this.props.underlying) {
         let index = 0;
-        while (this.props.underlying - this.props.formattedData[index].x > 0) index++;
+        while (this.props.underlying - this.props.formattedData[index].x > 0)
+          index++;
         underLyingPrice = this.props.formattedData[index];
       }
     }
@@ -298,12 +290,12 @@ class Chart extends React.Component {
           <Grid item className={classes.alignGridItems}>
             <Button
               className={classes.controlRoot}
-              //style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px',backgroundColor:"gray"}}
               onClick={this.setDefaultXCoords}
             >
-              Default
+              Reset
             </Button>
           </Grid>
+          <Divider orientation="vertical" flexItem />
         </Grid>
         <Grid container xs={12} style={{ width: "99%", height: 700 }}>
           <ResponsiveContainer>
