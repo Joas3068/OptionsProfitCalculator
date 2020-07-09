@@ -78,7 +78,6 @@ function Rows(props) {
     );
   }
   return (
-    //ohgod
     <React.Fragment>
       {props.contractData[expirationKey] ? (
         <>
@@ -88,11 +87,7 @@ function Rows(props) {
               {
                 <FormControl className={props.classes.formControl}>
                   <InputLabel shrink></InputLabel>
-                  <Select
-                    value={expirationKey}
-                    onChange={handleChange}
-                    //displayEmpty
-                  >
+                  <Select value={expirationKey} onChange={handleChange}>
                     {Object.keys(props.contractData).map((number, key) => (
                       <MenuItem key={key} value={number}>
                         {number}

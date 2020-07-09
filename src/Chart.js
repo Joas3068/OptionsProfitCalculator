@@ -13,15 +13,15 @@ import {
 } from "recharts";
 import {
   Checkbox,
-  Paper,
-  Input,
+  //Paper,
+  //Input,
   Grid,
   InputLabel,
   Button,
-  FormControl,
+ // FormControl,
   InputBase,
   Divider,
-  Typography,
+  //Typography,
 } from "@material-ui/core";
 
 import { withStyles } from "@material-ui/core/styles";
@@ -134,11 +134,8 @@ class Chart extends React.Component {
       var keyz = Object.keys(this.props.formattedData[0]);
       days = keyz.length - 1;
     }
-  
-    localStorage.setItem(
-      "numberOfDays",
-      JSON.stringify(days)
-    );
+
+    localStorage.setItem("numberOfDays", JSON.stringify(days));
   }
 
   updateXMin(e) {
@@ -158,7 +155,7 @@ class Chart extends React.Component {
     this.setState({ xMaxVal: undefined, xMinVal: undefined });
   }
   getCoord(e) {
-    var a = e; //.target.value;
+    //var a = e; //.target.value;
   }
   render() {
     var formattedData = [];
@@ -297,7 +294,7 @@ class Chart extends React.Component {
           </Grid>
           <Divider orientation="vertical" flexItem />
         </Grid>
-        <Grid container xs={12} style={{ width: "99%", height: 700 }}>
+        <Grid container xs={12} style={{ width: "99%", height: 500 }}>
           <ResponsiveContainer>
             <LineChart data={formattedData} onClick={(e) => this.getCoord(e)}>
               <CartesianGrid stroke={"#808080"} />
@@ -395,7 +392,11 @@ function GetLines(arrs, numberOfDays) {
         LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
       }
     } else {
-      for (let i = 1; i <= numberOfDays; i++) {
+      let dayMultiplier = 0;
+      if (numberOfDays > 15) {
+        dayMultiplier = Math.round(numberOfDays / 10);
+      }
+      for (let i = 1; i <= numberOfDays; i = i + dayMultiplier + 1) {
         var colsD = GetColors();
         let rgb =
           "rgb(" +

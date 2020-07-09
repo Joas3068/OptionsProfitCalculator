@@ -9,8 +9,8 @@ import {
   Grid,
   InputLabel,
   Button,
-  FormControl,
-  InputBase,
+  //FormControl,
+  //InputBase,
   Divider,
   Typography,
   ExpansionPanel,
@@ -67,7 +67,7 @@ class TdDataSelection extends React.Component {
             <Typography className={classes.heading}>Data Selection</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid item xs={12}>
+            <Grid container >
               <Grid
                 container
                 direction="row"
@@ -114,7 +114,6 @@ class TdDataSelection extends React.Component {
                 <Grid item className={classes.alignGridItems}>
                   <Button
                     className={classes.controlRoot}
-                    //style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px',backgroundColor:"gray"}}
                     onClick={this.callNewRequest}
                   >
                     Default

@@ -11,10 +11,11 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import ChainData from "../components/ChainData";
-import { TdBigData,OtherTd } from "../utils/StrategyData";
+import { TdBigData } from "../utils/StrategyData";
 import SelectedTdData from "../components/SelectedTdData";
 import { CalcBScholesTdData } from "../utils/Bscholes";
 import TdDataSelection from "../components/TdDataSelection";
+import { formatDate } from "../utils/Misc";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -62,19 +63,17 @@ const useRowStyles = (theme) => ({
     flex: 1,
     maxHeight: "auto",
   },
-  alignGridItems:{
-    
-  },
+  alignGridItems: {},
   fixedHeight: {
     height: 300,
   },
-  
+
   expPanelChain: {
     //active, Controls all expansion panel
     backgroundColor: "#cccccc",
     overflow: "auto",
-    padding:theme.spacing(1),
-    margin:theme.spacing(1),
+    padding: theme.spacing(1),
+    margin: theme.spacing(1),
   },
   chainDataTable: {
     backgroundColor: "#e6e6e6",
@@ -90,7 +89,6 @@ const useRowStyles = (theme) => ({
   addButton: {
     margin: theme.spacing(1),
   },
-  
 });
 
 class TdDataMode extends React.Component {
@@ -107,6 +105,18 @@ class TdDataMode extends React.Component {
   }
 
   componentWillMount() {
+    // const stringReq =
+    //   "https://api.tdameritrade.com/v1/marketdata/chains?apikey=" +
+    //   this.props.tdKey +
+    //   "&symbol=SPY&strikeCount=6&fromDate=" +
+    //   formatDate(new Date()) +
+    //   "&toDate=" +
+    //   this.state.endDate;
+    // var r;
+    // fetch(stringReq)
+    //   .then((response) => response.json())
+    //   .then((data) => (r = data))
+    //   .then(() => this.props.getNewData(r));
     this.setState({ tdData: TdBigData });
   }
 
@@ -213,8 +223,8 @@ class TdDataMode extends React.Component {
     //}
   }
 
-  getNewData(obj){
-    this.setState({tdData:obj,selectedTdData:[],formattedData:[]})
+  getNewData(obj) {
+    this.setState({ tdData: obj, selectedTdData: [], formattedData: [] });
   }
 
   render() {
@@ -279,7 +289,11 @@ class TdDataMode extends React.Component {
           </Grid>
           <Grid className={classes.chainGrid} item xs={12}>
             <Divider></Divider>
-            <TdDataSelection classes={classes} getNewData={this.getNewData} tdKey={this.props.tdKey}></TdDataSelection>
+            <TdDataSelection
+              classes={classes}
+              getNewData={this.getNewData}
+              tdKey={this.props.tdKey}
+            ></TdDataSelection>
           </Grid>
         </Grid>
 

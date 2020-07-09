@@ -1,20 +1,30 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
+import {
+  Drawer,
+  AppBar,
+  Toolbar,
+  Typography,
+  Divider,
+  IconButton,
+  Button,
+  FormControlLabel,
+  Switch,
+  Link,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  //DialogTitle,
+  TextField,
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import Colors from "../utils/Colors";
-import { Button } from "@material-ui/core";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+
 import {
   CallDebitSpread,
   PutCreditSpread,
@@ -22,13 +32,8 @@ import {
   ShortPut,
   IronCondor,
 } from "../utils/StrategyData";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DataKeyDialog from "../Elements/DataKeyDialog";
+
+//import DataKeyDialog from "../Elements/DataKeyDialog";
 
 const drawerWidth = 240;
 
@@ -246,6 +251,11 @@ export default function OptionsDrawer(props) {
         <DialogContent>
           <DialogContentText>
             Enter TD Ameritrade developers key for options data.
+            <Typography className={classes.root}>
+              <Link href="https://developer.tdameritrade.com/">
+                Sign Up Here
+              </Link>
+            </Typography>
           </DialogContentText>
           <TextField
             // autoFocus
