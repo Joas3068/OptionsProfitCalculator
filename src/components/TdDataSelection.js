@@ -25,9 +25,13 @@ class TdDataSelection extends React.Component {
 
     this.state = {
       endDate: undefined,
+      userSymbol: "",
+      startDate: formatDate(new Date()),
     };
     this.callNewRequest = this.callNewRequest.bind(this);
     this.getDate = this.getDate.bind(this);
+    this.updateSymbol = this.updateSymbol.bind(this);
+    this.getStartDate = this.getStartDate.bind(this);
   }
 
   callNewRequest() {
@@ -36,7 +40,11 @@ class TdDataSelection extends React.Component {
     const stringReq =
       "https://api.tdameritrade.com/v1/marketdata/chains?apikey=" +
       this.props.tdKey +
-      "&symbol=SPY&strikeCount=6&fromDate=2020-07-06&toDate=" +
+      "&symbol=" +
+      this.state.userSymbol +
+      "&strikeCount=10&fromDate=" +
+      this.state.startDate +
+      "&toDate=" +
       this.state.endDate;
 
     fetch(stringReq)
@@ -48,6 +56,17 @@ class TdDataSelection extends React.Component {
   getDate(e) {
     var a = e.target.value;
     this.setState({ endDate: a });
+  }
+
+  getStartDate(e) {
+    var a = e.target.value;
+    this.setState({ startDate: a });
+  }
+
+  updateSymbol(e) {
+    var a = e.target.value;
+    a = a.toUpperCase();
+    this.setState({ userSymbol: a });
   }
 
   render() {
@@ -67,7 +86,7 @@ class TdDataSelection extends React.Component {
             <Typography className={classes.heading}>Data Selection</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid container >
+            <Grid container>
               <Grid
                 container
                 direction="row"
@@ -78,21 +97,22 @@ class TdDataSelection extends React.Component {
               >
                 <Divider orientation="vertical" flexItem />
                 <Grid item className={classes.alignGridItems}>
-                  <InputLabel>P/L</InputLabel>
-                  <Checkbox
+                  <TextField
                     className={classes.controlRoot}
-                    //checked={this.state.showTip}
-                    size={"small"}
-                    //onChangeCapture={(e) => this.changeToolTip(e)}
-                  ></Checkbox>
+                    label="Symbol"
+                    id="outlined-basic"
+                    variant="outlined"
+                    onChange={this.updateSymbol}
+                  />
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid item className={classes.alignGridItems}>
                   <TextField
                     label="Start Date"
                     type="date"
+                    disabled={true}
                     defaultValue={formatDate(new Date())}
-                    onChange={this.getStartDate}
+                    //onChange={this.getStartDate}
                     className={classes.textField}
                     InputLabelProps={{
                       shrink: true,
@@ -116,7 +136,7 @@ class TdDataSelection extends React.Component {
                     className={classes.controlRoot}
                     onClick={this.callNewRequest}
                   >
-                    Default
+                    Get Chain Data
                   </Button>
                 </Grid>
               </Grid>

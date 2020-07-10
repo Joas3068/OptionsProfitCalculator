@@ -375,7 +375,7 @@ function GetLines(arrs, numberOfDays) {
     const LengthOfObj = keyz.length;
     if (numberOfDays === undefined) {
       let dayMultiplier = 0;
-      if (keyz.length > 20) {
+      if (keyz.length > 10) {
         dayMultiplier = Math.round(LengthOfObj / 10);
       }
 
@@ -393,7 +393,7 @@ function GetLines(arrs, numberOfDays) {
       }
     } else {
       let dayMultiplier = 0;
-      if (numberOfDays > 15) {
+      if (numberOfDays > 10) {
         dayMultiplier = Math.round(numberOfDays / 10);
       }
       for (let i = 1; i <= numberOfDays; i = i + dayMultiplier + 1) {

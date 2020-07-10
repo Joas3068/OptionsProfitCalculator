@@ -201,7 +201,8 @@ class TdDataMode extends React.Component {
     var calc = CalcBScholesTdData(
       this.state.selectedTdData,
       this.state.tdData.underlyingPrice,
-      this.state.tdData.interestRate
+      this.state.tdData.interestRate,
+      this.state.tdData.volatility
     );
     this.setState({ formattedData: calc });
   }
@@ -224,7 +225,8 @@ class TdDataMode extends React.Component {
   }
 
   getNewData(obj) {
-    this.setState({ tdData: obj, selectedTdData: [], formattedData: [] });
+    if (obj.status !== "FAILED")
+      this.setState({ tdData: obj, selectedTdData: [], formattedData: [] });
   }
 
   render() {
