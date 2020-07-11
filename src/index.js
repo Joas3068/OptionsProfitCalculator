@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import ParentComp from "./pages/ParentComp"
 import * as serviceWorker from './serviceWorker';
 import { Helmet } from 'react-helmet'
 import Main from "./pages/Main";
