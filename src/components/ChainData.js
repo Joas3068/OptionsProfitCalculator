@@ -258,12 +258,14 @@ class ChainData extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody className={classes.tableRoot}>
-                  <Rows
-                    contractData={this.props.tdDataContract}
-                    classes={classes}
-                    sendObject={this.props.sendObject}
-                    tdData={this.props.tdData}
-                  ></Rows>
+                  {this.props.tdDataContract !== undefined ? (
+                    <Rows
+                      contractData={this.props.tdDataContract}
+                      classes={classes}
+                      sendObject={this.props.sendObject}
+                      tdData={this.props.tdData}
+                    ></Rows>
+                  ) : null}
                 </TableBody>
               </Table>
             </Grid>

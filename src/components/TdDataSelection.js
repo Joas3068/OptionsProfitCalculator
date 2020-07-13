@@ -32,6 +32,44 @@ class TdDataSelection extends React.Component {
     this.getDate = this.getDate.bind(this);
     this.updateSymbol = this.updateSymbol.bind(this);
     this.getStartDate = this.getStartDate.bind(this);
+    this.prevDataCall = this.prevDataCall.bind(this);
+  }
+
+  componentDidMount() {
+    try {
+      var sym = localStorage.getItem("userSymbol");
+      var end = localStorage.getItem("endDate");
+      // if(end >= this.state.startDate)
+      if (sym !== null && end !== null)
+        this.setState({ userSymbol: sym, endDate: end }, this.prevDataCall);
+    } catch {
+      localStorage.clear();
+    }
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem("userSymbol", this.state.userSymbol);
+    localStorage.setItem("endDate", this.state.endDate);
+  }
+
+  prevDataCall() {
+    var r;
+
+    const stringReq =
+      "https://api.tdameritrade.com/v1/marketdata/chains?apikey=" +
+      this.props.tdKey +
+      "&symbol=" +
+      this.state.userSymbol +
+      "&strikeCount=10&fromDate=" +
+      this.state.startDate +
+      "&toDate=" +
+      this.state.endDate;
+
+    fetch(stringReq)
+      .then((response) => response.json())
+      .then((data) => (r = data))
+      .then(() => this.props.getPreviousChainData(r))
+      .catch((er) => console.log(er));
   }
 
   callNewRequest() {
@@ -50,7 +88,8 @@ class TdDataSelection extends React.Component {
     fetch(stringReq)
       .then((response) => response.json())
       .then((data) => (r = data))
-      .then(() => this.props.getNewData(r));
+      .then(() => this.props.getNewData(r))
+      .catch((er) => console.log(er));
   }
 
   getDate(e) {
@@ -100,7 +139,7 @@ class TdDataSelection extends React.Component {
                   <TextField
                     className={classes.controlRoot}
                     label="Symbol"
-                    id="outlined-basic"
+                    value={this.state.userSymbol}
                     variant="outlined"
                     onChange={this.updateSymbol}
                   />
@@ -125,6 +164,7 @@ class TdDataSelection extends React.Component {
                     label="End Date"
                     type="date"
                     onChange={this.getDate}
+                    value={this.state.endDate}
                     className={classes.textField}
                     InputLabelProps={{
                       shrink: true,

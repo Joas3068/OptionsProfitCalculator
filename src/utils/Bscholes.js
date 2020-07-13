@@ -35,7 +35,6 @@ export function CalcBScholesTdData(
     for (let checkExp = 0; checkExp < tdArr.length; checkExp++) {
       if (tdArr[checkExp].daysToExpiration > 150) return [];
     }
-    let asdf = GetFixedValue(stockPrice)
     var LargestExp = 0;
     var LargestVol = 0;
     tdArr.forEach((tData) => {
@@ -44,10 +43,10 @@ export function CalcBScholesTdData(
       if (tData.volatility > LargestVol) LargestVol = tData.volatility;
     });
     var deviation =
-      (LargestVol / 100) * stockPrice * (Math.sqrt((LargestExp+1) / 365));
+      (LargestVol / 100) * stockPrice * Math.sqrt((LargestExp + 1) / 365); //deviation calc based of volatility
 
     let multiplier = deviation * 3; //tweak graph size here, this will specify range from the stock price
-    let res = (multiplier * 2 + stockPrice) / 2000;
+    let res = (multiplier * 2 + stockPrice) / 2000; //2000 is the number of datapoints
 
     for (
       let index = stockPrice - multiplier;

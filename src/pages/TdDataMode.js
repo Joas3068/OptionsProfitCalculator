@@ -102,6 +102,7 @@ class TdDataMode extends React.Component {
     };
     this.sendObject = this.sendObject.bind(this);
     this.getNewData = this.getNewData.bind(this);
+    this.getPreviousChainData = this.getPreviousChainData.bind(this);
   }
 
   componentWillMount() {
@@ -117,14 +118,22 @@ class TdDataMode extends React.Component {
     //   .then((response) => response.json())
     //   .then((data) => (r = data))
     //   .then(() => this.props.getNewData(r));
-    this.setState({ tdData: TdBigData });
+    //this.setState({ tdData: TdBigData });
   }
 
   componentDidMount() {
     try {
       var selectedTdData = JSON.parse(localStorage.getItem("selectedTdData"));
+      var prevTdData = {};
+      prevTdData["underlyingPrice"] = Number(localStorage.getItem("underlyingPrice"));
+      prevTdData["interestRate"] = Number(localStorage.getItem("interestRate"));
+      prevTdData["volatility"] = Number(localStorage.getItem("volatility"));
+
       if (selectedTdData !== null)
-        this.setState({ selectedTdData: selectedTdData }, this.makeCalcs);
+        this.setState(
+          { selectedTdData: selectedTdData, tdData: prevTdData },
+          this.makeCalcs
+        );
     } catch {
       localStorage.clear();
     }
@@ -134,6 +143,18 @@ class TdDataMode extends React.Component {
     localStorage.setItem(
       "selectedTdData",
       JSON.stringify(this.state.selectedTdData)
+    );
+    localStorage.setItem(
+      "underlyingPrice",
+      JSON.stringify(this.state.tdData.underlyingPrice)
+    );
+    localStorage.setItem(
+      "interestRate",
+      JSON.stringify(this.state.tdData.interestRate)
+    );
+    localStorage.setItem(
+      "volatility",
+      JSON.stringify(this.state.tdData.volatility)
     );
   }
 
@@ -225,8 +246,13 @@ class TdDataMode extends React.Component {
   }
 
   getNewData(obj) {
-    if (obj.status !== "FAILED")
+    if (obj.status !== "FAILED" && obj.error !== "Bad request.")
       this.setState({ tdData: obj, selectedTdData: [], formattedData: [] });
+  }
+
+  getPreviousChainData(obj) {
+    if (obj.status !== "FAILED" && obj.error !== "Bad request.")
+      this.setState({ tdData: obj });
   }
 
   render() {
@@ -294,6 +320,7 @@ class TdDataMode extends React.Component {
             <TdDataSelection
               classes={classes}
               getNewData={this.getNewData}
+              getPreviousChainData={this.getPreviousChainData}
               tdKey={this.props.tdKey}
             ></TdDataSelection>
           </Grid>

@@ -18,7 +18,7 @@ import {
   Grid,
   InputLabel,
   Button,
- // FormControl,
+  // FormControl,
   InputBase,
   Divider,
   //Typography,
@@ -378,7 +378,7 @@ function GetLines(arrs, numberOfDays) {
       if (keyz.length > 10) {
         dayMultiplier = Math.round(LengthOfObj / 10);
       }
-
+      //days not specified
       for (let i = 1; i <= LengthOfObj - 1; i = i + dayMultiplier + 1) {
         var cols = GetColors();
         let rgb =
@@ -408,6 +408,18 @@ function GetLines(arrs, numberOfDays) {
           ")";
         LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
       }
+      var colsD2 = GetColors();
+      let rgb2 =
+        "rgb(" +
+        colsD2.r.toString() +
+        "," +
+        colsD2.g.toString() +
+        "," +
+        colsD2.b.toString() +
+        ")";
+      LineList.push(
+        <Line stroke={rgb2} dataKey={keyz[LengthOfObj - 1]} dot={false} />
+      );
     }
 
     return LineList;
