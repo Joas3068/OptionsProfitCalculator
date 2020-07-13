@@ -190,7 +190,6 @@ export class ParentComp extends React.Component {
       currentEditGuid: mainObj[0].GUID, //GUID to access checksList
       calculatedPriceData: [[]], //final calcs for Charts
       formattedData: [],
-      tdData: {},
     };
     this.addData = this.addData.bind(this);
     this.clearSelected = this.clearSelected.bind(this);
@@ -251,12 +250,6 @@ export class ParentComp extends React.Component {
     arrayCopy[index] = replaceObj;
 
     return arrayCopy;
-  }
-
-  getRes(res) {
-    this.setState({
-      tdData: res,
-    });
   }
 
   componentDidMount() {

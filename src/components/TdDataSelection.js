@@ -22,10 +22,12 @@ import {
 class TdDataSelection extends React.Component {
   constructor(props) {
     super(props);
-
+    var futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 10);
+    var final = formatDate(futureDate);
     this.state = {
-      endDate: undefined,
-      userSymbol: "",
+      endDate: final,
+      userSymbol: "SPY",
       startDate: formatDate(new Date()),
     };
     this.callNewRequest = this.callNewRequest.bind(this);
@@ -34,8 +36,11 @@ class TdDataSelection extends React.Component {
     this.getStartDate = this.getStartDate.bind(this);
     this.prevDataCall = this.prevDataCall.bind(this);
   }
-
+  componentWillUnmount() {
+    this.props.onRef(undefined);
+  }
   componentDidMount() {
+    this.props.onRef(this);
     try {
       var sym = localStorage.getItem("userSymbol");
       var end = localStorage.getItem("endDate");

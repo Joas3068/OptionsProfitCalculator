@@ -77,7 +77,6 @@ class Chart extends React.Component {
       xMaxVal: undefined,
     };
     this.changeToolTip = this.changeToolTip.bind(this);
-    this.getCoord = this.getCoord.bind(this);
     this.setDefaultXCoords = this.setDefaultXCoords.bind(this);
     this.updateXMax = this.updateXMax.bind(this);
   }
@@ -95,7 +94,7 @@ class Chart extends React.Component {
   updateDaysNumber(e) {
     if (this.props.formattedData.length > 0) {
       var keyz = Object.keys(this.props.formattedData[0]);
-      if (e.target.value === "") {
+      if (e.target.value === "" || e.target.value === 0) {
         this.setState({ numberOfDays: undefined });
       } else if (
         e.target.value <= keyz.length &&
@@ -154,9 +153,7 @@ class Chart extends React.Component {
   setDefaultXCoords() {
     this.setState({ xMaxVal: undefined, xMinVal: undefined });
   }
-  getCoord(e) {
-    //var a = e; //.target.value;
-  }
+
   render() {
     var formattedData = [];
     let underLyingPrice = undefined;
@@ -296,7 +293,7 @@ class Chart extends React.Component {
         </Grid>
         <Grid container xs={12} style={{ width: "99%", height: 500 }}>
           <ResponsiveContainer>
-            <LineChart data={formattedData} onClick={(e) => this.getCoord(e)}>
+            <LineChart data={formattedData}>
               <CartesianGrid stroke={"#808080"} />
               <XAxis
                 tickCount={25}
@@ -373,7 +370,7 @@ function GetLines(arrs, numberOfDays) {
   if (arrs.length > 0) {
     var keyz = Object.keys(arrs[0]);
     const LengthOfObj = keyz.length;
-    if (numberOfDays === undefined) {
+    if (numberOfDays === undefined || numberOfDays === 0) {
       let dayMultiplier = 0;
       if (keyz.length > 10) {
         dayMultiplier = Math.round(LengthOfObj / 10);
@@ -408,18 +405,18 @@ function GetLines(arrs, numberOfDays) {
           ")";
         LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
       }
-      var colsD2 = GetColors();
-      let rgb2 =
-        "rgb(" +
-        colsD2.r.toString() +
-        "," +
-        colsD2.g.toString() +
-        "," +
-        colsD2.b.toString() +
-        ")";
-      LineList.push(
-        <Line stroke={rgb2} dataKey={keyz[LengthOfObj - 1]} dot={false} />
-      );
+      // var colsD2 = GetColors();
+      // let rgb2 =
+      //   "rgb(" +
+      //   colsD2.r.toString() +
+      //   "," +
+      //   colsD2.g.toString() +
+      //   "," +
+      //   colsD2.b.toString() +
+      //   ")";
+      // LineList.push(
+      //   <Line stroke={rgb2} dataKey={keyz[LengthOfObj - 1]} dot={false} />
+      // );
     }
 
     return LineList;

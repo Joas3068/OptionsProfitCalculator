@@ -125,7 +125,9 @@ class TdDataMode extends React.Component {
     try {
       var selectedTdData = JSON.parse(localStorage.getItem("selectedTdData"));
       var prevTdData = {};
-      prevTdData["underlyingPrice"] = Number(localStorage.getItem("underlyingPrice"));
+      prevTdData["underlyingPrice"] = Number(
+        localStorage.getItem("underlyingPrice")
+      );
       prevTdData["interestRate"] = Number(localStorage.getItem("interestRate"));
       prevTdData["volatility"] = Number(localStorage.getItem("volatility"));
 
@@ -251,8 +253,38 @@ class TdDataMode extends React.Component {
   }
 
   getPreviousChainData(obj) {
-    if (obj.status !== "FAILED" && obj.error !== "Bad request.")
-      this.setState({ tdData: obj });
+    if (obj.status !== "FAILED" && obj.error !== "Bad request.") {
+      if (this.state.selectedTdData.length === 0) {
+      }
+      this.setState({ tdData: obj }, this.setFirst);
+    }
+  }
+
+  setFirst() {
+    var a = this.state.tdData;
+    if (
+      this.state.selectedTdData !== null &&
+      this.state.selectedTdData.length === 0
+    ) {
+      var sel = this.state.tdData.callExpDateMap;
+      var keyz = Object.keys(sel);
+      if (keyz.length > 0) {
+        let keyL = Math.floor((keyz.length - 1) / 2)
+        let key = keyz[keyL];
+        var selected = sel[key];
+        var selectedStrikeKeyz = Object.keys(selected);
+        if (selectedStrikeKeyz.length > 0) {
+          let count = Math.floor((selectedStrikeKeyz.length - 1) / 2);
+          var strikeKey =
+            selectedStrikeKeyz[count];
+            var finalData = selected[strikeKey];
+            finalData[0]["numberOfContracts"] = 1;
+            finalData[0]["buySell"]= "buy"
+            this.setState({ selectedTdData: finalData },this.makeCalcs);
+        }
+        
+      }
+    }
   }
 
   render() {
@@ -322,6 +354,7 @@ class TdDataMode extends React.Component {
               getNewData={this.getNewData}
               getPreviousChainData={this.getPreviousChainData}
               tdKey={this.props.tdKey}
+              onRef={(ref) => (this.TdDataSelection = ref)}
             ></TdDataSelection>
           </Grid>
         </Grid>

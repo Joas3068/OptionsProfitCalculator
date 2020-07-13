@@ -33,10 +33,12 @@ export default class Main extends React.Component {
       //var cg = JSON.parse(localStorage.getItem("tdKey"));
       if (
         //cg !== undefined &&
-         tdData !== undefined)
-        this.setState({ tdData: tdData, 
+        tdData !== undefined
+      )
+        this.setState({
+          tdData: tdData,
           //tdKey: cg
-         });
+        });
     } catch {
       localStorage.clear();
     }
@@ -48,19 +50,20 @@ export default class Main extends React.Component {
   }
 
   render() {
-    let mainComp = !this.state.tdData ? (
-      <ParentComp
-        tdKey={this.state.tdKey}
-        toggleDataMode={this.toggleDataMode}
-        dataModeState={this.state.tdData}
-      ></ParentComp>
-    ) : (
-      <TdDataMode
-        tdKey={this.state.tdKey}
-        toggleDataMode={this.toggleDataMode}
-        dataModeState={this.state.tdData}
-      ></TdDataMode>
-    );
+    let mainComp =
+      this.state.tdData === false ? (
+        <ParentComp
+          tdKey={this.state.tdKey}
+          toggleDataMode={this.toggleDataMode}
+          dataModeState={this.state.tdData}
+        ></ParentComp>
+      ) : (
+        <TdDataMode
+          tdKey={this.state.tdKey}
+          toggleDataMode={this.toggleDataMode}
+          dataModeState={this.state.tdData}
+        ></TdDataMode>
+      );
 
     return <div> {mainComp}</div>;
   }
