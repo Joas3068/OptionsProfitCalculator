@@ -1,8 +1,5 @@
 //Ref: https://gist.github.com/santacruz123/3623310
 
-import TdDataMode from "../pages/TdDataMode";
-
-//
 export function GetSchole(lastItem) {
   var tempObject = lastItem;
   var pArr = [];

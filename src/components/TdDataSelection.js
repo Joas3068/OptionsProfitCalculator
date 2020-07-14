@@ -3,11 +3,11 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { formatDate } from "../utils/Misc";
 
 import {
-  Checkbox,
+  //Checkbox,
   //Paper,
   //Input,
   Grid,
-  InputLabel,
+  //InputLabel,
   Button,
   //FormControl,
   //InputBase,
@@ -36,11 +36,8 @@ class TdDataSelection extends React.Component {
     this.getStartDate = this.getStartDate.bind(this);
     this.prevDataCall = this.prevDataCall.bind(this);
   }
-  componentWillUnmount() {
-    this.props.onRef(undefined);
-  }
+
   componentDidMount() {
-    this.props.onRef(this);
     try {
       var sym = localStorage.getItem("userSymbol");
       var end = localStorage.getItem("endDate");
@@ -79,6 +76,9 @@ class TdDataSelection extends React.Component {
 
   callNewRequest() {
     var r;
+    var futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 5);
+    var final = formatDate(futureDate); //if end date isn't selected just use a date 5 in advance
 
     const stringReq =
       "https://api.tdameritrade.com/v1/marketdata/chains?apikey=" +
@@ -88,7 +88,9 @@ class TdDataSelection extends React.Component {
       "&strikeCount=10&fromDate=" +
       this.state.startDate +
       "&toDate=" +
-      this.state.endDate;
+      (!this.state.endDate || this.state.endDate === ""
+        ? final
+        : this.state.endDate);
 
     fetch(stringReq)
       .then((response) => response.json())

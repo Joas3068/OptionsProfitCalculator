@@ -11,11 +11,9 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import ChainData from "../components/ChainData";
-import { TdBigData } from "../utils/StrategyData";
 import SelectedTdData from "../components/SelectedTdData";
 import { CalcBScholesTdData } from "../utils/Bscholes";
 import TdDataSelection from "../components/TdDataSelection";
-import { formatDate } from "../utils/Misc";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -261,37 +259,36 @@ class TdDataMode extends React.Component {
   }
 
   setFirst() {
-    var a = this.state.tdData;
+    //This mess sets a default contract to be more intuitive for a user
     if (
       this.state.selectedTdData !== null &&
       this.state.selectedTdData.length === 0
     ) {
-      var sel = this.state.tdData.callExpDateMap;
-      var keyz = Object.keys(sel);
+      let sel = this.state.tdData.callExpDateMap;
+      let keyz = Object.keys(sel);
       if (keyz.length > 0) {
-        let keyL = Math.floor((keyz.length - 1) / 2)
+        //get a key in the middle...
+        let keyL = Math.floor((keyz.length - 1) / 2);
         let key = keyz[keyL];
-        var selected = sel[key];
-        var selectedStrikeKeyz = Object.keys(selected);
+        let selected = sel[key];
+        //get strike keys
+        let selectedStrikeKeyz = Object.keys(selected);
         if (selectedStrikeKeyz.length > 0) {
+          //set a default contract here and make calculations 
           let count = Math.floor((selectedStrikeKeyz.length - 1) / 2);
-          var strikeKey =
-            selectedStrikeKeyz[count];
-            var finalData = selected[strikeKey];
-            finalData[0]["numberOfContracts"] = 1;
-            finalData[0]["buySell"]= "buy"
-            this.setState({ selectedTdData: finalData },this.makeCalcs);
+          let strikeKey = selectedStrikeKeyz[count];
+          let finalData = selected[strikeKey];
+          finalData[0]["numberOfContracts"] = 1;
+          finalData[0]["buySell"] = "buy";
+          this.setState({ selectedTdData: finalData }, this.makeCalcs);
         }
-        
       }
     }
   }
 
   render() {
     const { classes } = this.props;
-    //need symbol
-    //api key
-    //to date? from date should be default day of
+
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
@@ -354,7 +351,6 @@ class TdDataMode extends React.Component {
               getNewData={this.getNewData}
               getPreviousChainData={this.getPreviousChainData}
               tdKey={this.props.tdKey}
-              onRef={(ref) => (this.TdDataSelection = ref)}
             ></TdDataSelection>
           </Grid>
         </Grid>
