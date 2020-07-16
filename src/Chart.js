@@ -168,7 +168,9 @@ class Chart extends React.Component {
 
       let i = 0;
 
+      //If user inputs zoom values
       if (this.state.xMaxVal) {
+        //search nearest value
         while (
           this.state.xMaxVal - this.props.formattedData[i].x >= 0 &&
           this.state.xMaxVal < xMaxH
@@ -203,6 +205,7 @@ class Chart extends React.Component {
       xMin = formattedData[0].x;
       xMax = formattedData[formattedData.length - 1].x;
 
+      //find nearest underlying
       if (this.props.underlying) {
         let index = 0;
         while (this.props.underlying - this.props.formattedData[index].x > 0)
@@ -365,18 +368,20 @@ const CustomTooltip = ({ active, payload, label, stylez }) => {
   return null;
 };
 
+//TODO: Bug here not allowing all lines to be shown
 function GetLines(arrs, numberOfDays) {
   var LineList = [];
+  numberOfDays = Number(numberOfDays);
   if (arrs.length > 0) {
-    var keyz = Object.keys(arrs[0]);
+    var keyz = Object.keys(arrs[0]).slice(1);
     const LengthOfObj = keyz.length;
-    if (numberOfDays === undefined || numberOfDays === 0) {
+    if (!numberOfDays || numberOfDays === 0) {
       let dayMultiplier = 0;
       if (keyz.length > 10) {
-        dayMultiplier = Math.round(LengthOfObj / 10);
+        dayMultiplier = Math.floor(LengthOfObj / 10);
       }
       //days not specified
-      for (let i = 1; i <= LengthOfObj - 1; i = i + dayMultiplier + 1) {
+      for (let i = 1; i < LengthOfObj; i = i + dayMultiplier + 1) {
         var cols = GetColors();
         let rgb =
           "rgb(" +
@@ -391,9 +396,9 @@ function GetLines(arrs, numberOfDays) {
     } else {
       let dayMultiplier = 0;
       if (numberOfDays > 10) {
-        dayMultiplier = Math.round(numberOfDays / 10);
+        dayMultiplier = Math.floor(numberOfDays / 10);
       }
-      for (let i = 1; i <= numberOfDays; i = i + dayMultiplier + 1) {
+      for (let i = 1; i < numberOfDays; i = i + dayMultiplier + 1) {
         var colsD = GetColors();
         let rgb =
           "rgb(" +
