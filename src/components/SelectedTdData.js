@@ -48,8 +48,8 @@ class SelectedTdData extends React.Component {
               <TableCell align="left">Mark&nbsp;</TableCell>
               <TableCell align="left">Number of Contracts&nbsp;</TableCell>
               <TableCell align="left">Volatility&nbsp;</TableCell>
-              <TableCell align="left">Interest Free&nbsp;</TableCell>
-              <TableCell align="left">Mark&nbsp;</TableCell>
+              <TableCell align="left">Delta&nbsp;</TableCell>
+              <TableCell align="left">Open Interest&nbsp;</TableCell>
               <TableCell align="left">
                 <Button
                   style={{ backgroundColor: "#bfbfbf", color: "black" }}
@@ -114,8 +114,8 @@ class SelectedTdData extends React.Component {
                       ></InputBase>
                     </TableCell>
                     <TableCell align="left">{row.volatility}</TableCell>
-                    <TableCell align="left">-</TableCell>
-                    <TableCell align="left">-</TableCell>
+                    <TableCell align="left">{row.delta}</TableCell>
+                    <TableCell align="left">{row.openInterest}</TableCell>
                     <TableCell align="left">
                       <IconButton
                         value={row.symbol}
