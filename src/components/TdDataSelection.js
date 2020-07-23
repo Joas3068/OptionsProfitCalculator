@@ -92,11 +92,13 @@ class TdDataSelection extends React.Component {
         ? final
         : this.state.endDate);
 
-    fetch(stringReq)
-      .then((response) => response.json())
-      .then((data) => (r = data))
-      .then(() => this.props.getNewData(r))
-      .catch((er) => console.log(er));
+    if (this.state.userSymbol && this.state.startDate) {
+      fetch(stringReq)
+        .then((response) => response.json())
+        .then((data) => (r = data))
+        .then(() => this.props.getNewData(r))
+        .catch((er) => console.log(er));
+    }
   }
 
   getDate(e) {

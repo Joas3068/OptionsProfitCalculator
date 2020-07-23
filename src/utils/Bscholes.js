@@ -1,5 +1,7 @@
 //Ref: https://gist.github.com/santacruz123/3623310
 
+import GetChartDate from "./Misc";
+
 export function GetSchole(lastItem) {
   var tempObject = lastItem;
   var pArr = [];
@@ -19,6 +21,8 @@ export function GetSchole(lastItem) {
   return tempObject;
 }
 
+//function adjusts to different price ranges, calculate
+//based on stocks volatility, and it specifies number of datapoints
 export function CalcBScholesTdData(
   tdArr,
   stockPrice,
@@ -32,15 +36,19 @@ export function CalcBScholesTdData(
     for (let checkExp = 0; checkExp < tdArr.length; checkExp++) {
       if (tdArr[checkExp].daysToExpiration > 150) return [];
     }
+
     var LargestExp = 0;
     var LargestVol = 0;
+
+    //get largest volatility and expiration
     tdArr.forEach((tData) => {
       if (tData.daysToExpiration > LargestExp)
         LargestExp = tData.daysToExpiration;
       if (tData.volatility > LargestVol) LargestVol = tData.volatility;
     });
+
     var deviation =
-      (LargestVol / 100) * stockPrice * Math.sqrt((LargestExp + 1) / 365); //deviation calc based of volatility
+      (LargestVol / 100) * stockPrice * Math.sqrt((LargestExp + 1) / 365); //deviation calc based off volatility
 
     let multiplier = deviation * 3; //tweak graph size here, this will specify range from the stock price
     let res = (multiplier * 2 + stockPrice) / 2000; //2000 is the number of datapoints
@@ -66,12 +74,17 @@ export function CalcBScholesTdData(
           var volatility = tdArr[i].volatility / 100;
           var BS =
             BlackScholes(type, index, strikeX, timeYears, r, volatility) * 100; //current price
+
           var sign = tdArr[i].buySell === "sell" ? -1 : 1;
-          if (entryAtStockPrice["DAY" + (j + 1)] === undefined)
-            entryAtStockPrice["DAY" + (j + 1)] = 0;
+
+          if (entryAtStockPrice[GetChartDate(j + 1)] === undefined)
+            entryAtStockPrice[GetChartDate(j + 1)] = 0;
+
           if (isNaN(BS)) BS = 0;
-          var tempEnt = entryAtStockPrice["DAY" + (j + 1)];
-          entryAtStockPrice["DAY" + (j + 1)] = +(
+
+          var tempEnt = entryAtStockPrice[GetChartDate(j + 1)];
+          
+          entryAtStockPrice[GetChartDate(j + 1)] = +(
             Number.parseFloat(tdArr[i].numberOfContracts) *
               (sign * BS - sign * tdArr[i].theoreticalOptionValue * 100) +
             tempEnt
