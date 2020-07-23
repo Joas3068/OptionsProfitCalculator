@@ -1,6 +1,6 @@
 //Ref: https://gist.github.com/santacruz123/3623310
 
-import GetChartDate from "./Misc";
+import {GetChartDate} from "./Misc";
 
 export function GetSchole(lastItem) {
   var tempObject = lastItem;
@@ -76,7 +76,7 @@ export function CalcBScholesTdData(
             BlackScholes(type, index, strikeX, timeYears, r, volatility) * 100; //current price
 
           var sign = tdArr[i].buySell === "sell" ? -1 : 1;
-
+          var test = GetChartDate(j + 1);
           if (entryAtStockPrice[GetChartDate(j + 1)] === undefined)
             entryAtStockPrice[GetChartDate(j + 1)] = 0;
 
