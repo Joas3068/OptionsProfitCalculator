@@ -1,6 +1,6 @@
 //Ref: https://gist.github.com/santacruz123/3623310
 
-import {GetChartDate} from "./Misc";
+import { GetChartDate } from "./Misc";
 
 export function GetSchole(lastItem) {
   var tempObject = lastItem;
@@ -62,11 +62,10 @@ export function CalcBScholesTdData(
       entryAtStockPrice["x"] = +index.toFixed(2); //add stock price on x axis
 
       for (let i = 0; i < tdArr.length; i++) {
-        //var entryAtStockPrice = {};
-
         for (let j = 0; j <= tdArr[i].daysToExpiration; j++) {
           //iterate through expirations
 
+          //values for blacksholes calculation
           var type = tdArr[i].putCall;
           var strikeX = Number(tdArr[i].strikePrice);
           var timeYears = (tdArr[i].daysToExpiration - j) / 365;
@@ -75,15 +74,22 @@ export function CalcBScholesTdData(
           var BS =
             BlackScholes(type, index, strikeX, timeYears, r, volatility) * 100; //current price
 
+          //get sign based on buy or sell
           var sign = tdArr[i].buySell === "sell" ? -1 : 1;
-          var test = GetChartDate(j + 1);
+
           if (entryAtStockPrice[GetChartDate(j + 1)] === undefined)
             entryAtStockPrice[GetChartDate(j + 1)] = 0;
 
+          //BS can be NaN.
           if (isNaN(BS)) BS = 0;
 
+          //get current price at that stock price and time
           var tempEnt = entryAtStockPrice[GetChartDate(j + 1)];
-          
+
+          //multiple number of contracts by sign and black scholes result
+          //subtract theoretical option value to get price at time and 
+          //underlying price
+          //to fixed adds number of decimals based on stock price
           entryAtStockPrice[GetChartDate(j + 1)] = +(
             Number.parseFloat(tdArr[i].numberOfContracts) *
               (sign * BS - sign * tdArr[i].theoreticalOptionValue * 100) +
