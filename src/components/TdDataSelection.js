@@ -13,9 +13,9 @@ import {
   //InputBase,
   Divider,
   Typography,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   TextField,
 } from "@material-ui/core";
 
@@ -122,18 +122,18 @@ class TdDataSelection extends React.Component {
 
     return (
       <div>
-        <ExpansionPanel
+        <Accordion
           className={classes.expPanelChain}
           // style={{ backgroundColor: "gray",overflow:"scroll" }}
         >
-          <ExpansionPanelSummary
+          <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
             <Typography className={classes.heading}>Data Selection</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          </AccordionSummary>
+          <AccordionDetails>
             <Grid container>
               <Grid
                 container
@@ -190,8 +190,8 @@ class TdDataSelection extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }

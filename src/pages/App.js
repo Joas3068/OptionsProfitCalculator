@@ -6,19 +6,17 @@ import PageHeader from "../components/PageHeader";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       counter: 0,
-      GetTickerUrl: "https://cloud.iexapis.com/stable/tops?token=pk_14d7056bd568486cadda6c45dfcbdcf1&symbols=spy"
+      GetTickerUrl:
+        "https://cloud.iexapis.com/stable/tops?token=pk_14d7056bd568486cadda6c45dfcbdcf1&symbols=spy",
     };
-    
   }
-
-
 
   render() {
     return (
       <div className="App">
-        <Dashboard ></Dashboard>
+        <Dashboard />
       </div>
     );
   }

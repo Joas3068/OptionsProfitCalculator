@@ -65,6 +65,6 @@ export default class Main extends React.Component {
         ></TdDataMode>
       );
 
-    return <div> {mainComp}</div>;
+    return <> {mainComp}</>;
   }
 }
