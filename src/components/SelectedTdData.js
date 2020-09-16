@@ -35,7 +35,7 @@ class SelectedTdData extends React.Component {
     return (
       <TableContainer component={Paper}>
         <Table
-           className={classes.chainDataTable}
+          className={classes.chainDataTable}
           size="small"
           aria-label="a dense table"
         >
@@ -64,70 +64,72 @@ class SelectedTdData extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Array.isArray(this.props.selectedTdData)
-              ? this.props.selectedTdData.map((row) => (
-                  <TableRow key={row.symbol}> 
-                    <TableCell align="left">
-                      <Checkbox
-                        // checked={row.GUID === cGui.GUID ? true : false}
-                        value={row.symbol}
-                        onChangeCapture={this.props.getGuid}
-                      ></Checkbox>
+            {Array.isArray(this.props.selectedTdData) ? (
+              this.props.selectedTdData.map((row) => (
+                <TableRow key={row.symbol}>
+                  <TableCell align="left">
+                    <Checkbox
+                      // checked={row.GUID === cGui.GUID ? true : false}
+                      value={row.symbol}
+                      onChangeCapture={this.props.getGuid}
+                    ></Checkbox>
+                  </TableCell>
+                  <Tooltip title={row.buySell === "buy" ? "Buy" : "Sell"}>
+                    <TableCell
+                      className={
+                        row.buySell === "buy"
+                          ? this.props.classes.tableCellTrue
+                          : this.props.classes.tableCellFalse
+                      }
+                      component="th"
+                      scope="row"
+                    >
+                      {row.putCall === "CALL" ? "Call" : "Put"}
                     </TableCell>
-                    <Tooltip title={row.buySell === "buy" ? "Buy" : "Sell"}>
-                      <TableCell
-                        className={
-                          row.buySell === "buy"
-                            ? this.props.classes.tableCellTrue
-                            : this.props.classes.tableCellFalse
-                        }
-                        component="th"
-                        scope="row"
-                      >
-                        {row.putCall === "CALL" ? "Call" : "Put"}
-                      </TableCell>
-                    </Tooltip>
-                    <TableCell align="left">
-                      {/* {row.buySell === "buy" ? "Buy" : "Sell"} */}
-                      {row.strikePrice}
-                    </TableCell>
-                    <TableCell align="left">
-                      {new Date(row.expirationDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell align="left">
-                      {row.theoreticalOptionValue}
-                    </TableCell>
-                    <TableCell align="left">
-                      <InputBase
-                        inputProps={{
-                          min: 0,
-                          style: {
-                            maxWidth: 50,
-                            backgroundColor: "#f2f2f2",
-                            textAlign: "center",
-                          },
-                        }}
-                        onChange={this.props.updateContractNumber}
-                        type="number"
-                        value={row.numberOfContracts}
-                        id={row.symbol}
-                      ></InputBase>
-                    </TableCell>
-                    <TableCell align="left">{row.volatility}</TableCell>
-                    <TableCell align="left">{row.delta}</TableCell>
-                    <TableCell align="left">{row.openInterest}</TableCell>
-                    <TableCell align="left">
-                      <IconButton
-                        value={row.symbol}
-                        size="medium"
-                        onClick={this.props.deleteRow}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : null}
+                  </Tooltip>
+                  <TableCell align="left">
+                    {/* {row.buySell === "buy" ? "Buy" : "Sell"} */}
+                    {row.strikePrice}
+                  </TableCell>
+                  <TableCell align="left">
+                    {new Date(row.expirationDate).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell align="left">
+                    {row.theoreticalOptionValue}
+                  </TableCell>
+                  <TableCell align="left">
+                    <InputBase
+                      inputProps={{
+                        min: 0,
+                        style: {
+                          maxWidth: 50,
+                          backgroundColor: "#f2f2f2",
+                          textAlign: "center",
+                        },
+                      }}
+                      onChange={this.props.updateContractNumber}
+                      type="number"
+                      value={row.numberOfContracts}
+                      id={row.symbol}
+                    ></InputBase>
+                  </TableCell>
+                  <TableCell align="left">{row.volatility}</TableCell>
+                  <TableCell align="left">{row.delta}</TableCell>
+                  <TableCell align="left">{row.openInterest}</TableCell>
+                  <TableCell align="left">
+                    <IconButton
+                      value={row.symbol}
+                      size="medium"
+                      onClick={this.props.deleteRow}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <></>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

@@ -14,6 +14,7 @@ import OptionsForm from "../components/OptionsForm";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import uuidv4 from "../utils/GuidGen";
+import { compose } from "recompose";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -261,8 +262,8 @@ export class ParentComp extends React.Component {
     //  .then(() => this.getRes(r))
     //.then(data => console.log("API-DATA: " + data.symbol));
     try {
-      var checksList = JSON.parse(localStorage.getItem("checksList"));
-      var cg = JSON.parse(localStorage.getItem("currentEditGuid"));
+      let checksList = JSON.parse(localStorage.getItem("checksList"));
+      let cg = JSON.parse(localStorage.getItem("currentEditGuid"));
       if (cg !== undefined && checksList !== null)
         this.setState(
           { checksList: checksList, currentEditGuid: cg },
@@ -449,4 +450,4 @@ export class ParentComp extends React.Component {
   }
 }
 
-export default withStyles(useRowStyles)(ParentComp);
+export default compose(withStyles(useRowStyles))(ParentComp);

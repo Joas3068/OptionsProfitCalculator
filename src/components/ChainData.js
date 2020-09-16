@@ -211,7 +211,9 @@ function Rows(props) {
             </TableCell>
           </TableRow>
         </>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </React.Fragment>
   );
 }
@@ -262,7 +264,9 @@ class ChainData extends React.Component {
                       sendObject={this.props.sendObject}
                       tdData={this.props.tdData}
                     ></Rows>
-                  ) : null}
+                  ) : (
+                    <></>
+                  )}
                 </TableBody>
               </Table>
             </Grid>

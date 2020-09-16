@@ -23,6 +23,8 @@ import Chart from "../Chart";
 import DenseTable from "../components/SelectedItems";
 import { withStyles } from "@material-ui/core/styles";
 import ChainData from "../components/ChainData";
+import { compose } from "recompose";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -144,9 +146,8 @@ export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      
       checksList: [],
-      rowData:this.countRows(),
+      rowData: this.countRows(),
       isOpen: false,
     };
     this.updateChecks = this.updateChecks.bind(this);
@@ -198,7 +199,6 @@ export class Dashboard extends React.Component {
   };
 
   addData(val) {
-    
     return () => {
       this.setState({
         checksList: this.state.checksList.concat(val),
@@ -287,7 +287,6 @@ export class Dashboard extends React.Component {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container fixed className={classes.container}>
-
             <Box pt={4}>
               <Copyright />
             </Box>
@@ -298,5 +297,5 @@ export class Dashboard extends React.Component {
   }
 }
 
-export default withStyles(styles)(Dashboard);
+export default compose(withStyles(styles))(Dashboard);
 // export default Dashboard;

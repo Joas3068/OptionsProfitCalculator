@@ -10,7 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { Button } from "@material-ui/core";
-
+import { compose } from "recompose";
 const BuySell = [
   {
     value: "buy",
@@ -442,4 +442,4 @@ class OptionsForm extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(OptionsForm);
+export default compose(withStyles(useStyles))(OptionsForm);
