@@ -9,11 +9,11 @@ import {
   TableHead,
   TableRow,
   Typography,
-  ExpansionPanel,
+  Accordion,
   Divider,
   Grid,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  AccordionSummary,
+  AccordionDetails,
   Select,
   MenuItem,
   InputLabel,
@@ -211,7 +211,9 @@ function Rows(props) {
             </TableCell>
           </TableRow>
         </>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </React.Fragment>
   );
 }
@@ -222,11 +224,11 @@ class ChainData extends React.Component {
     //var contractData = this.props.tdDataContract;
     return (
       <div>
-        <ExpansionPanel
+        <Accordion
           className={classes.expPanelChain}
           // style={{ backgroundColor: "gray",overflow:"scroll" }}
         >
-          <ExpansionPanelSummary
+          <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
@@ -234,8 +236,8 @@ class ChainData extends React.Component {
             <Typography className={classes.heading}>
               {this.props.optionType}
             </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          </AccordionSummary>
+          <AccordionDetails>
             <Grid item xs={12}>
               <Table
                 className={classes.chainDataTable}
@@ -262,12 +264,14 @@ class ChainData extends React.Component {
                       sendObject={this.props.sendObject}
                       tdData={this.props.tdData}
                     ></Rows>
-                  ) : null}
+                  ) : (
+                    <></>
+                  )}
                 </TableBody>
               </Table>
             </Grid>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }

@@ -48,7 +48,9 @@ export default class Main extends React.Component {
     localStorage.setItem("tdData", JSON.stringify(this.state.tdData));
     //localStorage.setItem("tdKey", JSON.stringify(this.state.tdKey));
   }
-
+  componentWillUnmount() {
+    localStorage.removeItem("tdData");
+  }
   render() {
     let mainComp =
       this.state.tdData === false ? (
@@ -65,6 +67,6 @@ export default class Main extends React.Component {
         ></TdDataMode>
       );
 
-    return <div> {mainComp}</div>;
+    return <> {mainComp}</>;
   }
 }

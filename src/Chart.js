@@ -23,6 +23,7 @@ import {
   Divider,
   //Typography,
 } from "@material-ui/core";
+import { compose } from "recompose";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -294,7 +295,7 @@ class Chart extends React.Component {
           </Grid>
           <Divider orientation="vertical" flexItem />
         </Grid>
-        <Grid container xs={12} style={{ width: "99%", height: 500 }}>
+        <Grid container style={{ width: "99%", height: 500 }}>
           <ResponsiveContainer>
             <LineChart data={formattedData}>
               <CartesianGrid stroke={"#808080"} />
@@ -305,7 +306,7 @@ class Chart extends React.Component {
                 type="number"
                 dataKey="x"
                 stroke="white"
-                domain={[{ xMin }, { xMax }]}
+                domain={[xMin, xMax]}
               />
               <YAxis
                 tickCount={15}
@@ -408,7 +409,9 @@ function GetLines(arrs, numberOfDays) {
           "," +
           colsD.b.toString() +
           ")";
-        LineList.push(<Line stroke={rgb} dataKey={keyz[i]} dot={false} />);
+        LineList.push(
+          <Line stroke={rgb} dataKey={keyz[i]} key={keyz[i]} dot={false} />
+        );
       }
       // var colsD2 = GetColors();
       // let rgb2 =
@@ -425,7 +428,7 @@ function GetLines(arrs, numberOfDays) {
     }
 
     return LineList;
-  } else return null;
+  } else return;
 }
 
 function GetColors() {
@@ -440,4 +443,4 @@ function GetColors() {
   return cols;
 }
 
-export default withStyles(useRowStyles)(Chart);
+export default compose(withStyles(useRowStyles))(Chart);

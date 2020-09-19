@@ -1,5 +1,5 @@
-import { ExpansionPanel } from "@material-ui/core";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import { Accordion } from "@material-ui/core";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -10,7 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { Button } from "@material-ui/core";
-
+import { compose } from "recompose";
 const BuySell = [
   {
     value: "buy",
@@ -264,7 +264,8 @@ class OptionsForm extends React.Component {
         stockPrice: this.state.optionsData.stockPrice,
         strikePrice: this.state.optionsData.strikePrice,
         expiration: this.state.optionsData.expiration,
-        interestFree: event.target.value > -1 ? Number.parseFloat(event.target.value) : 0,
+        interestFree:
+          event.target.value > -1 ? Number.parseFloat(event.target.value) : 0,
         volatility: this.state.optionsData.volatility,
         greeks: [
           { volatility: "55%", delta: ".5", amount: 3 },
@@ -295,7 +296,10 @@ class OptionsForm extends React.Component {
         GUID: this.state.optionsData.GUID,
         priceArray: this.state.optionsData.priceArray,
         breakEvens: this.state.optionsData.breakEvens,
-        numberOfContracts: Number.parseFloat(event.target.value) > "0"?Number.parseFloat(event.target.value):1,
+        numberOfContracts:
+          Number.parseFloat(event.target.value) > "0"
+            ? Number.parseFloat(event.target.value)
+            : 1,
       },
     });
   };
@@ -317,8 +321,8 @@ class OptionsForm extends React.Component {
     return (
       <form className={classes.root} noValidate autoComplete="off">
         <div className={classes.formBack}>
-          <ExpansionPanel className={classes.formBack} defaultExpanded={true}>
-            <ExpansionPanelSummary
+          <Accordion className={classes.formBack} defaultExpanded={true}>
+            <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
@@ -328,7 +332,7 @@ class OptionsForm extends React.Component {
               >
                 Add/Edit Options
               </Typography>
-            </ExpansionPanelSummary>
+            </AccordionSummary>
 
             <TextField
               className={classes.formControl}
@@ -404,9 +408,13 @@ class OptionsForm extends React.Component {
               />
             </FormControl>
             <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="component-simple">Number Of Contracts</InputLabel>
-              <Input 
-                value={Number.parseFloat(this.state.optionsData.numberOfContracts)}
+              <InputLabel htmlFor="component-simple">
+                Number Of Contracts
+              </InputLabel>
+              <Input
+                value={Number.parseFloat(
+                  this.state.optionsData.numberOfContracts
+                )}
                 onChange={this.handleContractNumberChange}
                 type="number"
               />
@@ -427,11 +435,11 @@ class OptionsForm extends React.Component {
             >
               Add
             </Button>
-          </ExpansionPanel>
+          </Accordion>
         </div>
       </form>
     );
   }
 }
 
-export default withStyles(useStyles)(OptionsForm);
+export default compose(withStyles(useStyles))(OptionsForm);

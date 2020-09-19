@@ -14,6 +14,7 @@ import ChainData from "../components/ChainData";
 import SelectedTdData from "../components/SelectedTdData";
 import { CalcBScholesTdData } from "../utils/Bscholes";
 import TdDataSelection from "../components/TdDataSelection";
+import { compose } from "recompose";
 
 const useRowStyles = (theme) => ({
   root: {
@@ -129,7 +130,7 @@ class TdDataMode extends React.Component {
       prevTdData["interestRate"] = Number(localStorage.getItem("interestRate"));
       prevTdData["volatility"] = Number(localStorage.getItem("volatility"));
 
-      if (selectedTdData !== null)
+      if (selectedTdData !== undefined)
         this.setState(
           { selectedTdData: selectedTdData, tdData: prevTdData },
           this.makeCalcs
@@ -274,7 +275,7 @@ class TdDataMode extends React.Component {
         //get strike keys
         let selectedStrikeKeyz = Object.keys(selected);
         if (selectedStrikeKeyz.length > 0) {
-          //set a default contract here and make calculations 
+          //set a default contract here and make calculations
           let count = Math.floor((selectedStrikeKeyz.length - 1) / 2);
           let strikeKey = selectedStrikeKeyz[count];
           let finalData = selected[strikeKey];
@@ -366,4 +367,4 @@ class TdDataMode extends React.Component {
   }
 }
 
-export default withStyles(useRowStyles)(TdDataMode);
+export default compose(withStyles(useRowStyles))(TdDataMode);
