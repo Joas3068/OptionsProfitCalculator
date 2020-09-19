@@ -332,17 +332,13 @@ class Chart extends React.Component {
                     </Label>
                   }
                 />
-              ) : (
-                <></>
-              )}
+              ) : null}
               <Tooltip
                 //viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
                 content={
                   !this.state.showTip ? (
                     <CustomTooltip stylez={classes.toolTipContainer} />
-                  ) : (
-                    <></>
-                  )
+                  ) : null
                 }
                 //position={{ x: 400, y: 0 }}
                 cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
@@ -370,7 +366,7 @@ const CustomTooltip = ({ active, payload, label, stylez }) => {
     );
   }
 
-  return;
+  return null;
 };
 
 //TODO: Bug here not allowing all lines to be shown
