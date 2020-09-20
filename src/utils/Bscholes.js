@@ -87,7 +87,7 @@ export function CalcBScholesTdData(
           var tempEnt = entryAtStockPrice[GetChartDate(j + 1)];
 
           //multiple number of contracts by sign and black scholes result
-          //subtract theoretical option value to get price at time and 
+          //subtract theoretical option value to get price at time and
           //underlying price
           //to fixed adds number of decimals based on stock price
           entryAtStockPrice[GetChartDate(j + 1)] = +(

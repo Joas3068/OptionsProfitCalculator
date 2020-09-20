@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@material-ui/core/Box";
 import {
   Collapse,
@@ -21,19 +21,18 @@ import {
   Button,
   Tooltip,
 } from "@material-ui/core";
-
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
+import dayjs from "dayjs";
 //expiration data and strike price are keys to access values
 function Rows(props) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   var initialDateKey = Object.keys(props.contractData);
   var initialStrikeKey = Object.keys(props.contractData[initialDateKey[0]]);
 
-  const [expirationKey, setExpirationKey] = React.useState(initialDateKey[0]);
+  const [expirationKey, setExpirationKey] = useState(initialDateKey[0]);
 
   let index = 0;
 
@@ -51,7 +50,7 @@ function Rows(props) {
     initialStrikeKey,
     index,
   ]);
-  const [strikeKey, setStrikeKey] = React.useState(initialStrikeKey[index]);
+  const [strikeKey, setStrikeKey] = useState(initialStrikeKey[index]);
 
   const handleChange = (event) => {
     setExpirationKey(event.target.value);
@@ -87,7 +86,7 @@ function Rows(props) {
                   <Select value={expirationKey} onChange={handleChange}>
                     {Object.keys(props.contractData).map((number, key) => (
                       <MenuItem key={key} value={number}>
-                        {number}
+                        {dayjs(number).format("MMM DD[ at ]Ha")}
                       </MenuItem>
                     ))}
                   </Select>
