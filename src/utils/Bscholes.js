@@ -31,7 +31,7 @@ export function CalcBScholesTdData(
 ) {
   var finalCalcs = [];
 
-  if (tdArr.length > 0) {
+  if (tdArr != null && tdArr.length > 0) {
     //cancel if exp > 150
     for (let checkExp = 0; checkExp < tdArr.length; checkExp++) {
       if (tdArr[checkExp].daysToExpiration > 150) return [];
@@ -87,7 +87,7 @@ export function CalcBScholesTdData(
           var tempEnt = entryAtStockPrice[GetChartDate(j + 1)];
 
           //multiple number of contracts by sign and black scholes result
-          //subtract theoretical option value to get price at time and 
+          //subtract theoretical option value to get price at time and
           //underlying price
           //to fixed adds number of decimals based on stock price
           entryAtStockPrice[GetChartDate(j + 1)] = +(

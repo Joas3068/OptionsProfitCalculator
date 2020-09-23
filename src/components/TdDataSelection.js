@@ -85,7 +85,7 @@ class TdDataSelection extends React.Component {
       this.props.tdKey +
       "&symbol=" +
       this.state.userSymbol +
-      "&strikeCount=10&fromDate=" +
+      "&strikeCount=20&fromDate=" +
       this.state.startDate +
       "&toDate=" +
       (!this.state.endDate || this.state.endDate === ""
