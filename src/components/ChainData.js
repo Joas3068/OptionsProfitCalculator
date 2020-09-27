@@ -86,7 +86,7 @@ function Rows(props) {
                   <Select value={expirationKey} onChange={handleChange}>
                     {Object.keys(props.contractData).map((number, key) => (
                       <MenuItem key={key} value={number}>
-                        {dayjs(number).format("MMM DD[ at ]Ha")}
+                        {dayjs(number).format("MMM DD")}
                       </MenuItem>
                     ))}
                   </Select>

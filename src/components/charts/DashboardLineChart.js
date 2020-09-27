@@ -260,19 +260,26 @@ class Chart extends React.Component {
                   }
                 />
               ) : null}
-              <Tooltip
-                //viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
-                content={
-                  !this.state.showTip ? (
-                    <CustomTooltip stylez={classes.toolTipContainer} />
-                  ) : null
-                }
-                //position={{ x: 400, y: 0 }}
-                cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
-                //cursor={false}
-                offset={45}
-                animationEasing={"linear"}
-              />
+              {this.state.showTip ? (
+                <Tooltip
+                  cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
+                  //cursor={false}
+                  offset={45}
+                  animationEasing={"linear"}
+                ></Tooltip>
+              ) : (
+                <Tooltip
+                  cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
+                  //cursor={false}
+                  offset={45}
+                  animationEasing={"linear"}
+                  content={
+                    <CustomTooltip
+                    //stylez={classes.toolTipContainer}
+                    />
+                  }
+                ></Tooltip>
+              )}
 
               {GetLines(formattedData, this.state.numberOfDays)}
             </LineChart>
