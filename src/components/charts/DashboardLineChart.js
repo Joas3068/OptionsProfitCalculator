@@ -43,16 +43,16 @@ class Chart extends React.Component {
   updateDaysNumber(e) {
     if (this.props.formattedData.length > 0) {
       var keyz = Object.keys(this.props.formattedData[0]);
-      if (e.target.value === "" || e.target.value === 0) {
+      if (e === "" || e === 0) {
         this.setState({ numberOfDays: undefined });
       } else if (
-        e.target.value <= keyz.length &&
-        e.target.value > 0 &&
-        e.target.value
+        e <= keyz.length &&
+        e > 0 &&
+        e
       ) {
-        this.setState({ numberOfDays: e.target.value });
-      } else if (e.target.value > keyz.length) {
-        let t = e.target.value - 1;
+        this.setState({ numberOfDays: e });
+      } else if (e > keyz.length) {
+        let t = e - 1;
         this.setState({ numberOfDays: t });
       }
     }
@@ -87,14 +87,14 @@ class Chart extends React.Component {
   }
 
   updateXMin(e) {
-    let val = e.target.valueAsNumber;
+    let val = e; //TODO some verification..
     if (this.props.formattedData.length > 0) {
       this.setState({ xMinVal: val });
     }
   }
 
   updateXMax(e) {
-    let val = e.target.valueAsNumber;
+    let val = e;
     if (this.props.formattedData.length > 0) {
       this.setState({ xMaxVal: val });
     }

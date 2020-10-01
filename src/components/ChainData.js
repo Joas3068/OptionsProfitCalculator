@@ -24,7 +24,6 @@ import {
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import dayjs from "dayjs";
 //expiration data and strike price are keys to access values
 function Rows(props) {
   const [open, setOpen] = useState(false);
@@ -86,7 +85,7 @@ function Rows(props) {
                   <Select value={expirationKey} onChange={handleChange}>
                     {Object.keys(props.contractData).map((number, key) => (
                       <MenuItem key={key} value={number}>
-                        {dayjs(number).format("MMM DD")}
+                        {number}
                       </MenuItem>
                     ))}
                   </Select>
