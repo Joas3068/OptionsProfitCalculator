@@ -31,7 +31,7 @@ export function CalcBScholesTdData(
 ) {
   var finalCalcs = [];
 
-  if (tdArr.length > 0) {
+  if (tdArr != null && tdArr.length > 0) {
     //cancel if exp > 150
     for (let checkExp = 0; checkExp < tdArr.length; checkExp++) {
       if (tdArr[checkExp].daysToExpiration > 150) return [];
