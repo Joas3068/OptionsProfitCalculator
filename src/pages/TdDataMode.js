@@ -6,7 +6,7 @@ import {
   BottomNavigation,
   BottomNavigationAction,
 } from "@material-ui/core";
-import Chart from "../Chart";
+import Chart from "../components/charts/DashboardLineChart";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
@@ -130,7 +130,7 @@ class TdDataMode extends React.Component {
       prevTdData["interestRate"] = Number(localStorage.getItem("interestRate"));
       prevTdData["volatility"] = Number(localStorage.getItem("volatility"));
 
-      if (selectedTdData !== undefined)
+      if (selectedTdData !== null)
         this.setState(
           { selectedTdData: selectedTdData, tdData: prevTdData },
           this.makeCalcs
@@ -306,7 +306,7 @@ class TdDataMode extends React.Component {
             <Chart
               formattedData={this.state.formattedData}
               underlying={this.state.tdData.underlyingPrice}
-            ></Chart>
+            />
           </Grid>
           <Grid item xs={12}>
             <SelectedTdData
@@ -317,7 +317,7 @@ class TdDataMode extends React.Component {
               updateContractNumber={(obj, val) =>
                 this.updateContractNumber(obj, val)
               }
-            ></SelectedTdData>
+            />
           </Grid>
           <Grid container spacing={3}>
             <Grid className={classes.chainGrid} item xs={12}>
@@ -330,7 +330,7 @@ class TdDataMode extends React.Component {
                 optionType={"CALL"}
                 classes={classes}
                 sendObject={(obj, e) => this.sendObject(obj, e)}
-              ></ChainData>
+              />
             </Grid>
             <Grid className={classes.chainGrid} item xs={12}>
               <ChainData
@@ -342,17 +342,17 @@ class TdDataMode extends React.Component {
                 optionType={"PUT"}
                 classes={classes}
                 sendObject={(obj, e) => this.sendObject(obj, e)}
-              ></ChainData>
+              />
             </Grid>
           </Grid>
           <Grid className={classes.chainGrid} item xs={12}>
-            <Divider></Divider>
+            <Divider />
             <TdDataSelection
               classes={classes}
               getNewData={this.getNewData}
               getPreviousChainData={this.getPreviousChainData}
               tdKey={this.props.tdKey}
-            ></TdDataSelection>
+            />
           </Grid>
         </Grid>
 

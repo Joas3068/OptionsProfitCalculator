@@ -11,60 +11,8 @@ import {
   ReferenceLine,
   Legend,
 } from "recharts";
-import {
-  Checkbox,
-  //Paper,
-  //Input,
-  Grid,
-  InputLabel,
-  Button,
-  // FormControl,
-  InputBase,
-  Divider,
-  //Typography,
-} from "@material-ui/core";
-import { compose } from "recompose";
-
-import { withStyles } from "@material-ui/core/styles";
-
-const useRowStyles = (theme) => ({
-  root: {
-    margin: theme.spacing(3),
-    padding: theme.spacing(3),
-    // display: "table",
-    //backgroundColor: Colors.Primary,
-    "& > *": {
-      borderBottom: "unset",
-    },
-    flexWrap: "wrap",
-  },
-  papa: {
-    backgroundColor: "white",
-    margin: theme.spacing(1),
-    borderRadius: "2px",
-    //display: "inlineBlock",
-    //flexWrap: "wrap",
-  },
-  controlRoot: {
-    //margin: theme.spacing(1),
-    //padding: theme.spacing(2),
-    //float:"left",
-    //display: "inlineBlock",
-  },
-  alignGridItems: {
-    //display: "flex",
-    justifyContent: "center",
-    //alignItems: "center",
-  },
-  toolTipContainer: {
-    //boxSizing: "borderBox",
-    border: "1px solid",
-    // padding: 10px,
-    // width: 800px,
-    // height: 800px,
-    backgroundColor: "#f2f2f2",
-  },
-});
+import Grid from "@material-ui/core/Grid/";
+import { Checkbox, Button, InputNumber, Divider } from "antd";
 
 class Chart extends React.Component {
   constructor(props) {
@@ -95,16 +43,16 @@ class Chart extends React.Component {
   updateDaysNumber(e) {
     if (this.props.formattedData.length > 0) {
       var keyz = Object.keys(this.props.formattedData[0]);
-      if (e.target.value === "" || e.target.value === 0) {
+      if (e === "" || e === 0) {
         this.setState({ numberOfDays: undefined });
       } else if (
-        e.target.value <= keyz.length &&
-        e.target.value > 0 &&
-        e.target.value
+        e <= keyz.length &&
+        e > 0 &&
+        e
       ) {
-        this.setState({ numberOfDays: e.target.value });
-      } else if (e.target.value > keyz.length) {
-        let t = e.target.value - 1;
+        this.setState({ numberOfDays: e });
+      } else if (e > keyz.length) {
+        let t = e - 1;
         this.setState({ numberOfDays: t });
       }
     }
@@ -139,14 +87,14 @@ class Chart extends React.Component {
   }
 
   updateXMin(e) {
-    let val = e.target.valueAsNumber;
+    let val = e; //TODO some verification..
     if (this.props.formattedData.length > 0) {
       this.setState({ xMinVal: val });
     }
   }
 
   updateXMax(e) {
-    let val = e.target.valueAsNumber;
+    let val = e;
     if (this.props.formattedData.length > 0) {
       this.setState({ xMaxVal: val });
     }
@@ -224,78 +172,57 @@ class Chart extends React.Component {
           justify="flex-start"
           alignItems="center"
           spacing={1}
-          className={classes.papa}
+          className="papa"
         >
-          <Grid item className={classes.alignGridItems}>
-            <InputLabel>Days</InputLabel>
-            <InputBase
-              inputProps={{
-                min: 0,
-                style: {
-                  maxWidth: 50,
-                  backgroundColor: "#f2f2f2",
-                  textAlign: "center",
-                },
-              }}
+          <Grid item style={{ justifyContent: "center" }}>
+            <label className="label">Days</label>
+            <InputNumber
+              min={0}
+              size={"small"}
               onChange={(e) => this.updateDaysNumber(e)}
               type="number"
               value={this.state.numberOfDays}
-            ></InputBase>
+            />
           </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item className={classes.alignGridItems}>
-            <InputLabel>P/L</InputLabel>
+          <Divider type="vertical" />
+          <Grid item style={{ justifyContent: "center" }}>
+            <label className="label">P/L</label>
             <Checkbox
-              className={classes.controlRoot}
               checked={this.state.showTip}
               size={"small"}
-              onChangeCapture={(e) => this.changeToolTip(e)}
+              onChange={(e) => this.changeToolTip(e)}
             ></Checkbox>
           </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item className={classes.alignGridItems}>
-            <InputLabel>X-Min</InputLabel>
-            <InputBase
-              inputProps={{
-                min: 0,
-                style: {
-                  maxWidth: 55,
-                  backgroundColor: "#f2f2f2",
-                  textAlign: "center",
-                },
-              }}
+          <Divider type="vertical" />
+          <Grid item style={{ justifyContent: "center" }}>
+            <label className="label">X-Min</label>
+            <InputNumber
+              min={0}
+              size={"small"}
               onChange={(e) => this.updateXMin(e)}
               type="number"
               value={this.state.xMinVal}
-            ></InputBase>
+            />
           </Grid>
-          <Grid item className={classes.alignGridItems}>
-            <InputLabel>X-Max</InputLabel>
-            <InputBase
-              inputProps={{
-                min: 0,
-                style: {
-                  maxWidth: 55,
-                  backgroundColor: "#f2f2f2",
-                  textAlign: "center",
-                },
-              }}
+          <Grid item style={{ justifyContent: "center" }}>
+            <label className="label">X-Max</label>
+            <InputNumber
+              min={0}
+              size={"small"}
               onChange={this.updateXMax}
               type="number"
               value={this.state.xMaxVal}
-            ></InputBase>
+            />
           </Grid>
-          <Grid item className={classes.alignGridItems}>
-            <Button
-              className={classes.controlRoot}
-              onClick={this.setDefaultXCoords}
-            >
-              Reset
-            </Button>
+          <Grid item style={{ justifyContent: "center" }}>
+            <Button onClick={this.setDefaultXCoords}>Reset</Button>
           </Grid>
-          <Divider orientation="vertical" flexItem />
+          <Divider type="vertical" />
         </Grid>
-        <Grid container style={{ width: "99%", height: 500 }}>
+        <Grid
+          container
+          style={{ width: "99%", height: 550, margin: "1% auto" }}
+        >
           <ResponsiveContainer>
             <LineChart data={formattedData}>
               <CartesianGrid stroke={"#808080"} />
@@ -333,19 +260,26 @@ class Chart extends React.Component {
                   }
                 />
               ) : null}
-              <Tooltip
-                //viewBox={{ x: 0, y: 0, width: 400, height: 200 }}
-                content={
-                  !this.state.showTip ? (
-                    <CustomTooltip stylez={classes.toolTipContainer} />
-                  ) : null
-                }
-                //position={{ x: 400, y: 0 }}
-                cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
-                //cursor={false}
-                offset={45}
-                animationEasing={"linear"}
-              />
+              {this.state.showTip ? (
+                <Tooltip
+                  cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
+                  //cursor={false}
+                  offset={45}
+                  animationEasing={"linear"}
+                ></Tooltip>
+              ) : (
+                <Tooltip
+                  cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
+                  //cursor={false}
+                  offset={45}
+                  animationEasing={"linear"}
+                  content={
+                    <CustomTooltip
+                    //stylez={classes.toolTipContainer}
+                    />
+                  }
+                ></Tooltip>
+              )}
 
               {GetLines(formattedData, this.state.numberOfDays)}
             </LineChart>
@@ -443,4 +377,4 @@ function GetColors() {
   return cols;
 }
 
-export default compose(withStyles(useRowStyles))(Chart);
+export default Chart;

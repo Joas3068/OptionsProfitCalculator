@@ -19,6 +19,8 @@ import {
   TextField,
 } from "@material-ui/core";
 
+const strikes = 18;
+
 class TdDataSelection extends React.Component {
   constructor(props) {
     super(props);
@@ -62,7 +64,9 @@ class TdDataSelection extends React.Component {
       this.props.tdKey +
       "&symbol=" +
       this.state.userSymbol +
-      "&strikeCount=10&fromDate=" +
+      "&strikeCount=" +
+      strikes +
+      "&fromDate=" +
       this.state.startDate +
       "&toDate=" +
       this.state.endDate;
@@ -85,7 +89,9 @@ class TdDataSelection extends React.Component {
       this.props.tdKey +
       "&symbol=" +
       this.state.userSymbol +
-      "&strikeCount=20&fromDate=" +
+      "&strikeCount=" +
+      strikes +
+      "&fromDate=" +
       this.state.startDate +
       "&toDate=" +
       (!this.state.endDate || this.state.endDate === ""

@@ -6,7 +6,7 @@ import {
   BottomNavigationAction,
   withStyles,
 } from "@material-ui/core";
-import Chart from "../Chart";
+import Chart from "../components/charts/DashboardLineChart";
 import ItemsPanel from "../components/ItemsPanel";
 import { CalcBScholes } from "../utils/Bscholes";
 import GitHubIcon from "@material-ui/icons/GitHub";
