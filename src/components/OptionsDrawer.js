@@ -1,30 +1,26 @@
-import React from "react";
-import clsx from "clsx";
-import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+
 import {
-  Drawer,
-  AppBar,
-  Toolbar,
-  Typography,
-  Divider,
-  IconButton,
-  Button,
   FormControlLabel,
-  Switch,
   Link,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  //DialogTitle,
   TextField,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ShowChartIcon from "@material-ui/icons/ShowChart";
-import Colors from "../utils/Colors";
 
+import { Menu, Layout, Button, Switch } from "antd";
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  RiseOutlined,
+  ArrowsAltOutlined,
+  ShrinkOutlined,
+  BoxPlotOutlined,
+  StockOutlined,
+  LineChartOutlined,
+} from "@ant-design/icons";
 import {
   CallDebitSpread,
   PutCreditSpread,
@@ -35,103 +31,18 @@ import {
 
 //import DataKeyDialog from "../Elements/DataKeyDialog";
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    padding: theme.spacing(4),
-  },
-  appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    background: Colors.Secondary,
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: "none",
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-    background: Colors.Tables,
-  },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentShift: {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
-
-const PurpleSwitch = withStyles({
-  switchBase: {
-    color: Colors.Tables,
-    "&$checked": {
-      color: Colors.Tables,
-    },
-    "&$checked + $track": {
-      backgroundColor: Colors.Tables,
-    },
-  },
-  checked: {},
-  track: {},
-})(Switch);
+const { Header, Sider, Content } = Layout;
 
 export default function OptionsDrawer(props) {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [toggleMode, setToggleMode] = React.useState(false);
-  const [value, setValue] = React.useState(props.tdKey);
+  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [toggleMode, setToggleMode] = useState(false);
+  const [value, setValue] = useState(props.tdKey);
+  const toggleDrawer = () => setOpen(!open);
+
   //const { prop } = props;
   const handleInputChange = (event) => {
     setValue(event.target.value);
-  };
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
   };
 
   function sendCallDebit() {
@@ -177,106 +88,101 @@ export default function OptionsDrawer(props) {
   }
 
   return (
-    <div className={classes.root}>
-      <AppBar
-        position="fixed"
-        // variant={"persistent"}
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
+    <Layout>
+      <Sider trigger={null} collapsible collapsed={open}>
+        <div className="logo" style={{ color: "#fff" }}>
+          Bullish Strategies
+        </div>
+        <Menu
+          defaultSelectedKeys={["1"]}
+          mode="inline"
+          theme="dark"
+          inlineCollapsed={open}
+        >
+          <Menu.Item key="1" icon={<RiseOutlined />} onClick={sendCallDebit}>
+            Call Debit Spread
+          </Menu.Item>
+          <Menu.Item key="2" icon={<StockOutlined />} onClick={sendPutCredit}>
+            Put Credit Spread
+          </Menu.Item>
+          <Menu.Item
+            key="3"
+            icon={<ArrowsAltOutlined />}
+            onClick={sendLongCall}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6">
+            Long Call
+          </Menu.Item>
+          <Menu.Item key="4" icon={<ShrinkOutlined />} onClick={sendShortPut}>
+            Short Put
+          </Menu.Item>
+          <Menu.Item
+            key="5"
+            icon={<BoxPlotOutlined />}
+            onClick={sendIronCondor}
+          >
+            Iron Condor
+          </Menu.Item>
+        </Menu>
+      </Sider>
+      <Layout className="site-layout">
+        <Header className="site-layout-background" style={{ padding: 0 }}>
+          {React.createElement(open ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: "trigger",
+            onClick: toggleDrawer,
+          })}
+
+          <h2 style={{ color: "#fff", margin: "1em auto" }}>
             Options Strategies
-          </Typography>
+          </h2>
 
           <FormControlLabel
             control={
-              <PurpleSwitch
+              <Switch
                 onChange={handleChange}
                 // defaultChecked={props.dataModeState}
                 checked={props.dataModeState}
                 aria-label="toggle-mode"
               />
             }
+            style={{ margin: "1em auto" }}
             label={"Toggle Data Mode"}
           />
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
-        <ShowChartIcon>Bullish Strategies</ShowChartIcon>
-        <Divider />
-        <Button onClick={sendCallDebit}>Call Debit Spread</Button>
-        <Button onClick={sendPutCredit}>Put Credit Spread</Button>
-        <Button onClick={sendLongCall}>Long Call</Button>
-        <Button onClick={sendShortPut}>Short Put</Button>
-        <Divider />
-        <Button onClick={sendIronCondor}>Iron Condor</Button>
-        <Button onClick={sendPutCredit}>Put Credit Spread</Button>
-        <Button onClick={sendLongCall}>Long Call</Button>
-        <Button onClick={sendShortPut}>Short Put</Button>
-        <Divider />
-      </Drawer>
-      <Dialog
-        open={openDialog}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        {/* <DialogTitle id="form-dialog-title">Subscribe</DialogTitle> */}
-        <DialogContent>
-          <DialogContentText>
-            Enter TD Ameritrade developers key for options data.
-            <Typography className={classes.root}>
-              <Link href="https://developer.tdameritrade.com/">
-                Sign Up Here
-              </Link>
-            </Typography>
-          </DialogContentText>
-          <TextField
-            // autoFocus
-            margin="dense"
-            id="name"
-            label="TD Key"
-            type="string"
-            fullWidth
-            onChange={handleInputChange}
-            value={value}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={changeMode} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+
+          <Dialog
+            open={openDialog}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+          >
+            {/* <DialogTitle id="form-dialog-title">Subscribe</DialogTitle> */}
+            <DialogContent>
+              <DialogContentText>
+                Enter TD Ameritrade developers key for options data.
+                <Link href="https://developer.tdameritrade.com/">
+                  Sign Up Here
+                </Link>
+              </DialogContentText>
+              <TextField
+                // autoFocus
+                margin="dense"
+                id="name"
+                label="TD Key"
+                type="string"
+                fullWidth
+                onChange={handleInputChange}
+                value={value}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={changeMode} color="primary">
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Header>
+      </Layout>
+    </Layout>
   );
 }

@@ -1,11 +1,11 @@
 import React from "react";
 //import ChainData from "../components/ChainData";
 import {
-  Grid,
   BottomNavigation,
   BottomNavigationAction,
   withStyles,
 } from "@material-ui/core";
+import { Layout } from "antd";
 import Chart from "../components/charts/DashboardLineChart";
 import ItemsPanel from "../components/ItemsPanel";
 import { CalcBScholes } from "../utils/Bscholes";
@@ -15,29 +15,8 @@ import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import uuidv4 from "../utils/GuidGen";
 import { compose } from "recompose";
-
+const { Content } = Layout;
 const useRowStyles = (theme) => ({
-  root: {
-    margin: theme.spacing(1),
-    // display: "table",
-    backgroundColor: Colors.Primary,
-    "& > *": {
-      borderBottom: "unset",
-    },
-    // width: "100%",
-    // flexWrap: 1,
-  },
-  title: {
-    flexGrow: 1,
-  },
-  table: {
-    minWidth: 0,
-    backgroundColor: Colors.Tables,
-  },
-  drawer: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(2),
-  },
   chartz: {
     marginTop: theme.spacing(2),
     paddingTop: theme.spacing(2),
@@ -49,75 +28,13 @@ const useRowStyles = (theme) => ({
     marginRight: theme.spacing(0),
     paddingRight: theme.spacing(0),
   },
-  container: {
-    backgroundColor: Colors.Secondary,
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    height: 500,
-    overflow: "scroll",
-    display: "block",
-  },
-  paper: {
-    backgroundColor: Colors.Secondary,
-    padding: theme.spacing(2),
-    // display: "flex",
-    overflow: "auto",
-    // // flexDirection: "row",
-    maxHeight: "auto",
-  },
+
   chartGrid: {
     backgroundColor: Colors.Tables,
     padding: theme.spacing(1),
-    //display: "block",
-    // overflow: "auto",
     flexDirection: "row",
     flex: 1,
     maxHeight: "auto",
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  paperHeader: {
-    backgroundColor: "#364156",
-    padding: theme.spacing(0),
-    flexDirection: "row",
-  },
-  fixedHeight: {
-    height: 300,
-  },
-  expPanelCall: {
-    backgroundColor: "rgb(0, 77, 0)",
-  },
-  expPanelPut: {
-    backgroundColor: "#364156",
-  },
-  selectedTable: {
-    backgroundColor: "gray",
-  },
-  headerPaper: {
-    //Top level
-    margin: theme.spacing(3),
-    // color: "rgb(191, 191, 191)",
-    // backgroundColor: "rgb(128, 0, 0)",
-    display: "block",
-    flexGrow: 1,
-  },
-  headerButton: {
-    margin: theme.spacing(1),
-    color: "black",
-    backgroundColor: "rgb(204, 204, 204)",
-    flexGrow: 1,
-  },
-  headerBlock: {
-    // margin: theme.spacing(1),
-    // backgroundColor: "rgb(128, 0, 0)",
-    // color: "white",
-    // padding: theme.spacing(2),
-    //flexGrow: 1,
   },
 });
 
@@ -376,76 +293,66 @@ export class ParentComp extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid container spacing={3}>
-            <OptionsDrawer
-              className={classes.drawer}
-              updateStrategy={(obj, val) => this.updateStrategy(obj, val)}
-              toggleDataMode={this.props.toggleDataMode}
-              dataModeState={this.props.dataModeState}
-              tdKey={this.props.tdKey}
-            ></OptionsDrawer>
-          </Grid>
-          <Grid container className={classes.chartz}>
-            <Chart formattedData={this.state.formattedData}></Chart>
-          </Grid>
-
-          <Grid item xs={12}>
-            <ItemsPanel
-              classes={classes}
-              clearSelected={() => this.clearSelected()}
-              getGuid={(e, val) => this.getGuid(val, e)}
-              calculateOptionsPrice={() => this.calculateOptionsPrice()}
-              currentEditGuid={this.state.currentEditGuid}
-              checksList={this.state.checksList}
-              deleteRow={(e, val) => this.deleteRow(val, e)}
-            ></ItemsPanel>
-          </Grid>
-          <Grid
-            //spacing={3}
-            item
-            xs={12}
-          >
-            <OptionsForm
-              getFormData={(val) => this.getFormData(val)}
-              currentEditGuid={this.state.currentEditGuid}
-              checksList={this.state.checksList}
-            ></OptionsForm>
-          </Grid>
-          {/* <Grid item xs={6}>
-            <ChainData
-              checksList={this.state.checksList}
-              addDataFunc={(val) => this.addData(val)}
-              rowData={this.state.rowData}
-              optionType={"Call"}
-              classes={classes}
-            ></ChainData>
-          </Grid>
-          <Grid item xs={6}>
-            <ChainData
-              checksList={this.state.checksList}
-              addDataFunc={(val) => this.addData(val)}
-              rowData={this.state.rowData}
-              optionType={"Put"}
-              classes={classes}
-            ></ChainData>
-          </Grid> */}
-        </Grid>
-        <BottomNavigation
-          value={1}
-          // onChange={(event, newValue) => {
-          //   setValue(newValue);
-          // }}
-          showLabels
-          className={classes.root}
+      <>
+        <OptionsDrawer
+          className={classes.drawer}
+          updateStrategy={(obj, val) => this.updateStrategy(obj, val)}
+          toggleDataMode={this.props.toggleDataMode}
+          dataModeState={this.props.dataModeState}
+          tdKey={this.props.tdKey}
+        />
+        <Content
+          className='site-layout-background'
+          style={{
+            margin: "24px 16px",
+            padding: 24,
+            minHeight: 280,
+          }}
         >
+          <Chart formattedData={this.state.formattedData} />
+
+          <ItemsPanel
+            classes={classes}
+            clearSelected={() => this.clearSelected()}
+            getGuid={(e, val) => this.getGuid(val, e)}
+            calculateOptionsPrice={() => this.calculateOptionsPrice()}
+            currentEditGuid={this.state.currentEditGuid}
+            checksList={this.state.checksList}
+            deleteRow={(e, val) => this.deleteRow(val, e)}
+          />
+
+          <OptionsForm
+            getFormData={(val) => this.getFormData(val)}
+            currentEditGuid={this.state.currentEditGuid}
+            checksList={this.state.checksList}
+          />
+
+          {/* <Grid item xs={6}>
+                <ChainData
+                  checksList={this.state.checksList}
+                  addDataFunc={(val) => this.addData(val)}
+                  rowData={this.state.rowData}
+                  optionType={"Call"}
+                  classes={classes}
+                ></ChainData>
+              </Grid>
+              <Grid item xs={6}>
+                <ChainData
+                  checksList={this.state.checksList}
+                  addDataFunc={(val) => this.addData(val)}
+                  rowData={this.state.rowData}
+                  optionType={"Put"}
+                  classes={classes}
+                ></ChainData>
+              </Grid> */}
+        </Content>
+        <BottomNavigation value={1} showLabels className={classes.root}>
           <BottomNavigationAction
             icon={<GitHubIcon />}
             href={"https://github.com/Joas3068/OptionsProfitCalculator"}
           />
         </BottomNavigation>
-      </div>
+      </>
     );
   }
 }

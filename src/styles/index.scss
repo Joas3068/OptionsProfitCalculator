@@ -58,6 +58,25 @@ button {
     transform: scale(1.01);
   }
 }
-a {
-  //   color: ${({ theme }) => theme.text};
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height: auto;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+  padding: 1em;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
 }
