@@ -1,16 +1,7 @@
-import { Accordion } from "@material-ui/core";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import { Button } from "@material-ui/core";
-import { compose } from "recompose";
+
+import { Button, Col, Form, Input, Row, Select, Typography } from "antd";
+
 const BuySell = [
   {
     value: "buy",
@@ -32,37 +23,6 @@ const type = [
     label: "Put",
   },
 ];
-
-const useStyles = (theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-  },
-  formControl: {
-    // fullWidth: true,
-    backgroundColor: "rgb(230, 230, 230)",
-    //display: "flex",
-    //wrap: "nowrap",
-    margin: theme.spacing(1),
-    padding: theme.spacing(1),
-    width: 75,
-  },
-  formBack: {
-    backgroundColor: "rgb(230, 230, 230)",
-  },
-  formControlButton: {
-    // fullWidth: true,
-    backgroundColor: "rgb(179, 179, 179)",
-    //display: "flex",
-    //wrap: "nowrap",
-    margin: theme.spacing(1),
-    padding: theme.spacing(1),
-    width: 75,
-    color: "black",
-  },
-});
 
 class OptionsForm extends React.Component {
   constructor(props) {
@@ -227,13 +187,14 @@ class OptionsForm extends React.Component {
   };
 
   uuidv4() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
-      c
-    ) {
-      var r = (Math.random() * 16) | 0,
-        v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 
   createData(newItem) {
@@ -316,130 +277,113 @@ class OptionsForm extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
     this.getSelected(); //check to see if changes have been made since state needs to be kept seperately.
-    return (
-      <form className={classes.root} noValidate autoComplete="off">
-        <div className={classes.formBack}>
-          <Accordion className={classes.formBack} defaultExpanded={true}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography
-              //className={classes.heading}
-              >
-                Add/Edit Options
-              </Typography>
-            </AccordionSummary>
 
-            <TextField
-              className={classes.formControl}
-              id="standard-select-CallPut"
-              select
-              //autoWidth={true}
-              value={this.state.optionsData.type}
-              onChange={this.handleType}
-              helperText="Call/Put"
-              width={20}
-            >
-              {type.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              className={classes.formControl}
-              id="standard-select-buySell"
-              select
-              value={this.state.optionsData.buySell}
-              onChange={this.handleChange}
-              helperText="Buy or Sell"
-              width={20}
-            >
-              {BuySell.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="component-simple">Stock Price</InputLabel>
-              <Input
-                value={this.state.optionsData.stockPrice}
-                onChange={this.handleStockPriceChange}
-                type="number"
-              />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="component-simple">Strike Price</InputLabel>
-              <Input
-                value={this.state.optionsData.strikePrice}
-                onChange={this.handleStrikePriceChange}
-                type="number"
-              />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="component-simple">
-                Expiration (Days)
-              </InputLabel>
-              <Input
-                value={this.state.optionsData.expiration}
-                onChange={this.handleExpChange}
-                type="number"
-              />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="component-simple">Volatility (%)</InputLabel>
-              <Input
-                value={this.state.optionsData.volatility}
-                onChange={this.handleVolChange}
-                type="number"
-              />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="component-simple">Interest Free</InputLabel>
-              <Input
-                value={this.state.optionsData.interestFree}
-                onChange={this.handleInterestChange}
-                type="number"
-              />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="component-simple">
-                Number Of Contracts
-              </InputLabel>
-              <Input
-                value={Number.parseFloat(
-                  this.state.optionsData.numberOfContracts
-                )}
-                onChange={this.handleContractNumberChange}
-                type="number"
-              />
-            </FormControl>
-            <Button
-              className={classes.formControlButton}
-              variant="outlined"
-              color="primary"
-              onClick={this.prepareData}
-            >
-              Update
-            </Button>
-            <Button
-              className={classes.formControlButton}
-              variant="outlined"
-              color="primary"
-              onClick={this.prepareDataNew}
-            >
-              Add
-            </Button>
-          </Accordion>
-        </div>
-      </form>
+    return (
+      <>
+        <Form size='large'>
+          <Row gutter={16}>
+            <Col span={6}>
+              <Form.Item label='Call/Put' required tooltip='This is a required'>
+                <Select
+                  id='standard-select-CallPut'
+                  value={this.state.optionsData.type}
+                  onChange={this.handleType}
+                >
+                  {type.map((option) => (
+                    <Select.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col span={7}>
+              <Form.Item label='Strike Price'>
+                <Input
+                  value={this.state.optionsData.strikePrice}
+                  onChange={this.handleStrikePriceChange}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={7}>
+              <Form.Item label='Stock Price'>
+                <Input
+                  value={this.state.optionsData.stockPrice}
+                  onChange={this.handleStockPriceChange}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col span={4} style={{ textAlign: "right" }}>
+              <Form.Item>
+                <Button type='primary' onClick={this.prepareData} block>
+                  Update
+                </Button>
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label='Sell/Buy' required tooltip='This is a required'>
+                <Select
+                  id='standard-select-buySell'
+                  value={this.state.optionsData.buySell}
+                  onChange={this.handleChange}
+                  helperText='Buy or Sell'
+                >
+                  {BuySell.map((option) => (
+                    <Select.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={3}>
+              <Form.Item label='Volatility (%)'>
+                <Input
+                  value={this.state.optionsData.volatility}
+                  onChange={this.handleVolChange}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item label='Interest Free'>
+                <Input
+                  value={this.state.optionsData.interestFree}
+                  onChange={this.handleInterestChange}
+                  type='number'
+                />
+              </Form.Item>
+            </Col>
+            <Col span={3}>
+              <Form.Item label='Contracts #'>
+                <Input
+                  value={this.state.optionsData.numberOfContracts}
+                  onChange={this.handleContractNumberChange}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item label='Expiration (Days)'>
+                <Input
+                  value={this.state.optionsData.expiration}
+                  onChange={this.handleExpChange}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={4} style={{ textAlign: "right" }}>
+              <Form.Item>
+                <Button onClick={this.prepareDataNew} block>
+                  Add
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </>
     );
   }
 }
 
-export default compose(withStyles(useStyles))(OptionsForm);
+export default OptionsForm;
