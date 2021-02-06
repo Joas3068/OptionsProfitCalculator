@@ -216,7 +216,7 @@ class Chart extends React.Component {
         </Grid>
         <Grid
           container
-          style={{ width: "70%", height: 550, margin: "1% auto" }}
+          style={{ width: "99%", height: 550, margin: "1% auto" }}
         >
           <ResponsiveContainer>
             <LineChart data={formattedData}>

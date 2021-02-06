@@ -1,12 +1,14 @@
 @import "~antd/dist/antd.css";
 
 // pages
+@import "./pages/Dashboard.scss";
 
 // components
 @import "./components/chart.scss";
 
 // fonts
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
 // vendor
 @import "./vendor/animate.min.css";
 
@@ -33,13 +35,6 @@ td,
 small,
 embed {
   font-family: "Lato", sans-serif;
-}
-
-footer {
-  position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 small {
@@ -75,8 +70,4 @@ button {
   background: rgba(255, 255, 255, 0.2);
   margin: 16px;
   padding: 1em;
-}
-
-.site-layout .site-layout-background {
-  background: #fff;
 }

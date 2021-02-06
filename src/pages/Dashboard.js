@@ -55,8 +55,6 @@ export class Dashboard extends React.Component {
     };
     this.updateChecks = this.updateChecks.bind(this);
     this.addData = this.addData.bind(this);
-    // this.clearSelected = this.clearSelected.bind(this);
-    // this.updateRows = this.updateRows.bind(this);
   }
 
   handleDrawerOpen = () => {

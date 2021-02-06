@@ -24,7 +24,6 @@ const useRowStyles = (theme) => ({
     "& > *": {
       borderBottom: "unset",
     },
-    // flexWrap: "wrap",
   },
   title: {
     flexGrow: 1,
@@ -42,22 +41,16 @@ const useRowStyles = (theme) => ({
   },
 
   chainGrid: {
-    //active
-    // backgroundColor: "white",
-    //margin:theme.spacing(2),
-    // //display: "flex",
-    // // // flexDirection: "row",
-    // //maxHeight: "auto",
-    //display: "flex",
+    maxHeight: "auto",
+    display: "flex",
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    // //height: 500,
   },
   chartGrid: {
     backgroundColor: Colors.Tables,
     padding: theme.spacing(1),
     display: "block",
-    // overflow: "auto",
+
     flexDirection: "row",
     flex: 1,
     maxHeight: "auto",

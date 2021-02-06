@@ -1,15 +1,5 @@
 import React, { useState } from "react";
 
-import {
-  FormControlLabel,
-  Link,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  TextField,
-} from "@material-ui/core";
-
 import { Menu, Layout, Button, Switch } from "antd";
 import {
   MenuUnfoldOutlined,
@@ -88,101 +78,100 @@ export default function OptionsDrawer(props) {
   }
 
   return (
-    <Layout>
+    <>
       <Sider trigger={null} collapsible collapsed={open}>
-        <div className="logo" style={{ color: "#fff" }}>
-          Bullish Strategies
+        <div className='logo' style={{ color: "#fff" }}>
+          {open ? "B/S" : "Bullish Strategies"}
         </div>
         <Menu
           defaultSelectedKeys={["1"]}
-          mode="inline"
-          theme="dark"
+          mode='inline'
+          theme='dark'
           inlineCollapsed={open}
         >
-          <Menu.Item key="1" icon={<RiseOutlined />} onClick={sendCallDebit}>
+          <Menu.Item key='1' icon={<RiseOutlined />} onClick={sendCallDebit}>
             Call Debit Spread
           </Menu.Item>
-          <Menu.Item key="2" icon={<StockOutlined />} onClick={sendPutCredit}>
+          <Menu.Item key='2' icon={<StockOutlined />} onClick={sendPutCredit}>
             Put Credit Spread
           </Menu.Item>
           <Menu.Item
-            key="3"
+            key='3'
             icon={<ArrowsAltOutlined />}
             onClick={sendLongCall}
           >
             Long Call
           </Menu.Item>
-          <Menu.Item key="4" icon={<ShrinkOutlined />} onClick={sendShortPut}>
+          <Menu.Item key='4' icon={<ShrinkOutlined />} onClick={sendShortPut}>
             Short Put
           </Menu.Item>
           <Menu.Item
-            key="5"
+            key='5'
             icon={<BoxPlotOutlined />}
             onClick={sendIronCondor}
           >
             Iron Condor
           </Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
-          {React.createElement(open ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: "trigger",
-            onClick: toggleDrawer,
-          })}
 
-          <h2 style={{ color: "#fff", margin: "1em auto" }}>
-            Options Strategies
-          </h2>
+          {open ? null : (
+            <h5 style={{ color: "#fff", margin: "1em auto" }}>
+              Options Strategies
+            </h5>
+          )}
 
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={handleChange}
-                // defaultChecked={props.dataModeState}
-                checked={props.dataModeState}
-                aria-label="toggle-mode"
-              />
-            }
-            style={{ margin: "1em auto" }}
-            label={"Toggle Data Mode"}
+          <Switch
+            onChange={(e) => handleChange(e)}
+            style={{ margin: open ? "0 auto" : "unset" }}
+            checked={props.dataModeState}
+            aria-label='toggle-mode'
           />
 
-          <Dialog
-            open={openDialog}
-            onClose={handleClose}
-            aria-labelledby="form-dialog-title"
-          >
-            {/* <DialogTitle id="form-dialog-title">Subscribe</DialogTitle> */}
-            <DialogContent>
-              <DialogContentText>
-                Enter TD Ameritrade developers key for options data.
-                <Link href="https://developer.tdameritrade.com/">
-                  Sign Up Here
-                </Link>
-              </DialogContentText>
-              <TextField
-                // autoFocus
-                margin="dense"
-                id="name"
-                label="TD Key"
-                type="string"
-                fullWidth
-                onChange={handleInputChange}
-                value={value}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={changeMode} color="primary">
-                Submit
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Header>
-      </Layout>
-    </Layout>
+          {open ? null : <label>Toggle Data Mode</label>}
+        </Menu>
+      </Sider>
+      {React.createElement(open ? MenuUnfoldOutlined : MenuFoldOutlined, {
+        className: "trigger",
+        style: {
+          backgroundColor: "#fff",
+          margin: "0 auto",
+          padding: "1rem auto .5rem",
+          maxHeight: "64px",
+        },
+        onClick: toggleDrawer,
+      })}
+    </>
   );
 }
+// <Dialog
+//   open={openDialog}
+//   onClose={handleClose}
+//   aria-labelledby='form-dialog-title'
+// >
+//   <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+//   <DialogContent>
+//     <DialogContentText>
+//       Enter TD Ameritrade developers key for options data.
+//       <Link href='https://developer.tdameritrade.com/'>
+//         Sign Up Here
+//       </Link>
+//     </DialogContentText>
+//     <TextField
+//       // autoFocus
+//       margin='dense'
+//       id='name'
+//       label='TD Key'
+//       type='string'
+//       fullWidth
+//       onChange={handleInputChange}
+//       value={value}
+//     />
+//   </DialogContent>
+//   <DialogActions>
+//     <Button onClick={handleClose} color='primary'>
+//       Cancel
+//     </Button>
+//     <Button onClick={changeMode} color='primary'>
+//       Submit
+//     </Button>
+//   </DialogActions>
+// </Dialog>

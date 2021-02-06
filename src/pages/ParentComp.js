@@ -1,21 +1,19 @@
 import React from "react";
-//import ChainData from "../components/ChainData";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  withStyles,
-} from "@material-ui/core";
+import ChainData from "../components/ChainData";
+import { withStyles } from "@material-ui/core";
 import { Layout } from "antd";
 import Chart from "../components/charts/DashboardLineChart";
 import ItemsPanel from "../components/ItemsPanel";
 import { CalcBScholes } from "../utils/Bscholes";
-import GitHubIcon from "@material-ui/icons/GitHub";
+import { GithubOutlined } from "@ant-design/icons";
 import OptionsForm from "../components/OptionsForm";
 import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import uuidv4 from "../utils/GuidGen";
 import { compose } from "recompose";
-const { Content } = Layout;
+
+const { Content, Header, Footer } = Layout;
+
 const useRowStyles = (theme) => ({
   chartz: {
     marginTop: theme.spacing(2),
@@ -181,7 +179,7 @@ export class ParentComp extends React.Component {
     try {
       let checksList = JSON.parse(localStorage.getItem("checksList"));
       let cg = JSON.parse(localStorage.getItem("currentEditGuid"));
-      if (cg !== undefined && checksList !== null)
+      if (cg && checksList !== null)
         this.setState(
           { checksList: checksList, currentEditGuid: cg },
           this.calcData
@@ -293,7 +291,7 @@ export class ParentComp extends React.Component {
     const { classes } = this.props;
 
     return (
-      <>
+      <Layout>
         <OptionsDrawer
           className={classes.drawer}
           updateStrategy={(obj, val) => this.updateStrategy(obj, val)}
@@ -301,58 +299,57 @@ export class ParentComp extends React.Component {
           dataModeState={this.props.dataModeState}
           tdKey={this.props.tdKey}
         />
-        <Content
-          className='site-layout-background'
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-          }}
-        >
-          <Chart formattedData={this.state.formattedData} />
+        <Layout>
+          <Header className='site-layout-background' style={{ padding: 0 }} />
+          <Content
+            className='site-layout-background'
+            style={{
+              margin: "24px 16px",
+              padding: 24,
+              minHeight: 280,
+            }}
+          >
+            <Chart formattedData={this.state.formattedData} />
 
-          <ItemsPanel
-            classes={classes}
-            clearSelected={() => this.clearSelected()}
-            getGuid={(e, val) => this.getGuid(val, e)}
-            calculateOptionsPrice={() => this.calculateOptionsPrice()}
-            currentEditGuid={this.state.currentEditGuid}
-            checksList={this.state.checksList}
-            deleteRow={(e, val) => this.deleteRow(val, e)}
-          />
+            <ItemsPanel
+              classes={classes}
+              clearSelected={() => this.clearSelected()}
+              getGuid={(e, val) => this.getGuid(val, e)}
+              calculateOptionsPrice={() => this.calculateOptionsPrice()}
+              currentEditGuid={this.state.currentEditGuid}
+              checksList={this.state.checksList}
+              deleteRow={(e, val) => this.deleteRow(val, e)}
+            />
 
-          <OptionsForm
-            getFormData={(val) => this.getFormData(val)}
-            currentEditGuid={this.state.currentEditGuid}
-            checksList={this.state.checksList}
-          />
+            <OptionsForm
+              getFormData={(val) => this.getFormData(val)}
+              currentEditGuid={this.state.currentEditGuid}
+              checksList={this.state.checksList}
+            />
 
-          {/* <Grid item xs={6}>
-                <ChainData
-                  checksList={this.state.checksList}
-                  addDataFunc={(val) => this.addData(val)}
-                  rowData={this.state.rowData}
-                  optionType={"Call"}
-                  classes={classes}
-                ></ChainData>
-              </Grid>
-              <Grid item xs={6}>
-                <ChainData
-                  checksList={this.state.checksList}
-                  addDataFunc={(val) => this.addData(val)}
-                  rowData={this.state.rowData}
-                  optionType={"Put"}
-                  classes={classes}
-                ></ChainData>
-              </Grid> */}
-        </Content>
-        <BottomNavigation value={1} showLabels className={classes.root}>
-          <BottomNavigationAction
-            icon={<GitHubIcon />}
-            href={"https://github.com/Joas3068/OptionsProfitCalculator"}
-          />
-        </BottomNavigation>
-      </>
+            <ChainData
+              checksList={this.state.checksList}
+              addDataFunc={(val) => this.addData(val)}
+              rowData={this.state.rowData}
+              optionType={"Call"}
+              classes={classes}
+            />
+
+            <ChainData
+              checksList={this.state.checksList}
+              addDataFunc={(val) => this.addData(val)}
+              rowData={this.state.rowData}
+              optionType={"Put"}
+              classes={classes}
+            />
+          </Content>
+          <Footer style={{ textAlign: "center" }}>
+            <a href={"https://github.com/Joas3068/OptionsProfitCalculator"}>
+              <GithubOutlined style={{ fontSize: "2rem", color: "#343a3f" }} />{" "}
+            </a>
+          </Footer>
+        </Layout>
+      </Layout>
     );
   }
 }
