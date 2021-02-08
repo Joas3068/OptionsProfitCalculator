@@ -18,9 +18,9 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Button,
   Tooltip,
 } from "@material-ui/core";
-import { Button } from "antd";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -42,7 +42,13 @@ function Rows(props) {
       setExpirationKey(initialDateKey[0]);
       setStrikeKey(initialStrikeKey[index]);
     }
-  }, [props.contractData, expirationKey, index]);
+  }, [
+    props.contractData,
+    expirationKey,
+    initialDateKey,
+    initialStrikeKey,
+    index,
+  ]);
   const [strikeKey, setStrikeKey] = useState(initialStrikeKey[index]);
 
   const handleChange = (event) => {
@@ -67,12 +73,12 @@ function Rows(props) {
     );
   }
   return (
-    <>
+    <React.Fragment>
       {props.contractData[expirationKey] ? (
         <>
           <TableRow value={props.contractData[expirationKey][strikeKey]}>
             <TableCell>{+props.tdData.underlyingPrice.toFixed(2)}</TableCell>
-            <TableCell component='th' scope='row'>
+            <TableCell component="th" scope="row">
               {
                 <FormControl className={props.classes.formControl}>
                   <InputLabel shrink></InputLabel>
@@ -86,12 +92,12 @@ function Rows(props) {
                 </FormControl>
               }
             </TableCell>
-            <TableCell component='th' scope='row'>
+            <TableCell component="th" scope="row">
               {
                 <FormControl>
                   <InputLabel shrink></InputLabel>
                   <Select
-                    id='dateSelect'
+                    id="dateSelect"
                     value={strikeKey}
                     onChange={handleChangeStrike}
                     displayEmpty
@@ -107,45 +113,45 @@ function Rows(props) {
                 </FormControl>
               }
             </TableCell>
-            <TableCell align='left'>
-              <Tooltip title='Sell'>
+            <TableCell align="left">
+              <Tooltip title="Sell">
                 <Button
                   className={props.classes.tableCellFalse}
-                  id='sell'
+                  id="sell"
                   onClick={handleClick}
                 >
                   {safeHandle("bid")}
                 </Button>
               </Tooltip>
             </TableCell>
-            <TableCell align='left'>
-              <Tooltip title='Buy'>
+            <TableCell align="left">
+              <Tooltip title="Buy">
                 <Button
                   className={props.classes.tableCellTrue}
-                  id='buy'
+                  id="buy"
                   onClick={handleClick}
                 >
                   {safeHandle("ask")}
                 </Button>
               </Tooltip>
             </TableCell>
-            <TableCell align='left'>{safeHandle("volatility") + "%"}</TableCell>
-            <TableCell align='left'>{safeHandle("openInterest")}</TableCell>
+            <TableCell align="left">{safeHandle("volatility") + "%"}</TableCell>
+            <TableCell align="left">{safeHandle("openInterest")}</TableCell>
             <TableCell
               className={
                 safeHandle("inTheMoney")
                   ? props.classes.tableCellTrue
                   : props.classes.tableCellFalse
               }
-              align='left'
+              align="left"
             >
               {/* {new Date(safeHandle("expirationDate")).toLocaleDateString()} */}
               {safeHandle("inTheMoney") ? "ITM" : "OTM"}
             </TableCell>
             <TableCell>
               <IconButton
-                aria-label='expand row'
-                size='small'
+                aria-label="expand row"
+                size="small"
                 onClick={() => setOpen(!open)}
               >
                 {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -169,9 +175,9 @@ function Rows(props) {
           </TableRow>
           <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-              <Collapse in={open} timeout='auto' unmountOnExit>
+              <Collapse in={open} timeout="auto" unmountOnExit>
                 <Box margin={1}>
-                  <Typography variant='h6' gutterBottom component='div'>
+                  <Typography variant="h6" gutterBottom component="div">
                     Greeks&nbsp;
                     <Typography
                     //variant="srOnly"
@@ -180,22 +186,22 @@ function Rows(props) {
                     </Typography>
                   </Typography>
                   <Divider></Divider>
-                  <Table size='small' aria-label='purchases'>
+                  <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        <TableCell align='left'>Delta</TableCell>
-                        <TableCell align='left'>Gamma</TableCell>
-                        <TableCell align='left'>Theta</TableCell>
-                        <TableCell align='left'>Vega</TableCell>
-                        <TableCell align='left'>Rho</TableCell>
+                        <TableCell align="left">Delta</TableCell>
+                        <TableCell align="left">Gamma</TableCell>
+                        <TableCell align="left">Theta</TableCell>
+                        <TableCell align="left">Vega</TableCell>
+                        <TableCell align="left">Rho</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <TableCell align='left'>{safeHandle("delta")}</TableCell>
-                      <TableCell align='left'>{safeHandle("gamma")}</TableCell>
-                      <TableCell align='left'>{safeHandle("theta")}</TableCell>
-                      <TableCell align='left'>{safeHandle("vega")}</TableCell>
-                      <TableCell align='left'>{safeHandle("rho")}</TableCell>
+                      <TableCell align="left">{safeHandle("delta")}</TableCell>
+                      <TableCell align="left">{safeHandle("gamma")}</TableCell>
+                      <TableCell align="left">{safeHandle("theta")}</TableCell>
+                      <TableCell align="left">{safeHandle("vega")}</TableCell>
+                      <TableCell align="left">{safeHandle("rho")}</TableCell>
                     </TableBody>
                   </Table>
                 </Box>
@@ -203,8 +209,10 @@ function Rows(props) {
             </TableCell>
           </TableRow>
         </>
-      ) : null}
-    </>
+      ) : (
+        <></>
+      )}
+    </React.Fragment>
   );
 }
 
@@ -220,8 +228,8 @@ class ChainData extends React.Component {
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls='panel1a-content'
-            id='panel1a-header'
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
             <Typography className={classes.heading}>
               {this.props.optionType}
@@ -231,18 +239,18 @@ class ChainData extends React.Component {
             <Grid item xs={12}>
               <Table
                 className={classes.chainDataTable}
-                aria-label='collapsible table'
+                aria-label="collapsible table"
               >
                 <TableHead>
                   <TableRow className={classes.tableRoot}>
                     <TableCell>Underlying Price</TableCell>
                     <TableCell>Expiration Date</TableCell>
-                    <TableCell align='left'>Strike Price</TableCell>
-                    <TableCell align='left'>Bid&nbsp;</TableCell>
-                    <TableCell align='left'>Ask&nbsp;</TableCell>
-                    <TableCell align='left'>Volatility&nbsp;</TableCell>
-                    <TableCell align='left'>Open Int.&nbsp;</TableCell>
-                    <TableCell align='left'>ITM/OTM&nbsp;</TableCell>
+                    <TableCell align="left">Strike Price</TableCell>
+                    <TableCell align="left">Bid&nbsp;</TableCell>
+                    <TableCell align="left">Ask&nbsp;</TableCell>
+                    <TableCell align="left">Volatility&nbsp;</TableCell>
+                    <TableCell align="left">Open Int.&nbsp;</TableCell>
+                    <TableCell align="left">ITM/OTM&nbsp;</TableCell>
                     {/* <TableCell align="left">Greeks&nbsp;</TableCell> */}
                   </TableRow>
                 </TableHead>

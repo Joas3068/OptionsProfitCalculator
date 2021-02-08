@@ -45,7 +45,11 @@ class Chart extends React.Component {
       var keyz = Object.keys(this.props.formattedData[0]);
       if (e === "" || e === 0) {
         this.setState({ numberOfDays: undefined });
-      } else if (e <= keyz.length && e > 0 && e) {
+      } else if (
+        e <= keyz.length &&
+        e > 0 &&
+        e
+      ) {
         this.setState({ numberOfDays: e });
       } else if (e > keyz.length) {
         let t = e - 1;
@@ -159,60 +163,61 @@ class Chart extends React.Component {
       }
     }
 
+    const { classes } = this.props;
     return (
       <>
         <Grid
           container
-          direction='row'
-          justify='flex-start'
-          alignItems='center'
+          direction="row"
+          justify="flex-start"
+          alignItems="center"
           spacing={1}
-          className='papa'
+          className="papa"
         >
           <Grid item style={{ justifyContent: "center" }}>
-            <label className='label'>Days</label>
+            <label className="label">Days</label>
             <InputNumber
               min={0}
               size={"small"}
               onChange={(e) => this.updateDaysNumber(e)}
-              type='number'
+              type="number"
               value={this.state.numberOfDays}
             />
           </Grid>
-          <Divider type='vertical' />
+          <Divider type="vertical" />
           <Grid item style={{ justifyContent: "center" }}>
-            <label className='label'>P/L</label>
+            <label className="label">P/L</label>
             <Checkbox
               checked={this.state.showTip}
               size={"small"}
               onChange={(e) => this.changeToolTip(e)}
             ></Checkbox>
           </Grid>
-          <Divider type='vertical' />
+          <Divider type="vertical" />
           <Grid item style={{ justifyContent: "center" }}>
-            <label className='label'>X-Min</label>
+            <label className="label">X-Min</label>
             <InputNumber
               min={0}
               size={"small"}
               onChange={(e) => this.updateXMin(e)}
-              type='number'
+              type="number"
               value={this.state.xMinVal}
             />
           </Grid>
           <Grid item style={{ justifyContent: "center" }}>
-            <label className='label'>X-Max</label>
+            <label className="label">X-Max</label>
             <InputNumber
               min={0}
               size={"small"}
               onChange={this.updateXMax}
-              type='number'
+              type="number"
               value={this.state.xMaxVal}
             />
           </Grid>
           <Grid item style={{ justifyContent: "center" }}>
             <Button onClick={this.setDefaultXCoords}>Reset</Button>
           </Grid>
-          <Divider type='vertical' />
+          <Divider type="vertical" />
         </Grid>
         <Grid
           container
@@ -223,33 +228,33 @@ class Chart extends React.Component {
               <CartesianGrid stroke={"#808080"} />
               <XAxis
                 tickCount={25}
-                interval='preserveStartEnd'
+                interval="preserveStartEnd"
                 tickSize={10}
-                type='number'
-                dataKey='x'
-                stroke='white'
+                type="number"
+                dataKey="x"
+                stroke="white"
                 domain={[xMin, xMax]}
               />
               <YAxis
                 tickCount={15}
-                type='number'
+                type="number"
                 minTickGap={0}
                 tickSize={10}
               />
               <Legend formatter={this.renderColorfulLegendText} />
               <ReferenceLine
                 y={0}
-                stroke='white'
+                stroke="white"
                 strokeWidth={1}
-                label={<Label fill={"white"} position='insideTopLeft' />}
+                label={<Label fill={"white"} position="insideTopLeft" />}
               />
               {underLyingPrice !== undefined ? (
                 <ReferenceLine
                   x={underLyingPrice.x}
-                  stroke='#736916'
+                  stroke="#736916"
                   strokeWidth={1}
                   label={
-                    <Label fill={"#736916"} position='insideTopLeft'>
+                    <Label fill={"#736916"} position="insideTopLeft">
                       {"Underlying " + this.props.underlying.toFixed(2)}
                     </Label>
                   }
@@ -261,7 +266,7 @@ class Chart extends React.Component {
                   //cursor={false}
                   offset={45}
                   animationEasing={"linear"}
-                />
+                ></Tooltip>
               ) : (
                 <Tooltip
                   cursor={{ stroke: "rgb(204, 163, 0)", strokeWidth: 2 }}
@@ -273,7 +278,7 @@ class Chart extends React.Component {
                     //stylez={classes.toolTipContainer}
                     />
                   }
-                />
+                ></Tooltip>
               )}
 
               {GetLines(formattedData, this.state.numberOfDays)}
@@ -289,7 +294,7 @@ const CustomTooltip = ({ active, payload, label, stylez }) => {
   if (active) {
     return (
       <div className={stylez}>
-        <p className='label'>{`${label}`}</p>
+        <p className="label">{`${label}`}</p>
         {/* <p className="intro">{getIntroOfPage(label)}</p> */}
       </div>
     );
