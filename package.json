@@ -24,7 +24,6 @@
     "styled-components": "^5.1.0"
   },
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -44,11 +43,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "brunch": "^3.0.0",
-    "eslint-plugin-react": "^7.22.0",
-    "source-map-explorer": "^2.5.2",
-    "terser-brunch": "^4.0.0"
   }
 }
