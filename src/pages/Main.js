@@ -23,7 +23,7 @@ export default function Main() {
 
   useEffect(
     () => localStorage.setItem("tdData", JSON.stringify(state.tdData)),
-    [state.tdData]
+    []
   );
 
   useEffect(() => {

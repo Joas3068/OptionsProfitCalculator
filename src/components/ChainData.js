@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@material-ui/core/Box";
 import {
+  Collapse,
   IconButton,
   Table,
   TableBody,
@@ -8,8 +9,10 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Accordion,
   Divider,
   Grid,
+  AccordionSummary,
   AccordionDetails,
   Select,
   MenuItem,
@@ -17,10 +20,10 @@ import {
   FormControl,
   Tooltip,
 } from "@material-ui/core";
-import { Collapse, Button } from "antd";
+import { Button } from "antd";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 //expiration data and strike price are keys to access values
 function Rows(props) {
   const [open, setOpen] = useState(false);
@@ -39,7 +42,7 @@ function Rows(props) {
       setExpirationKey(initialDateKey[0]);
       setStrikeKey(initialStrikeKey[index]);
     }
-  }, [expirationKey, index, props.contractData]);
+  }, [props.contractData, expirationKey, index]);
   const [strikeKey, setStrikeKey] = useState(initialStrikeKey[index]);
 
   const handleChange = (event) => {
@@ -211,40 +214,54 @@ class ChainData extends React.Component {
     //var contractData = this.props.tdDataContract;
     return (
       <div>
-        <AccordionDetails>
-          <Grid item xs={12}>
-            <Table
-              className={classes.chainDataTable}
-              aria-label='collapsible table'
-            >
-              <TableHead>
-                <TableRow className={classes.tableRoot}>
-                  <TableCell>Underlying Price</TableCell>
-                  <TableCell>Expiration Date</TableCell>
-                  <TableCell align='left'>Strike Price</TableCell>
-                  <TableCell align='left'>Bid&nbsp;</TableCell>
-                  <TableCell align='left'>Ask&nbsp;</TableCell>
-                  <TableCell align='left'>Volatility&nbsp;</TableCell>
-                  <TableCell align='left'>Open Int.&nbsp;</TableCell>
-                  <TableCell align='left'>ITM/OTM&nbsp;</TableCell>
-                  {/* <TableCell align="left">Greeks&nbsp;</TableCell> */}
-                </TableRow>
-              </TableHead>
-              <TableBody className={classes.tableRoot}>
-                {this.props.tdDataContract !== undefined ? (
-                  <Rows
-                    contractData={this.props.tdDataContract}
-                    classes={classes}
-                    sendObject={this.props.sendObject}
-                    tdData={this.props.tdData}
-                  ></Rows>
-                ) : (
-                  <></>
-                )}
-              </TableBody>
-            </Table>
-          </Grid>
-        </AccordionDetails>
+        <Accordion
+          className={classes.expPanelChain}
+          // style={{ backgroundColor: "gray",overflow:"scroll" }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <Typography className={classes.heading}>
+              {this.props.optionType}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid item xs={12}>
+              <Table
+                className={classes.chainDataTable}
+                aria-label='collapsible table'
+              >
+                <TableHead>
+                  <TableRow className={classes.tableRoot}>
+                    <TableCell>Underlying Price</TableCell>
+                    <TableCell>Expiration Date</TableCell>
+                    <TableCell align='left'>Strike Price</TableCell>
+                    <TableCell align='left'>Bid&nbsp;</TableCell>
+                    <TableCell align='left'>Ask&nbsp;</TableCell>
+                    <TableCell align='left'>Volatility&nbsp;</TableCell>
+                    <TableCell align='left'>Open Int.&nbsp;</TableCell>
+                    <TableCell align='left'>ITM/OTM&nbsp;</TableCell>
+                    {/* <TableCell align="left">Greeks&nbsp;</TableCell> */}
+                  </TableRow>
+                </TableHead>
+                <TableBody className={classes.tableRoot}>
+                  {this.props.tdDataContract !== undefined ? (
+                    <Rows
+                      contractData={this.props.tdDataContract}
+                      classes={classes}
+                      sendObject={this.props.sendObject}
+                      tdData={this.props.tdData}
+                    ></Rows>
+                  ) : (
+                    <></>
+                  )}
+                </TableBody>
+              </Table>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }

@@ -305,7 +305,7 @@ function GetLines(arrs, numberOfDays) {
   if (arrs.length > 0) {
     var keyz = Object.keys(arrs[0]).slice(1);
     const LengthOfObj = keyz.length;
-    if (!numberOfDays) {
+    if (!numberOfDays || numberOfDays === 0) {
       let dayMultiplier = 0;
       if (keyz.length > 10) {
         dayMultiplier = Math.floor(LengthOfObj / 10);

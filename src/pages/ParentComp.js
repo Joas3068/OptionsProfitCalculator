@@ -1,7 +1,7 @@
 import React from "react";
 import ChainData from "../components/ChainData";
 import { withStyles } from "@material-ui/core";
-import { Col, Collapse, Layout, Row, Typography } from "antd";
+import { Layout } from "antd";
 import Chart from "../components/charts/DashboardLineChart";
 import ItemsPanel from "../components/ItemsPanel";
 import { CalcBScholes } from "../utils/Bscholes";
@@ -11,6 +11,8 @@ import OptionsDrawer from "../components/OptionsDrawer";
 import Colors from "../utils/Colors";
 import uuidv4 from "../utils/GuidGen";
 import { compose } from "recompose";
+
+const { Content, Header, Footer } = Layout;
 
 const useRowStyles = (theme) => ({
   chartz: {
@@ -287,9 +289,7 @@ export class ParentComp extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { Content, Header, Footer } = Layout;
-    const { Panel } = Collapse;
-    const { Title } = Typography;
+
     return (
       <Layout>
         <OptionsDrawer
@@ -310,93 +310,38 @@ export class ParentComp extends React.Component {
             }}
           >
             <Chart formattedData={this.state.formattedData} />
-            <Collapse
-              defaultActiveKey={["1"]}
-              defaultExpanded={true}
-              ghost={true}
-              expandIconPosition='right'
-            >
-              <Panel
-                header={
-                  <Row gutter={16}>
-                    <Col span={24}>
-                      <Title level={4} style={{ fontWeight: "300" }}>
-                        Selected Options
-                      </Title>
-                    </Col>
-                  </Row>
-                }
-                key='1'
-              >
-                <ItemsPanel
-                  classes={classes}
-                  clearSelected={() => this.clearSelected()}
-                  getGuid={(e, val) => this.getGuid(val, e)}
-                  calculateOptionsPrice={() => this.calculateOptionsPrice()}
-                  currentEditGuid={this.state.currentEditGuid}
-                  checksList={this.state.checksList}
-                  deleteRow={(e, val) => this.deleteRow(val, e)}
-                />
-              </Panel>
-              <Panel
-                header={
-                  <Row gutter={16}>
-                    <Col span={24}>
-                      <Title level={4} style={{ fontWeight: "300" }}>
-                        Add/Edit Options
-                      </Title>
-                    </Col>
-                  </Row>
-                }
-                key='2'
-              >
-                <OptionsForm
-                  getFormData={(val) => this.getFormData(val)}
-                  currentEditGuid={this.state.currentEditGuid}
-                  checksList={this.state.checksList}
-                />
-              </Panel>
-              <Panel
-                header={
-                  <Row gutter={16}>
-                    <Col span={24}>
-                      <Title level={4} style={{ fontWeight: "300" }}>
-                        Call
-                      </Title>
-                    </Col>
-                  </Row>
-                }
-                key='3'
-              >
-                <ChainData
-                  checksList={this.state.checksList}
-                  addDataFunc={(val) => this.addData(val)}
-                  rowData={this.state.rowData}
-                  optionType={"Call"}
-                  classes={classes}
-                />
-              </Panel>
-              <Panel
-                header={
-                  <Row gutter={16}>
-                    <Col span={24}>
-                      <Title level={4} style={{ fontWeight: "300" }}>
-                        Put
-                      </Title>
-                    </Col>
-                  </Row>
-                }
-                key='4'
-              >
-                <ChainData
-                  checksList={this.state.checksList}
-                  addDataFunc={(val) => this.addData(val)}
-                  rowData={this.state.rowData}
-                  optionType={"Put"}
-                  classes={classes}
-                />
-              </Panel>
-            </Collapse>
+
+            <ItemsPanel
+              classes={classes}
+              clearSelected={() => this.clearSelected()}
+              getGuid={(e, val) => this.getGuid(val, e)}
+              calculateOptionsPrice={() => this.calculateOptionsPrice()}
+              currentEditGuid={this.state.currentEditGuid}
+              checksList={this.state.checksList}
+              deleteRow={(e, val) => this.deleteRow(val, e)}
+            />
+
+            <OptionsForm
+              getFormData={(val) => this.getFormData(val)}
+              currentEditGuid={this.state.currentEditGuid}
+              checksList={this.state.checksList}
+            />
+
+            <ChainData
+              checksList={this.state.checksList}
+              addDataFunc={(val) => this.addData(val)}
+              rowData={this.state.rowData}
+              optionType={"Call"}
+              classes={classes}
+            />
+
+            <ChainData
+              checksList={this.state.checksList}
+              addDataFunc={(val) => this.addData(val)}
+              rowData={this.state.rowData}
+              optionType={"Put"}
+              classes={classes}
+            />
           </Content>
           <Footer style={{ textAlign: "center" }}>
             <a href={"https://github.com/Joas3068/OptionsProfitCalculator"}>

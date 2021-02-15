@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Menu, Layout, Switch } from "antd";
+import { Menu, Layout, Button, Switch } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -9,6 +9,7 @@ import {
   ShrinkOutlined,
   BoxPlotOutlined,
   StockOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 import {
   CallDebitSpread,
@@ -20,13 +21,19 @@ import {
 
 //import DataKeyDialog from "../Elements/DataKeyDialog";
 
+const { Header, Sider, Content } = Layout;
+
 export default function OptionsDrawer(props) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [toggleMode, setToggleMode] = useState(false);
   const [value, setValue] = useState(props.tdKey);
-  const { Sider } = Layout;
   const toggleDrawer = () => setOpen(!open);
+
+  //const { prop } = props;
+  const handleInputChange = (event) => {
+    setValue(event.target.value);
+  };
 
   function sendCallDebit() {
     props.updateStrategy(CallDebitSpread);
@@ -64,16 +71,16 @@ export default function OptionsDrawer(props) {
     props.toggleDataMode(toggleMode, value);
   }
 
+  function handleClose() {
+    setToggleMode(false);
+    setOpenDialog(false);
+    props.toggleDataMode(!toggleMode, value);
+  }
+
   return (
     <>
       <Sider trigger={null} collapsible collapsed={open}>
-        <div
-          className='logo'
-          style={{
-            textAlign: open ? "left" : "center",
-            paddingLeft: open ? ".7rem" : "1rem",
-          }}
-        >
+        <div className='logo' style={{ color: "#fff" }}>
           {open ? "B/S" : "Bullish Strategies"}
         </div>
         <Menu
@@ -107,24 +114,16 @@ export default function OptionsDrawer(props) {
           </Menu.Item>
 
           {open ? null : (
-            <h5
-              style={{
-                color: "#fff",
-                margin: "1em auto",
-                fontSize: "1rem",
-                paddingLeft: "1rem",
-              }}
-            >
+            <h5 style={{ color: "#fff", margin: "1em auto" }}>
               Options Strategies
             </h5>
           )}
 
           <Switch
             onChange={(e) => handleChange(e)}
-            style={{ margin: open ? "0 auto" : "unset", paddingLeft: "1rem" }}
+            style={{ margin: open ? "0 auto" : "unset" }}
             checked={props.dataModeState}
             aria-label='toggle-mode'
-            disabled
           />
 
           {open ? null : <label>Toggle Data Mode</label>}
